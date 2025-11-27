@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description|default:'Order everything you need for your perfect event - birthdays, weddings, and private parties.' }}{% endblock %}">
+    <title>{% block title %}{% endblock %}{% if block.super %} | {% endif %}{{ site_settings.site_name|default:'VerzendConnect' }}</title>
+    
+    <!-- Favicon -->
+    {% if site_settings.favicon %}
+    <link rel="icon" href="{{ site_settings.favicon.url }}">
+    {% endif %}
+    
+    <!-- Tailwind CSS -->
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass border-b border-secondary-100">
+        <nav class="container-custom">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <a href="{% url 'core:home' %}" class="flex items-center gap-2">
+                    {% if site_settings.logo %}
+                    <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name }}" class="h-10">
+                    {% else %}
+                    <span class="font-display text-2xl font-bold text-gradient">VerzendConnect</span>
+                    {% endif %}
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="{% url 'core:home' %}" class="nav-link">Home</a>
+                    <div class="relative group">
+                        <button class="nav-link flex items-center gap-1">
+                            Categories
+                            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="absolute top-full left-0 mt-2 w-56 rounded-xl bg-white shadow-xl shadow-secondary-200/50 ring-1 ring-black/5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            {% for category in nav_categories %}
+                            <a href="{{ category.get_absolute_url }}" class="dropdown-item {% if forloop.first %}rounded-t-xl{% endif %} {% if forloop.last %}rounded-b-xl{% endif %}">
+                                {{ category.name }}
+                            </a>
+                            {% empty %}
+                            <span class="dropdown-item text-secondary-400">No categories yet</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a href="{% url 'core:product_list' %}" class="nav-link">All Products</a>
+                </div>
+                
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:block relative flex-1 max-w-md mx-8">
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Search products..." 
+                        class="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-secondary-200 bg-white/50 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all duration-200"
+                    >
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <div id="search-results" class="absolute left-0 mt-2 w-full min-w-[500px] rounded-xl bg-white shadow-xl shadow-secondary-200/50 ring-1 ring-black/5 z-50 animate-slide-down hidden max-h-96 overflow-y-auto"></div>
+                </div>
+                
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Account -->
+                    <div class="relative group">
+                        <button class="p-2 rounded-lg hover:bg-secondary-100 transition-colors">
+                            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </button>
+                        <div class="absolute top-full right-0 mt-2 w-48 rounded-xl bg-white shadow-xl shadow-secondary-200/50 ring-1 ring-black/5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            {% if user.is_authenticated %}
+                            <div class="px-4 py-3 border-b border-secondary-100">
+                                <p class="text-sm font-medium text-secondary-900">{{ user.full_name }}</p>
+                                <p class="text-xs text-secondary-500">{{ user.email }}</p>
+                            </div>
+                            <a href="{% url 'accounts:profile' %}" class="dropdown-item">My Profile</a>
+                            <a href="{% url 'accounts:order_history' %}" class="dropdown-item">My Orders</a>
+                            <a href="{% url 'accounts:address_list' %}" class="dropdown-item">Addresses</a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'admin:index' %}" class="dropdown-item text-primary-600">Admin Panel</a>
+                            {% endif %}
+                            <a href="{% url 'accounts:logout' %}" class="dropdown-item rounded-b-xl text-error-600">Logout</a>
+                            {% else %}
+                            <a href="{% url 'accounts:login' %}" class="dropdown-item rounded-t-xl">Login</a>
+                            <a href="{% url 'accounts:register' %}" class="dropdown-item rounded-b-xl">Create Account</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Cart -->
+                    <a href="{% url 'orders:cart' %}" class="relative p-2 rounded-lg hover:bg-secondary-100 transition-colors">
+                        <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        <span class="cart-count absolute -top-1 -right-1 w-5 h-5 bg-primary-600 text-white text-xs font-bold rounded-full flex items-center justify-center {% if cart_count == 0 %}hidden{% endif %}">
+                            {{ cart_count }}
+                        </span>
+                    </a>
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-secondary-100 transition-colors">
+                        <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden lg:hidden pb-4">
+                <div class="flex flex-col gap-2">
+                    <a href="{% url 'core:home' %}" class="px-4 py-2 rounded-lg hover:bg-secondary-100">Home</a>
+                    <a href="{% url 'core:product_list' %}" class="px-4 py-2 rounded-lg hover:bg-secondary-100">All Products</a>
+                    {% for category in nav_categories %}
+                    <a href="{{ category.get_absolute_url }}" class="px-4 py-2 rounded-lg hover:bg-secondary-100">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+                <div class="mt-4 px-4">
+                    <input type="text" placeholder="Search products..." class="input">
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container-custom mt-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% else %}alert-warning{% endif %} animate-slide-down">
+            <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                {% if message.tags == 'success' %}
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                {% elif message.tags == 'error' %}
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                {% else %}
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                {% endif %}
+            </svg>
+            <span>{{ message }}</span>
+            <button onclick="this.parentElement.remove()" class="ml-auto">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Main Content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-secondary-900 text-white mt-auto">
+        <div class="container-custom py-12 md:py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="lg:col-span-1">
+                    <span class="font-display text-2xl font-bold">VerzendConnect</span>
+                    <p class="mt-4 text-secondary-400">
+                        {{ site_settings.site_tagline|default:'Your one-stop shop for everything events. Making your celebrations unforgettable.' }}
+                    </p>
+                    <div class="flex gap-4 mt-6">
+                        {% if site_settings.facebook_url %}
+                        <a href="{{ site_settings.facebook_url }}" class="text-secondary-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                        </a>
+                        {% endif %}
+                        {% if site_settings.instagram_url %}
+                        <a href="{{ site_settings.instagram_url }}" class="text-secondary-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/></svg>
+                        </a>
+                        {% endif %}
+                        {% if site_settings.twitter_url %}
+                        <a href="{{ site_settings.twitter_url }}" class="text-secondary-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-3 text-secondary-400">
+                        <li><a href="{% url 'core:home' %}" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="{% url 'core:product_list' %}" class="hover:text-white transition-colors">All Products</a></li>
+                        {% for event in nav_event_types|slice:":4" %}
+                        <li><a href="{{ event.get_absolute_url }}" class="hover:text-white transition-colors">{{ event.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <!-- Categories -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Categories</h4>
+                    <ul class="space-y-3 text-secondary-400">
+                        {% for category in nav_categories|slice:":5" %}
+                        <li><a href="{{ category.get_absolute_url }}" class="hover:text-white transition-colors">{{ category.name }}</a></li>
+                        {% empty %}
+                        <li>Coming soon...</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Contact Us</h4>
+                    <ul class="space-y-3 text-secondary-400">
+                        {% if site_settings.email %}
+                        <li class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <a href="mailto:{{ site_settings.email }}" class="hover:text-white transition-colors">{{ site_settings.email }}</a>
+                        </li>
+                        {% endif %}
+                        {% if site_settings.phone %}
+                        <li class="flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            <a href="tel:{{ site_settings.phone }}" class="hover:text-white transition-colors">{{ site_settings.phone }}</a>
+                        </li>
+                        {% endif %}
+                        {% if site_settings.address %}
+                        <li class="flex items-start gap-2">
+                            <svg class="w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span>{{ site_settings.address|linebreaksbr }}</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-secondary-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-secondary-400 text-sm">
+                    {{ site_settings.footer_text|default:'© 2024 VerzendConnect. All rights reserved.' }}
+                </p>
+                <div class="flex gap-6 text-sm text-secondary-400">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

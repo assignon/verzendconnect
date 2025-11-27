@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Event Ordering Made Easy{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+    </div>
+    <div class="container-custom py-20 md:py-32 relative">
+        <div class="max-w-3xl">
+            <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
+                Make Your Event
+                <span class="block text-accent-400">Unforgettable</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-white/80 mb-8 animate-fade-in" style="animation-delay: 0.1s">
+                Everything you need for birthdays, weddings, and private parties. 
+                Browse, select, and order with ease.
+            </p>
+            <div class="flex flex-wrap gap-4 animate-fade-in" style="animation-delay: 0.2s">
+                <a href="{% url 'core:product_list' %}" class="btn btn-lg bg-white text-primary-700 hover:bg-white/90">
+                    Shop Now
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+                <a href="#categories" class="btn btn-lg border-2 border-white/30 text-white hover:bg-white/10">
+                    Explore Categories
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Wave decoration -->
+    <div class="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+        </svg>
+    </div>
+</section>
+
+<!-- Event Types -->
+<section class="section" id="events">
+    <div class="container-custom">
+        <div class="text-center mb-12">
+            <h2 class="section-title">Shop by Event</h2>
+            <p class="section-subtitle mx-auto">Find everything you need for your special occasion</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+            {% for event in event_types %}
+            <a href="{{ event.get_absolute_url }}" class="group text-center">
+                <div class="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center group-hover:from-primary-200 group-hover:to-primary-300 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary-200/50">
+                    {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-12 h-12 object-contain">
+                    {% else %}
+                    <img src="{% static 'images/placeholder.svg' %}" alt="{{ event.name }}" class="w-10 h-10 object-contain opacity-50">
+                    {% endif %}
+                </div>
+                <h3 class="font-medium text-secondary-800 group-hover:text-primary-600 transition-colors">{{ event.name }}</h3>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-8 text-secondary-500">
+                <p>Event types coming soon...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="section bg-secondary-50" id="categories">
+    <div class="container-custom">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
+            <div>
+                <h2 class="section-title">Popular Categories</h2>
+                <p class="section-subtitle">Browse our most popular product categories</p>
+            </div>
+            <a href="{% url 'core:product_list' %}" class="btn btn-secondary">
+                View All Categories
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for category in featured_categories %}
+            <a href="{{ category.get_absolute_url }}" class="category-card">
+                {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                    <img src="{% static 'images/placeholder.svg' %}" alt="{{ category.name }}" class="w-24 h-24 object-contain opacity-30">
+                </div>
+                {% endif %}
+                <div class="category-card-overlay"></div>
+                <div class="category-card-content">
+                    <h3 class="font-display text-2xl font-bold mb-2">{{ category.name }}</h3>
+                    <p class="text-white/80 text-sm">{{ category.active_products.count }} products</p>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-12 text-secondary-500">
+                <p>Categories coming soon...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section">
+    <div class="container-custom">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
+            <div>
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Hand-picked items for your special events</p>
+            </div>
+            <a href="{% url 'core:product_list' %}" class="btn btn-secondary">
+                View All Products
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {% for product in featured_products %}
+            {% include 'core/partials/product_card.html' with product=product %}
+            {% empty %}
+            <div class="col-span-full text-center py-12 text-secondary-500">
+                <p>Featured products coming soon...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest Products -->
+<section class="section bg-gradient-to-br from-primary-50 via-white to-accent-50">
+    <div class="container-custom">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
+            <div>
+                <h2 class="section-title">New Arrivals</h2>
+                <p class="section-subtitle">Check out our latest additions</p>
+            </div>
+            <a href="{% url 'core:product_list' %}?sort=-created_at" class="btn btn-secondary">
+                See All New
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {% for product in latest_products %}
+            {% include 'core/partials/product_card.html' with product=product show_new=True %}
+            {% empty %}
+            <div class="col-span-full text-center py-12 text-secondary-500">
+                <p>New products coming soon...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section bg-secondary-900 text-white">
+    <div class="container-custom text-center">
+        <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">
+            Ready to Create Your Perfect Event?
+        </h2>
+        <p class="text-secondary-300 text-lg max-w-2xl mx-auto mb-8">
+            Browse our extensive collection of event supplies, decorations, and services. 
+            We've got everything you need to make your celebration memorable.
+        </p>
+        <a href="{% url 'core:product_list' %}" class="btn btn-primary btn-lg">
+            Start Shopping
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+        </a>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,78 @@
+PROJECT DESCRIPTION
+The goal of this project is to develop a custom Event Ordering Platform that allows
+customers to easily order all items and services needed for events such as
+birthdays, weddings, and private parties.
+The platform will make it simple for users to browse, select, and pay for
+event-related products while providing the business owner (the client) with a
+complete management dashboard to control content, products, and customer
+orders.
+
+STACK
+- django (back and frontend)
+- tailwind css 
+- redis and celery for background task
+- mollie for online payment integration
+- jwt for auth
+- docker for contanirization and deployment once on production
+- Digital Ocean will be used as hosting provider
+- resend to send emails on production
+- django smtp to send emails on dev
+
+
+PROJECT SCOPE AND FUNCTIONALITIES
+A. Customer Front-End (Website)
+The customer-facing side will include:
+
+Home Page & Navigation System
+- Modern UI with event categories and highlights
+- Responsive and mobile-friendly design
+
+Product & Service Browsing
+- Filter by category (e.g., Cakes, Decorations, Catering, DJs, etc.)
+- Search functionality
+- Product detail pages (description, images, price, availability)
+
+Shopping Cart & Event Order Creation
+- Add/remove items to/from cart
+- View cart summary and total
+- Checkout process linked to payment gateways
+
+Customer Accounts
+- Account creation and login
+- Order history and order tracking
+- Guest checkout option
+
+Payment Integration
+- Integration with iDEAL (for Dutch customers) and PayPal (for international customers) through mollie
+- Secure transaction flow and real-time confirmation through email
+
+Notifications
+- Email confirmation after order/payment
+- Order status updates via email
+
+B. Admin Back Office (Dashboard)
+The admin panel for the Client will include:
+Authentication & Access Control
+- Secure admin login
+
+Order Management System
+- View, approve, or reject orders
+- Track payment and delivery status
+
+Product & Category Management (CMS)
+- Add, edit, delete products and services
+- Upload multiple product images
+- Organize items by category or event type
+- Set prices and availability
+
+Dashboard Overview
+- Real-time statistics on sales, revenue, and customer activity
+- Visual charts
+
+System Settings
+- Manage business details (address, logo, etc.)
+- Manage email templates
+
+Notification Control
+- Receive email notification when order is placed
+- Receive an in app notification on order placement

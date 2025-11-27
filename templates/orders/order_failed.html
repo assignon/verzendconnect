@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Failed{% endblock %}
+
+{% block content %}
+<div class="container-custom py-16 md:py-24">
+    <div class="max-w-2xl mx-auto text-center">
+        <!-- Error Icon -->
+        <div class="w-24 h-24 mx-auto mb-8 rounded-full bg-error-100 flex items-center justify-center">
+            <svg class="w-12 h-12 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </div>
+        
+        <h1 class="font-display text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+            Payment Failed
+        </h1>
+        <p class="text-lg text-secondary-600 mb-8">
+            Unfortunately, your payment could not be processed. 
+            Your order has been saved and you can try again.
+        </p>
+        
+        <!-- Order Info -->
+        <div class="card p-6 md:p-8 text-left mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm text-secondary-500">Order number</p>
+                    <p class="font-semibold text-secondary-800 text-lg">{{ order.order_number }}</p>
+                </div>
+                <div>
+                    <span class="badge bg-warning-100 text-warning-700">Payment Pending</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'payments:process' order.order_number %}" class="btn btn-primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Try Payment Again
+            </a>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary">
+                Back to Home
+            </a>
+        </div>
+        
+        <p class="mt-8 text-sm text-secondary-500">
+            Need help? Contact us at <a href="mailto:support@verzendconnect.nl" class="text-primary-600 hover:underline">support@verzendconnect.nl</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+

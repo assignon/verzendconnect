@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Payment{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Checkout Progress -->
+    <div class="max-w-3xl mx-auto mb-12">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-success-500 text-white flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="ml-3 text-success-600">Info</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-success-500"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-success-500 text-white flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="ml-3 text-success-600">Shipping</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-primary-600"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-semibold">3</div>
+                <span class="ml-3 font-medium text-primary-600">Payment</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-secondary-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary-200 text-secondary-500 flex items-center justify-center font-semibold">4</div>
+                <span class="ml-3 text-secondary-500">Confirm</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <div class="card p-6 md:p-8">
+                <h2 class="font-display text-2xl font-bold text-secondary-900 mb-6">Payment Method</h2>
+                
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <label class="block cursor-pointer">
+                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment_method" value="ideal" checked class="w-5 h-5 text-primary-600">
+                                <div class="flex-1">
+                                    <span class="font-medium text-secondary-800">iDEAL</span>
+                                    <p class="text-sm text-secondary-500">Pay directly from your Dutch bank account</p>
+                                </div>
+                                <img src="https://www.mollie.com/external/icons/payment-methods/ideal.svg" alt="iDEAL" class="h-8">
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="block cursor-pointer">
+                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment_method" value="paypal" class="w-5 h-5 text-primary-600">
+                                <div class="flex-1">
+                                    <span class="font-medium text-secondary-800">PayPal</span>
+                                    <p class="text-sm text-secondary-500">Pay with your PayPal account</p>
+                                </div>
+                                <img src="https://www.mollie.com/external/icons/payment-methods/paypal.svg" alt="PayPal" class="h-8">
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="block cursor-pointer">
+                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment_method" value="creditcard" class="w-5 h-5 text-primary-600">
+                                <div class="flex-1">
+                                    <span class="font-medium text-secondary-800">Credit Card</span>
+                                    <p class="text-sm text-secondary-500">Visa, Mastercard, American Express</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <img src="https://www.mollie.com/external/icons/payment-methods/visa.svg" alt="Visa" class="h-8">
+                                    <img src="https://www.mollie.com/external/icons/payment-methods/mastercard.svg" alt="Mastercard" class="h-8">
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="block cursor-pointer">
+                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="payment_method" value="banktransfer" class="w-5 h-5 text-primary-600">
+                                <div class="flex-1">
+                                    <span class="font-medium text-secondary-800">Bank Transfer</span>
+                                    <p class="text-sm text-secondary-500">Pay via manual bank transfer</p>
+                                </div>
+                                <img src="https://www.mollie.com/external/icons/payment-methods/banktransfer.svg" alt="Bank Transfer" class="h-8">
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <div class="flex justify-between pt-6">
+                        <a href="{% url 'orders:checkout_shipping' %}" class="btn btn-secondary">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Review Order
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            {% include 'orders/partials/order_summary.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

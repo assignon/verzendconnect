@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="w-full max-w-md">
+        <div class="card p-8">
+            <div class="text-center mb-8">
+                <h1 class="font-display text-3xl font-bold text-secondary-900 mb-2">Create Account</h1>
+                <p class="text-secondary-600">Join us to start shopping</p>
+            </div>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="label">First Name</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <p class="text-error-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="label">Last Name</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <p class="text-error-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="label">Email Address</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <p class="text-error-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="label">Phone (optional)</label>
+                    {{ form.phone }}
+                </div>
+                
+                <div>
+                    <label class="label">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <p class="text-error-600 text-sm mt-1">{{ form.password.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="label">Confirm Password</label>
+                    {{ form.password_confirm }}
+                    {% if form.password_confirm.errors %}
+                    <p class="text-error-600 text-sm mt-1">{{ form.password_confirm.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {{ form.non_field_errors.0 }}
+                </div>
+                {% endif %}
+                
+                <div class="flex items-start gap-2">
+                    {{ form.terms_accepted }}
+                    <label for="{{ form.terms_accepted.id_for_label }}" class="text-sm text-secondary-600">
+                        I agree to the <a href="#" class="text-primary-600 hover:underline">Terms of Service</a> 
+                        and <a href="#" class="text-primary-600 hover:underline">Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-full">
+                    Create Account
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-secondary-600">
+                    Already have an account?
+                    <a href="{% url 'accounts:login' %}" class="text-primary-600 font-medium hover:text-primary-700">
+                        Sign in
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

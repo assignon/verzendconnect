@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Confirm Order{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Checkout Progress -->
+    <div class="max-w-3xl mx-auto mb-12">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-success-500 text-white flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="ml-3 text-success-600">Info</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-success-500"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-success-500 text-white flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="ml-3 text-success-600">Shipping</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-success-500"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-success-500 text-white flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="ml-3 text-success-600">Payment</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-primary-600"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-semibold">4</div>
+                <span class="ml-3 font-medium text-primary-600">Confirm</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Order Review -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="card p-6">
+                <h2 class="font-display text-2xl font-bold text-secondary-900 mb-6">Review Your Order</h2>
+                
+                <!-- Customer Info -->
+                <div class="border-b border-secondary-200 pb-4 mb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-secondary-800">Contact</h3>
+                            <p class="text-secondary-600">{{ checkout_info.email }}</p>
+                            {% if checkout_info.phone %}
+                            <p class="text-secondary-600">{{ checkout_info.phone }}</p>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'orders:checkout_info' %}" class="text-primary-600 text-sm hover:text-primary-700">Change</a>
+                    </div>
+                </div>
+                
+                <!-- Shipping Address -->
+                <div class="border-b border-secondary-200 pb-4 mb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-secondary-800">Ship to</h3>
+                            <p class="text-secondary-600">
+                                {{ checkout_shipping.shipping_first_name }} {{ checkout_shipping.shipping_last_name }}<br>
+                                {{ checkout_shipping.shipping_address }}<br>
+                                {% if checkout_shipping.shipping_address_2 %}{{ checkout_shipping.shipping_address_2 }}<br>{% endif %}
+                                {{ checkout_shipping.shipping_postal_code }} {{ checkout_shipping.shipping_city }}<br>
+                                {{ checkout_shipping.shipping_country }}
+                            </p>
+                        </div>
+                        <a href="{% url 'orders:checkout_shipping' %}" class="text-primary-600 text-sm hover:text-primary-700">Change</a>
+                    </div>
+                </div>
+                
+                <!-- Payment Method -->
+                <div class="pb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-secondary-800">Payment</h3>
+                            <p class="text-secondary-600">
+                                {% if checkout_payment.method == 'ideal' %}iDEAL
+                                {% elif checkout_payment.method == 'paypal' %}PayPal
+                                {% elif checkout_payment.method == 'creditcard' %}Credit Card
+                                {% else %}Bank Transfer
+                                {% endif %}
+                            </p>
+                        </div>
+                        <a href="{% url 'orders:checkout_payment' %}" class="text-primary-600 text-sm hover:text-primary-700">Change</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Items -->
+            <div class="card p-6">
+                <h3 class="font-medium text-secondary-800 mb-4">Order Items</h3>
+                <div class="space-y-4">
+                    {% for item in cart.items.all %}
+                    <div class="flex gap-4">
+                        <div class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-secondary-100">
+                            {% if item.product.primary_image %}
+                            <img src="{{ item.product.primary_image.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                            {% else %}
+                            <img src="{% static 'images/placeholder.svg' %}" alt="{{ item.product.name }}" class="w-full h-full object-contain p-2">
+                            {% endif %}
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-secondary-800">{{ item.product.name }}</p>
+                            <p class="text-sm text-secondary-500">Qty: {{ item.quantity }}</p>
+                        </div>
+                        <p class="font-medium text-secondary-800">€{{ item.total }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Order Notes -->
+            <form method="post" id="order-form">
+                {% csrf_token %}
+                <div class="card p-6">
+                    <h3 class="font-medium text-secondary-800 mb-4">Order Notes (Optional)</h3>
+                    <textarea name="notes" rows="3" class="input" placeholder="Any special instructions for your order..."></textarea>
+                </div>
+                
+                <div class="flex justify-between pt-6">
+                    <a href="{% url 'orders:checkout_payment' %}" class="btn btn-secondary">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        Back
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        Place Order & Pay
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            {% include 'orders/partials/order_summary.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

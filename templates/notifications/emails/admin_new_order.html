@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>New Order Notification</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden;">
+                    <tr>
+                        <td style="background-color: #1e293b; padding: 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">New Order Received!</h1>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 40px;">
+                            <div style="background-color: #f0fdf4; border: 1px solid #22c55e; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                                <h2 style="color: #16a34a; margin: 0 0 10px; font-size: 20px;">Order #{{ order.order_number }}</h2>
+                                <p style="color: #64748b; margin: 0;">Placed on {{ order.created_at|date:"F d, Y" }} at {{ order.created_at|time:"H:i" }}</p>
+                            </div>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                                <tr>
+                                    <td width="50%" style="padding-right: 20px;">
+                                        <h3 style="color: #1e293b; margin: 0 0 10px; font-size: 16px;">Customer</h3>
+                                        <p style="color: #64748b; margin: 0;">
+                                            {{ order.shipping_first_name }} {{ order.shipping_last_name }}<br>
+                                            {{ order.email }}<br>
+                                            {% if order.phone %}{{ order.phone }}{% endif %}
+                                        </p>
+                                    </td>
+                                    <td width="50%">
+                                        <h3 style="color: #1e293b; margin: 0 0 10px; font-size: 16px;">Shipping Address</h3>
+                                        <p style="color: #64748b; margin: 0;">
+                                            {{ order.shipping_address }}<br>
+                                            {{ order.shipping_postal_code }} {{ order.shipping_city }}<br>
+                                            {{ order.shipping_country }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <h3 style="color: #1e293b; margin: 0 0 16px; font-size: 16px;">Order Items ({{ order.items_count }})</h3>
+                            {% for item in order.items.all %}
+                            <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #e2e8f0; padding: 12px 0;">
+                                <tr>
+                                    <td>{{ item.product_name }} × {{ item.quantity }}</td>
+                                    <td align="right" style="font-weight: 600;">€{{ item.total }}</td>
+                                </tr>
+                            </table>
+                            {% endfor %}
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+                                <tr>
+                                    <td style="font-size: 20px; font-weight: 700; color: #1e293b;">Total: €{{ order.total }}</td>
+                                    <td align="right">
+                                        <span style="background-color: #f59e0b; color: white; padding: 6px 12px; border-radius: 6px; font-size: 14px;">
+                                            {{ order.get_payment_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div style="text-align: center; margin-top: 40px;">
+                                <a href="{{ admin_url }}" style="display: inline-block; background-color: #1e293b; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 600;">
+                                    View in Admin Panel
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

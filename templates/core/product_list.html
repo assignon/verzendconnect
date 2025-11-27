@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Products{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm text-secondary-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-primary-600">Home</a></li>
+            <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></li>
+            <li class="text-secondary-800 font-medium">All Products</li>
+        </ol>
+    </nav>
+    
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar Filters -->
+        <aside class="lg:w-64 flex-shrink-0">
+            <div class="card p-6 sticky top-24">
+                <h3 class="font-semibold text-lg mb-4">Filters</h3>
+                
+                <form method="get" class="space-y-6">
+                    <!-- Categories -->
+                    <div>
+                        <h4 class="font-medium text-secondary-700 mb-3">Categories</h4>
+                        <div class="space-y-2">
+                            <a href="{% url 'core:product_list' %}{% if request.GET.event %}?event={{ request.GET.event }}{% endif %}" 
+                               class="block px-3 py-2 rounded-lg {% if not current_category %}bg-primary-100 text-primary-700{% else %}hover:bg-secondary-100{% endif %}">
+                                All Categories
+                            </a>
+                            {% for category in categories %}
+                            <a href="?category={{ category.slug }}{% if request.GET.event %}&event={{ request.GET.event }}{% endif %}" 
+                               class="block px-3 py-2 rounded-lg {% if current_category == category.slug %}bg-primary-100 text-primary-700{% else %}hover:bg-secondary-100{% endif %}">
+                                {{ category.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Event Types -->
+                    <div>
+                        <h4 class="font-medium text-secondary-700 mb-3">Event Type</h4>
+                        <div class="space-y-2">
+                            <a href="{% url 'core:product_list' %}{% if request.GET.category %}?category={{ request.GET.category }}{% endif %}" 
+                               class="block px-3 py-2 rounded-lg {% if not current_event %}bg-primary-100 text-primary-700{% else %}hover:bg-secondary-100{% endif %}">
+                                All Events
+                            </a>
+                            {% for event in event_types %}
+                            <a href="?event={{ event.slug }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" 
+                               class="block px-3 py-2 rounded-lg {% if current_event == event.slug %}bg-primary-100 text-primary-700{% else %}hover:bg-secondary-100{% endif %}">
+                                {{ event.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Price Range -->
+                    <div>
+                        <h4 class="font-medium text-secondary-700 mb-3">Price Range</h4>
+                        <div class="flex gap-2">
+                            <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}" class="input flex-1">
+                            <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}" class="input flex-1">
+                        </div>
+                        <button type="submit" class="btn btn-secondary btn-sm w-full mt-3">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </aside>
+        
+        <!-- Products Grid -->
+        <div class="flex-1">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <p class="text-secondary-600">
+                    Showing <span class="font-semibold text-secondary-800">{{ products|length }}</span> products
+                </p>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-secondary-600">Sort by:</label>
+                    <select onchange="window.location.href=this.value" class="input py-2 w-auto">
+                        <option value="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.event %}event={{ request.GET.event }}&{% endif %}sort=-created_at" {% if current_sort == '-created_at' %}selected{% endif %}>Newest</option>
+                        <option value="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.event %}event={{ request.GET.event }}&{% endif %}sort=price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.event %}event={{ request.GET.event }}&{% endif %}sort=price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.event %}event={{ request.GET.event }}&{% endif %}sort=name" {% if current_sort == 'name' %}selected{% endif %}>Name</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                {% for product in products %}
+                {% include 'core/partials/product_card.html' with product=product %}
+                {% empty %}
+                <div class="col-span-full text-center py-16">
+                    <svg class="w-16 h-16 mx-auto text-secondary-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-secondary-700 mb-2">No products found</h3>
+                    <p class="text-secondary-500 mb-4">Try adjusting your filters or search terms.</p>
+                    <a href="{% url 'core:product_list' %}" class="btn btn-primary">View All Products</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav class="mt-8 flex justify-center">
+                <ul class="flex items-center gap-1">
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                           class="px-4 py-2 rounded-lg border border-secondary-200 hover:bg-secondary-100 transition-colors">
+                            Previous
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li><span class="px-4 py-2 rounded-lg bg-primary-600 text-white">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li>
+                        <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           class="px-4 py-2 rounded-lg border border-secondary-200 hover:bg-secondary-100 transition-colors">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           class="px-4 py-2 rounded-lg border border-secondary-200 hover:bg-secondary-100 transition-colors">
+                            Next
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

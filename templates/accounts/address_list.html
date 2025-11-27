@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Addresses{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="font-display text-3xl font-bold text-secondary-900">My Addresses</h1>
+            <a href="{% url 'accounts:address_add' %}" class="btn btn-primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Add Address
+            </a>
+        </div>
+        
+        {% if addresses %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for address in addresses %}
+            <div class="card p-6 {% if address.is_default %}ring-2 ring-primary-500{% endif %}">
+                {% if address.is_default %}
+                <span class="badge badge-primary mb-3">Default Address</span>
+                {% endif %}
+                
+                <h3 class="font-semibold text-secondary-800 mb-2">{{ address.full_name }}</h3>
+                <p class="text-secondary-600 mb-4">
+                    {{ address.street_address }}<br>
+                    {% if address.street_address_2 %}{{ address.street_address_2 }}<br>{% endif %}
+                    {{ address.postal_code }} {{ address.city }}<br>
+                    {{ address.country }}
+                </p>
+                {% if address.phone %}
+                <p class="text-sm text-secondary-500">{{ address.phone }}</p>
+                {% endif %}
+                
+                <div class="flex gap-3 mt-4 pt-4 border-t border-secondary-200">
+                    <a href="{% url 'accounts:address_edit' address.pk %}" class="text-primary-600 text-sm hover:text-primary-700">
+                        Edit
+                    </a>
+                    <form method="post" action="{% url 'accounts:address_delete' address.pk %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="text-error-600 text-sm hover:text-error-700" onclick="return confirm('Delete this address?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card p-12 text-center">
+            <svg class="w-16 h-16 mx-auto text-secondary-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <h3 class="text-xl font-semibold text-secondary-700 mb-2">No addresses saved</h3>
+            <p class="text-secondary-500 mb-6">Add an address to speed up checkout</p>
+            <a href="{% url 'accounts:address_add' %}" class="btn btn-primary">Add Your First Address</a>
+        </div>
+        {% endif %}
+        
+        <div class="mt-6">
+            <a href="{% url 'accounts:profile' %}" class="text-primary-600 hover:text-primary-700">
+                ← Back to Profile
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

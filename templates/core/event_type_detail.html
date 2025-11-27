@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ event_type.name }} Products{% endblock %}
+{% block meta_description %}{{ event_type.description|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<!-- Event Type Header -->
+<section class="relative py-16 md:py-24 overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-accent-600">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+    </div>
+    
+    <div class="container-custom relative">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="flex items-center gap-2 text-sm text-white/70">
+                <li><a href="{% url 'core:home' %}" class="hover:text-white">Home</a></li>
+                <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></li>
+                <li class="text-white font-medium">{{ event_type.name }}</li>
+            </ol>
+        </nav>
+        
+        <div class="max-w-3xl">
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                {{ event_type.name }}
+            </h1>
+            {% if event_type.description %}
+            <p class="text-white/80 text-lg">{{ event_type.description }}</p>
+            {% endif %}
+            <p class="mt-4 text-white/60">{{ products.count }} products perfect for your {{ event_type.name|lower }}</p>
+        </div>
+    </div>
+</section>
+
+<div class="container-custom py-8 md:py-12">
+    <!-- Categories for this event type -->
+    {% if categories %}
+    <div class="mb-12">
+        <h2 class="font-semibold text-lg text-secondary-800 mb-4">Shop by Category</h2>
+        <div class="flex flex-wrap gap-3">
+            {% for category in categories %}
+            <a href="{{ category.get_absolute_url }}?event={{ event_type.slug }}" class="btn btn-secondary btn-sm">
+                {{ category.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Products Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        {% for product in products %}
+        {% include 'core/partials/product_card.html' with product=product %}
+        {% empty %}
+        <div class="col-span-full text-center py-16">
+            <svg class="w-16 h-16 mx-auto text-secondary-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+            <h3 class="text-xl font-semibold text-secondary-700 mb-2">No products yet</h3>
+            <p class="text-secondary-500 mb-4">Check back soon for products perfect for {{ event_type.name|lower }}!</p>
+            <a href="{% url 'core:product_list' %}" class="btn btn-primary">Browse All Products</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

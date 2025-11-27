@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static widget_tweaks %}
+
+{% block title %}Checkout - Shipping{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Checkout Progress -->
+    <div class="max-w-3xl mx-auto mb-12">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-success-500 text-white flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="ml-3 text-success-600">Info</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-primary-600"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-semibold">2</div>
+                <span class="ml-3 font-medium text-primary-600">Shipping</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-secondary-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary-200 text-secondary-500 flex items-center justify-center font-semibold">3</div>
+                <span class="ml-3 text-secondary-500">Payment</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-secondary-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary-200 text-secondary-500 flex items-center justify-center font-semibold">4</div>
+                <span class="ml-3 text-secondary-500">Confirm</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <div class="card p-6 md:p-8">
+                <h2 class="font-display text-2xl font-bold text-secondary-900 mb-6">Shipping Address</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="label">First Name *</label>
+                            {{ form.shipping_first_name }}
+                        </div>
+                        <div>
+                            <label class="label">Last Name *</label>
+                            {{ form.shipping_last_name }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="label">Company (optional)</label>
+                        {{ form.shipping_company }}
+                    </div>
+                    
+                    <div>
+                        <label class="label">Street Address *</label>
+                        {{ form.shipping_address }}
+                    </div>
+                    
+                    <div>
+                        <label class="label">Apartment, suite, etc. (optional)</label>
+                        {{ form.shipping_address_2 }}
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="label">City *</label>
+                            {{ form.shipping_city }}
+                        </div>
+                        <div>
+                            <label class="label">Postal Code *</label>
+                            {{ form.shipping_postal_code }}
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="label">Country *</label>
+                            {{ form.shipping_country }}
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 p-4 bg-secondary-50 rounded-xl">
+                        {{ form.billing_same_as_shipping }}
+                        <label for="{{ form.billing_same_as_shipping.id_for_label }}" class="text-sm text-secondary-700">
+                            Billing address is the same as shipping address
+                        </label>
+                    </div>
+                    
+                    <div class="flex justify-between pt-6">
+                        <a href="{% url 'orders:checkout_info' %}" class="btn btn-secondary">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Continue to Payment
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            {% include 'orders/partials/order_summary.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

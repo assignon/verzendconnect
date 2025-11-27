@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Order Status Update</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden;">
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #c026d3 0%, #a21caf 100%); padding: 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">{{ site_name }}</h1>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 40px;">
+                            <h2 style="color: #1e293b; margin: 0 0 20px; font-size: 24px; text-align: center;">Order Update</h2>
+                            
+                            <div style="background-color: #f8fafc; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 30px;">
+                                <p style="color: #64748b; margin: 0 0 8px; font-size: 14px;">Order #{{ order.order_number }}</p>
+                                <p style="color: #1e293b; margin: 0; font-size: 20px; font-weight: 600;">
+                                    Status: {{ order.get_status_display }}
+                                </p>
+                            </div>
+                            
+                            <p style="color: #64748b; margin: 0 0 30px; text-align: center; line-height: 1.6;">
+                                {% if order.status == 'confirmed' %}
+                                Great news! Your order has been confirmed and is being prepared.
+                                {% elif order.status == 'preparing' %}
+                                Your order is now being prepared for shipment.
+                                {% elif order.status == 'shipped' %}
+                                Your order has been shipped and is on its way!
+                                {% elif order.status == 'delivered' %}
+                                Your order has been delivered. Enjoy!
+                                {% elif order.status == 'completed' %}
+                                Your order has been completed. Thank you for shopping with us!
+                                {% else %}
+                                Your order status has been updated.
+                                {% endif %}
+                            </p>
+                            
+                            <div style="text-align: center;">
+                                <a href="{{ site_url }}/accounts/orders/{{ order.order_number }}/" style="display: inline-block; background: linear-gradient(135deg, #c026d3 0%, #a21caf 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 600;">
+                                    View Order
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="background-color: #f8fafc; padding: 30px; text-align: center;">
+                            <p style="color: #94a3b8; margin: 0; font-size: 12px;">
+                                © {{ order.created_at|date:"Y" }} {{ site_name }}. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

@@ -1,0 +1,130 @@
+Sprint 1 (Weeks 1–2): Foundation + Core Customer Features
+🎯 Goals:
+Set up the project foundation and deliver a working customer-facing browsing experience.
+Functionalities to Build
+✔ Technical Setup
+Project setup (frontend + backend architecture)
+Database structure (products, orders, users)
+Deployment of initial development environment
+
+
+✔ Customer Front-End (Phase 1)
+Homepage layout
+Product categories & event type browsing
+Product listing pages
+Product detail page (title, description, price, images)
+Basic search + filter
+
+
+✔ Cart (Basic)
+Add to cart
+View cart
+Update quantities
+Remove items
+
+Client will see:
+Full navigation through categories
+Viewing products + filtering
+Adding items to cart
+User interface look & feel
+
+
+Sprint 2 (Weeks 3–4): Checkout + User Accounts + Admin CMS (Phase 1)
+🎯 Goals:
+Build checkout flow and allow admin to manage products.
+Functionalities to Build
+✔ Checkout System
+Checkout page + form
+Customer account registration & login OR guest checkout
+Store customer info
+Order summary page
+
+
+✔ Admin Dashboard (Phase 1)
+Admin login
+Product management:
+Add product
+Edit product
+Delete product
+Upload product images
+Category management
+
+
+✔ Notifications (Phase 1)
+Email templates setup
+Send order confirmation emails (mocked, no payment yet)
+
+Client will see:
+Complete checkout flow (no payment)
+Admin dashboard login
+Adding/editing products in admin
+Emails being triggered on mock orders
+
+
+
+Sprint 3 (Weeks 5–6): Payments + Orders + Notifications (Full)
+🎯 Goals:
+Make ordering fully functional with payments and backend workflow.
+Functionalities to Build
+✔ Payment Integration
+iDEAL integration
+Handle payment success/failure
+Automatic payment confirmation
+
+
+✔ Order Management System (Admin)
+View orders
+View payment status
+Update order status (Pending, Confirmed, Preparing, Completed)
+Send status update notifications
+
+
+✔ Notifications (Phase 2)
+SMS integration (optional)
+Admin notification when a new order arrives
+
+
+Client will see:
+Making a REAL payment (test mode)
+Payment status displays in admin
+Admin approving or changing order status
+Email & SMS notifications working
+
+
+
+Sprint 4 (Weeks 7–8): Finalization + Reports + Deployment
+🎯 Goals:
+Finalize the platform, add reporting, fix issues, and prepare for launch.
+Functionalities to Build
+✔ Admin Features (Final)
+Dashboard overview with:
+Number of orders
+Sales analytics
+Customer activity reports
+
+
+✔ Settings Module
+Manage business information
+Manage email templates
+Payment configurations
+
+
+✔ Front-End Polishing
+Mobile responsiveness (full)
+UI styling improvements
+Speed optimization
+
+
+✔ Deployment & Launch
+Production server setup
+Domain + SSL configuration
+Final testing & bug fixes
+
+
+Client will see:
+Complete platform end-to-end
+Admin dashboard with analytics
+Full ordering + payment + notification workflow
+Final UX/UI design
+Live production environment
+

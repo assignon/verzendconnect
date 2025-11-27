@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static widget_tweaks %}
+
+{% block title %}Checkout - Customer Info{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Checkout Progress -->
+    <div class="max-w-3xl mx-auto mb-12">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center font-semibold">1</div>
+                <span class="ml-3 font-medium text-primary-600">Info</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-secondary-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary-200 text-secondary-500 flex items-center justify-center font-semibold">2</div>
+                <span class="ml-3 text-secondary-500">Shipping</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-secondary-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary-200 text-secondary-500 flex items-center justify-center font-semibold">3</div>
+                <span class="ml-3 text-secondary-500">Payment</span>
+            </div>
+            <div class="flex-1 h-1 mx-4 bg-secondary-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary-200 text-secondary-500 flex items-center justify-center font-semibold">4</div>
+                <span class="ml-3 text-secondary-500">Confirm</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <div class="card p-6 md:p-8">
+                <h2 class="font-display text-2xl font-bold text-secondary-900 mb-6">Customer Information</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label class="label">Email Address *</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <p class="text-error-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="label">First Name *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                            <p class="text-error-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="label">Last Name *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                            <p class="text-error-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="label">Phone Number</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <p class="text-error-600 text-sm mt-1">{{ form.phone.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    {% if not user.is_authenticated %}
+                    <div class="flex items-center gap-3 p-4 bg-secondary-50 rounded-xl">
+                        {{ form.create_account }}
+                        <label for="{{ form.create_account.id_for_label }}" class="text-sm text-secondary-700">
+                            Create an account to track your orders
+                        </label>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="flex justify-between pt-6">
+                        <a href="{% url 'orders:cart' %}" class="btn btn-secondary">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Back to Cart
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Continue to Shipping
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            {% include 'orders/partials/order_summary.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
