@@ -97,19 +97,35 @@ class RegisterForm(forms.ModelForm):
 
 class ProfileForm(forms.ModelForm):
     """User profile edit form."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial value for email field
+        if self.instance:
+            self.fields['email'].initial = self.instance.email
+
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'phone', 'date_of_birth', 'avatar', 'newsletter_subscribed']
+        fields = ['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'avatar', 'newsletter_subscribed']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'input'}),
             'last_name': forms.TextInput(attrs={'class': 'input'}),
+            'email': forms.EmailInput(attrs={'class': 'input'}),
             'phone': forms.TextInput(attrs={'class': 'input'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'input', 'type': 'date'}),
-            'avatar': forms.FileInput(attrs={'class': 'input'}),
+            'avatar': forms.ClearableFileInput(attrs={
+                'class': 'input',
+                'accept': 'image/*',
+            }),
             'newsletter_subscribed': forms.CheckboxInput(attrs={
                 'class': 'w-4 h-4 text-primary-600 border-secondary-300 rounded focus:ring-primary-500',
             }),
         }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('This email address is already in use.')
+        return email
 
 
 class PasswordChangeForm(DjangoPasswordChangeForm):

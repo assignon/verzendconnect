@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Wedding",
+        "slug": "wedding",
+        "description": "Everything you need for your perfect wedding day"
+    },
+    {
+        "name": "Birthday",
+        "slug": "birthday",
+        "description": "Celebrate birthdays in style"
+    },
+    {
+        "name": "Corporate",
+        "slug": "corporate",
+        "description": "Everything you need for your corporate event"
+    },
+    {
+        "name": "Baby Shower",
+        "slug": "baby-shower",
+        "description": "Everything you need for your baby shower"
+    },
+    {
+        "name": "Graduation",
+        "slug": "graduation",
+        "description": "Everything you need for your graduation"
+    },
+    {
+        "name": "Other",
+        "slug": "other",
+        "description": "Other events"
+    }
+]

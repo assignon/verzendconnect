@@ -1,0 +1,202 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block page_title %}Event Types Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Event Types</h1>
+            <p class="text-gray-600">Manage event types for categorizing your products</p>
+        </div>
+        <a href="{% url 'dashboard:event_type_add' %}" class="inline-flex items-center px-6 py-3 border-2 border-transparent shadow-md text-sm font-semibold rounded-xl text-white bg-primary-600 hover:bg-primary-700 hover:shadow-lg transition-all duration-200">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Add Event Type
+        </a>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="get" class="flex gap-4">
+            <div class="flex-1">
+                <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search event types..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+            </div>
+            <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Event Types Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">All Event Types ({{ event_types|length }})</h2>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th class="w-2/5">Event Type</th>
+                        <th class="w-1/6">Icon</th>
+                        <th class="w-1/6">Products</th>
+                        <th class="w-1/6">Status</th>
+                        <th class="w-1/6">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event_type in event_types %}
+                    <tr>
+                        <td>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border-2 border-gray-200">
+                                    {% if event_type.image %}
+                                        <img src="{{ event_type.image.url }}" alt="{{ event_type.name }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+                                            <span class="text-lg">{{ event_type.icon|default:'🎉' }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-4 flex-1 min-w-0">
+                                    <div class="text-sm font-semibold text-gray-900">{{ event_type.name }}</div>
+                                    {% if event_type.description %}
+                                    <div class="text-sm text-gray-500">{{ event_type.description|truncatechars:60 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border-2 border-gray-200 shadow-sm">
+                                {{ event_type.icon|default:'No icon' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="text-sm font-semibold text-gray-900">
+                                {{ event_type.products.count }}
+                                {% if event_type.products.count > 0 %}
+                                <span class="text-xs text-gray-500 ml-1">products</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if event_type.is_active %}
+                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 border-2 border-green-300 shadow-sm">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>
+                                    Active
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border-2 border-gray-300 shadow-sm">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full mr-1.5"></span>
+                                    Inactive
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <a href="{% url 'dashboard:event_type_detail' event_type.pk %}" class="action-btn">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    View
+                                </a>
+                                <a href="{% url 'dashboard:event_type_edit' event_type.pk %}" class="action-btn-primary">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Edit
+                                </a>
+                                <a href="{% url 'dashboard:event_type_delete' event_type.pk %}" class="action-btn-danger" onclick="return confirm('Are you sure you want to delete this event type?')">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-8 py-16 text-center">
+                            <div class="flex flex-col items-center">
+                                <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">No event types found</h3>
+                                <p class="text-gray-500 mb-6 max-w-sm">Create event types to help customers find products for their specific occasions.</p>
+                                <a href="{% url 'dashboard:event_type_add' %}" class="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    </svg>
+                                    Add Your First Event Type
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="bg-white px-6 py-4 flex items-center justify-between border-t border-gray-200 sm:px-8">
+            <div class="flex-1 flex justify-between sm:hidden">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Previous
+                </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Next
+                </a>
+                {% endif %}
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        Showing <span class="font-medium">{{ page_obj.start_index }}</span> to <span class="font-medium">{{ page_obj.end_index }}</span> of <span class="font-medium">{{ paginator.count }}</span> results
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        {% endif %}
+
+                        {% for page_num in paginator.page_range %}
+                        {% if page_num >= page_obj.number|add:-2 and page_num <= page_obj.number|add:2 %}
+                        <a href="?page={{ page_num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {% if page_num == page_obj.number %}text-primary-600 bg-primary-50 border-primary-500{% else %}text-gray-700 hover:bg-gray-50{% endif %}">
+                            {{ page_num }}
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

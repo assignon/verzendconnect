@@ -16,10 +16,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production')
 
 # Application definition
 INSTALLED_APPS = [
-    # Django Unfold Admin Theme (must be before django.contrib.admin)
-    'unfold',
-    'unfold.contrib.filters',
-    'unfold.contrib.forms',
+# Django Unfold Admin Theme (must be before django.contrib.admin)
+# Temporarily disabled due to compatibility issues
+# 'unfold',
+# 'unfold.contrib.filters',
+# 'unfold.contrib.forms',
     
     # Django Core
     'django.contrib.admin',
@@ -33,8 +34,9 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'rest_framework_simplejwt',
-    'django_celery_beat',
-    'django_celery_results',
+    # Temporarily disable Celery apps
+    # 'django_celery_beat',
+    # 'django_celery_results',
     'widget_tweaks',
     
     # Local Apps
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Language switching
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -70,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',  # Language context
                 'apps.core.context_processors.site_settings',
                 'apps.orders.context_processors.cart_context',
             ],
@@ -96,10 +100,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'nl'  # Dutch as default
 TIME_ZONE = 'Europe/Amsterdam'
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
+
+# Supported languages
+LANGUAGES = [
+    ('nl', 'Nederlands'),
+    ('en', 'English'),
+]
+
+# Locale paths
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
@@ -158,6 +174,7 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'VerzendConnect <noreply@verzendconnect.nl>')
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@verzendconnect.nl')
 
 # Resend API
 RESEND_API_KEY = os.getenv('RESEND_API_KEY', '')

@@ -1,0 +1,248 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block page_title %}Event Type Details{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'dashboard:event_types' %}" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">{{ event_type.name }}</h1>
+                <p class="text-gray-600">Event type details and management</p>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'dashboard:event_type_edit' event_type.pk %}" class="inline-flex items-center px-4 py-2 border border-blue-300 rounded-lg text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-400 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Edit Event Type
+            </a>
+            <a href="{% url 'dashboard:event_type_delete' event_type.pk %}" class="inline-flex items-center px-4 py-2 border border-red-300 rounded-lg text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-400 transition-colors" onclick="return confirm('Are you sure you want to delete this event type?')">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Delete Event Type
+            </a>
+        </div>
+    </div>
+
+    <!-- Event Type Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Event Type Info -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Icon and Description -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 flex-shrink-0 rounded-lg bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center border border-purple-300">
+                        <span class="text-2xl">{{ event_type.icon|default:'🎉' }}</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">{{ event_type.name }}</h3>
+                        <p class="text-gray-600">Event Type</p>
+                    </div>
+                </div>
+                {% if event_type.description %}
+                <div class="prose prose-gray max-w-none">
+                    {{ event_type.description|linebreaks }}
+                </div>
+                {% else %}
+                <p class="text-gray-500 italic">No description provided.</p>
+                {% endif %}
+            </div>
+
+            <!-- Categories associated with this Event Type -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">Associated Categories ({{ categories|length }})</h3>
+                    {% if categories %}
+                    <a href="{% url 'dashboard:categories' %}?event_type={{ event_type.pk }}" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                        View all categories →
+                    </a>
+                    {% endif %}
+                </div>
+                {% if categories %}
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for category in categories|slice:":6" %}
+                        <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="w-12 h-12 flex-shrink-0 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center border border-blue-300">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4 flex-1 min-w-0">
+                                <div class="text-sm font-semibold text-gray-900">{{ category.name }}</div>
+                                <div class="text-sm text-gray-500">{{ category.products.count }} products</div>
+                                <div class="flex items-center mt-1">
+                                    {% if category.is_active %}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span>
+                                        Active
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1"></span>
+                                        Inactive
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if categories|length > 6 %}
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-500">And {{ categories|length|add:"-6" }} more categories...</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="px-6 py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No categories associated</h3>
+                    <p class="text-gray-500 mb-6">This event type is not associated with any categories yet.</p>
+                    <a href="{% url 'dashboard:category_add' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Add Category
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Products for this Event Type -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">Products for this Event Type ({{ products|length }})</h3>
+                    {% if products %}
+                    <a href="{% url 'dashboard:products' %}?event_type={{ event_type.pk }}" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                        View all products →
+                    </a>
+                    {% endif %}
+                </div>
+                {% if products %}
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for product in products|slice:":6" %}
+                        <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                {% if product.primary_image %}
+                                <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                                {% else %}
+                                <img src="{% static 'images/placeholder.svg' %}" alt="{{ product.name }}" class="w-full h-full object-contain p-1">
+                                {% endif %}
+                            </div>
+                            <div class="ml-4 flex-1 min-w-0">
+                                <div class="text-sm font-semibold text-gray-900 truncate">{{ product.name }}</div>
+                                <div class="text-sm text-gray-500">{{ product.category.name }} • €{{ product.price }}</div>
+                                <div class="flex items-center mt-1">
+                                    {% if product.is_active %}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span>
+                                        Active
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1"></span>
+                                        Inactive
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if products|length > 6 %}
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-500">And {{ products|length|add:"-6" }} more products...</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="px-6 py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No products for this event type</h3>
+                    <p class="text-gray-500 mb-6">No products are currently associated with this event type.</p>
+                    <a href="{% url 'dashboard:product_add' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Add Product
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Basic Info -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+                <dl class="space-y-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Icon</dt>
+                        <dd class="text-sm text-gray-900">{{ event_type.icon|default:'No icon set' }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Status</dt>
+                        <dd class="text-sm text-gray-900">
+                            {% if event_type.is_active %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span>
+                                Active
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                <span class="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1"></span>
+                                Inactive
+                            </span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- Statistics -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Statistics</h3>
+                <dl class="space-y-3">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Total Products</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ products|length }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Active Products</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ products|length }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Associated Categories</dt>
+                        <dd class="text-lg font-semibold text-gray-900">{{ categories|length }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Created</dt>
+                        <dd class="text-sm text-gray-900">{{ event_type.created_at|date:"M j, Y" }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+                        <dd class="text-sm text-gray-900">{{ event_type.updated_at|date:"M j, Y" }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

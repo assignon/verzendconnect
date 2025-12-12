@@ -1,0 +1,204 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'nl' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %} - VerzendConnect</title>
+
+    <!-- Tailwind CSS -->
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <style>
+        .sidebar-link.active {
+            background-color: #c026d3;
+            color: white;
+        }
+        .sidebar-link.active svg {
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Sidebar -->
+    <div class="flex">
+        <div class="w-64 bg-white shadow-lg min-h-screen">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900">Admin Panel</h1>
+                        <p class="text-sm text-gray-500">VerzendConnect</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="p-4">
+                <div class="space-y-2">
+                    <!-- Dashboard -->
+                    <a href="{% url 'dashboard:index' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+
+                    <!-- Products -->
+                    <a href="{% url 'dashboard:products' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 {% if 'product' in request.resolver_match.url_name %}active{% endif %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        Products
+                    </a>
+
+                    <!-- Categories -->
+                    <a href="{% url 'dashboard:categories' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 {% if 'categor' in request.resolver_match.url_name %}active{% endif %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        Categories
+                    </a>
+
+                    <!-- Event Types -->
+                    <a href="{% url 'dashboard:event_types' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 {% if 'event' in request.resolver_match.url_name %}active{% endif %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Event Types
+                    </a>
+
+                    <!-- Orders -->
+                    <a href="{% url 'dashboard:orders' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 {% if 'order' in request.resolver_match.url_name %}active{% endif %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        Orders
+                    </a>
+
+                    <!-- Reports -->
+                    <a href="{% url 'dashboard:reports' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        Reports
+                    </a>
+                </div>
+
+                <!-- Logout -->
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <a href="{% url 'accounts:logout' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 text-red-600 w-full">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200 px-8 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">{% block page_title %}Dashboard{% endblock %}</h1>
+                        <p class="text-sm text-gray-500">Welcome back, {{ user.first_name|default:user.username }}</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <!-- Language Switcher -->
+                        <form action="{% url 'set_language' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <select name="language" onchange="this.form.submit()" class="px-3 py-1.5 rounded-lg border-2 border-gray-200 bg-white text-sm font-medium text-gray-700 hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer">
+                                {% get_current_language as CURRENT_LANGUAGE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang_code, lang_name in LANGUAGES %}
+                                <option value="{{ lang_code }}" {% if lang_code == CURRENT_LANGUAGE %}selected{% endif %}>
+                                    {% if lang_code == 'nl' %}NL{% else %}EN{% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">{{ 'now'|date:'l, F j, Y' }}</p>
+                            <p class="text-xs text-gray-400">{{ 'now'|date:'H:i' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="p-8">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="fixed top-4 right-4 z-50 space-y-2">
+        {% for message in messages %}
+        <div class="message-alert max-w-sm bg-white shadow-lg rounded-lg p-4 border-l-4
+            {% if message.tags == 'success' %}border-green-500 bg-green-50
+            {% elif message.tags == 'error' %}border-red-500 bg-red-50
+            {% elif message.tags == 'warning' %}border-yellow-500 bg-yellow-50
+            {% else %}border-blue-500 bg-blue-50{% endif %}">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    {% if message.tags == 'success' %}
+                    <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    {% elif message.tags == 'error' %}
+                    <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    {% else %}
+                    <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium {% if message.tags == 'success' %}text-green-800{% elif message.tags == 'error' %}text-red-800{% elif message.tags == 'warning' %}text-yellow-800{% else %}text-blue-800{% endif %}">
+                        {{ message }}
+                    </p>
+                </div>
+                <div class="ml-auto pl-3">
+                    <div class="-mx-1.5 -my-1.5">
+                        <button type="button" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()" class="inline-flex rounded-md p-1.5 {% if message.tags == 'success' %}text-green-500 hover:bg-green-100{% elif message.tags == 'error' %}text-red-500 hover:bg-red-100{% elif message.tags == 'warning' %}text-yellow-500 hover:bg-yellow-100{% else %}text-blue-500 hover:bg-blue-100{% endif %} focus:outline-none">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Scripts -->
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.message-alert');
+            messages.forEach(function(msg) {
+                msg.style.transition = 'opacity 0.5s';
+                msg.style.opacity = '0';
+                setTimeout(function() {
+                    msg.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

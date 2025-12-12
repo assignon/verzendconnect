@@ -1,17 +1,29 @@
-from django.views.generic import TemplateView
-from django.contrib.admin.views.decorators import staff_member_required
-from django.utils.decorators import method_decorator
-from django.db.models import Sum, Count, Avg
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views import View
+from django.db.models import Sum, Count, Avg, Q
 from django.db.models.functions import TruncDate, TruncMonth
 from django.utils import timezone
 from datetime import timedelta
 from apps.orders.models import Order
-from apps.core.models import Product, Category
+from apps.core.models import Product, Category, ProductImage, EventType
 from apps.accounts.models import CustomUser
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class DashboardView(TemplateView):
+class SuperuserRequiredMixin(UserPassesTestMixin):
+    """Mixin to ensure only superusers can access the view."""
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'Access denied. Superuser privileges required.')
+        return redirect('core:home')
+
+
+class DashboardView(SuperuserRequiredMixin, TemplateView):
     """Admin dashboard with analytics overview."""
     template_name = 'dashboard/index.html'
 
@@ -108,8 +120,7 @@ class DashboardView(TemplateView):
         return context
 
 
-@method_decorator(staff_member_required, name='dispatch')
-class ReportsView(TemplateView):
+class ReportsView(SuperuserRequiredMixin, TemplateView):
     """Detailed reports view."""
     template_name = 'dashboard/reports.html'
 
@@ -132,10 +143,360 @@ class ReportsView(TemplateView):
         context['monthly_chart_data'] = [float(s['total']) for s in monthly_sales]
         context['monthly_order_counts'] = [s['count'] for s in monthly_sales]
         
+        # Prepare monthly data for table with average order value
+        context['monthly_data'] = [
+            (
+                s['month'].strftime('%b %Y'),
+                float(s['total']),
+                s['count'],
+                float(s['total']) / s['count'] if s['count'] > 0 else 0.0
+            )
+            for s in monthly_sales
+        ]
+        
+        # Calculate totals for 12-month period
+        context['twelve_month_revenue'] = sum(float(s['total']) for s in monthly_sales)
+        context['twelve_month_orders'] = sum(s['count'] for s in monthly_sales)
+        
         # Average order value
         context['average_order_value'] = Order.objects.filter(
             payment_status='paid'
         ).aggregate(avg=Avg('total'))['avg'] or 0
-        
+
         return context
+
+
+# Product Management Views
+class ProductListView(SuperuserRequiredMixin, ListView):
+    """List all products for admin management."""
+    model = Product
+    template_name = 'dashboard/products/list.html'
+    context_object_name = 'products'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Product.objects.select_related('category').prefetch_related('images')
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) |
+                Q(description__icontains=search) |
+                Q(category__name__icontains=search)
+            )
+        return queryset.order_by('-created_at')
+
+
+class ProductCreateView(SuperuserRequiredMixin, CreateView):
+    """Create new product."""
+    model = Product
+    template_name = 'dashboard/products/form.html'
+    fields = ['name', 'category', 'event_types', 'price', 'sale_price', 'stock',
+              'short_description', 'description', 'is_available', 'is_active', 'is_featured']
+    success_url = reverse_lazy('dashboard:products')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Product'
+        context['categories'] = Category.objects.filter(is_active=True)
+        context['event_types'] = EventType.objects.filter(is_active=True)
+        return context
+
+    def form_valid(self, form):
+        product = form.save()
+        # Handle primary image upload
+        primary_image_file = self.request.FILES.get('primary_image')
+        if primary_image_file:
+            from apps.core.models import ProductImage
+            ProductImage.objects.create(
+                product=product,
+                image=primary_image_file,
+                alt_text=product.name,
+                is_primary=True
+            )
+        messages.success(self.request, f'Product "{product.name}" created successfully.')
+        return super().form_valid(form)
+
+
+class ProductUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update existing product."""
+    model = Product
+    template_name = 'dashboard/products/form.html'
+    fields = ['name', 'category', 'event_types', 'price', 'sale_price', 'stock',
+              'short_description', 'description', 'is_available', 'is_active', 'is_featured']
+    success_url = reverse_lazy('dashboard:products')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Product'
+        context['categories'] = Category.objects.filter(is_active=True)
+        context['event_types'] = EventType.objects.filter(is_active=True)
+        return context
+
+    def form_valid(self, form):
+        product = form.save()
+        # Handle primary image upload
+        primary_image_file = self.request.FILES.get('primary_image')
+        if primary_image_file:
+            from apps.core.models import ProductImage
+            # Remove existing primary images
+            ProductImage.objects.filter(product=product, is_primary=True).update(is_primary=False)
+            # Create or update primary image
+            ProductImage.objects.update_or_create(
+                product=product,
+                is_primary=True,
+                defaults={
+                    'image': primary_image_file,
+                    'alt_text': product.name,
+                }
+            )
+        messages.success(self.request, f'Product "{product.name}" updated successfully.')
+        return super().form_valid(form)
+
+
+class ProductDetailView(SuperuserRequiredMixin, DetailView):
+    """View product details for admin."""
+    model = Product
+    template_name = 'dashboard/products/detail.html'
+    context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['product_images'] = self.object.images.all()
+        if self.object.sale_price:
+            context['savings'] = self.object.price - self.object.sale_price
+            context['discount_percentage'] = round((context['savings'] / self.object.price) * 100)
+        return context
+
+
+class ProductDeleteView(SuperuserRequiredMixin, DeleteView):
+    """Delete product."""
+    model = Product
+    template_name = 'dashboard/products/delete.html'
+    success_url = reverse_lazy('dashboard:products')
+
+    def delete(self, request, *args, **kwargs):
+        product = self.get_object()
+        messages.success(request, f'Product "{product.name}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+# Category Management Views
+class CategoryListView(SuperuserRequiredMixin, ListView):
+    """List all categories for admin management."""
+    model = Category
+    template_name = 'dashboard/categories/list.html'
+    context_object_name = 'categories'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Category.objects.prefetch_related('products')
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset.order_by('-created_at')
+
+
+class CategoryCreateView(SuperuserRequiredMixin, CreateView):
+    """Create new category."""
+    model = Category
+    template_name = 'dashboard/categories/form.html'
+    fields = ['name', 'description', 'image', 'parent', 'event_types', 'is_active', 'is_featured', 'order']
+    success_url = reverse_lazy('dashboard:categories')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Category'
+        context['parent_categories'] = Category.objects.filter(parent__isnull=True, is_active=True)
+        context['event_types'] = EventType.objects.filter(is_active=True)
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Category "{form.instance.name}" created successfully.')
+        return super().form_valid(form)
+
+
+class CategoryUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update existing category."""
+    model = Category
+    template_name = 'dashboard/categories/form.html'
+    fields = ['name', 'description', 'image', 'parent', 'event_types', 'is_active', 'is_featured', 'order']
+    success_url = reverse_lazy('dashboard:categories')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Category'
+        context['parent_categories'] = Category.objects.filter(
+            parent__isnull=True,
+            is_active=True
+        ).exclude(pk=self.object.pk)
+        context['event_types'] = EventType.objects.filter(is_active=True)
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Category "{form.instance.name}" updated successfully.')
+        return super().form_valid(form)
+
+
+class CategoryDetailView(SuperuserRequiredMixin, DetailView):
+    """View category details for admin."""
+    model = Category
+    template_name = 'dashboard/categories/detail.html'
+    context_object_name = 'category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['subcategories'] = self.object.subcategories.filter(is_active=True)
+        context['products'] = self.object.products.filter(is_active=True)
+        return context
+
+
+class CategoryDeleteView(SuperuserRequiredMixin, DeleteView):
+    """Delete category."""
+    model = Category
+    template_name = 'dashboard/categories/delete.html'
+    success_url = reverse_lazy('dashboard:categories')
+
+    def delete(self, request, *args, **kwargs):
+        category = self.get_object()
+        messages.success(request, f'Category "{category.name}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+# Event Types Management Views
+class EventTypeListView(SuperuserRequiredMixin, ListView):
+    """List all event types for admin management."""
+    model = EventType
+    template_name = 'dashboard/event_types/list.html'
+    context_object_name = 'event_types'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = EventType.objects.prefetch_related('products')
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset.order_by('-created_at')
+
+
+class EventTypeCreateView(SuperuserRequiredMixin, CreateView):
+    """Create new event type."""
+    model = EventType
+    template_name = 'dashboard/event_types/form.html'
+    fields = ['name', 'description', 'icon', 'image', 'is_active']
+    success_url = reverse_lazy('dashboard:event_types')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Event Type'
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Event type "{form.instance.name}" created successfully.')
+        return super().form_valid(form)
+
+
+class EventTypeUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update existing event type."""
+    model = EventType
+    template_name = 'dashboard/event_types/form.html'
+    fields = ['name', 'description', 'icon', 'image', 'is_active']
+    success_url = reverse_lazy('dashboard:event_types')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Event Type'
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Event type "{form.instance.name}" updated successfully.')
+        return super().form_valid(form)
+
+
+class EventTypeDetailView(SuperuserRequiredMixin, DetailView):
+    """View event type details for admin."""
+    model = EventType
+    template_name = 'dashboard/event_types/detail.html'
+    context_object_name = 'event_type'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = self.object.categories.filter(is_active=True)
+        context['products'] = self.object.products.filter(is_active=True)
+        return context
+
+
+class EventTypeDeleteView(SuperuserRequiredMixin, DeleteView):
+    """Delete event type."""
+    model = EventType
+    template_name = 'dashboard/event_types/delete.html'
+    success_url = reverse_lazy('dashboard:event_types')
+
+    def delete(self, request, *args, **kwargs):
+        event_type = self.get_object()
+        messages.success(request, f'Event type "{event_type.name}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+# Order Management Views
+class OrderListView(SuperuserRequiredMixin, ListView):
+    """List all orders for admin management."""
+    model = Order
+    template_name = 'dashboard/orders/list.html'
+    context_object_name = 'orders'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Order.objects.select_related('user').prefetch_related('items__product')
+        status = self.request.GET.get('status')
+        payment_status = self.request.GET.get('payment_status')
+        search = self.request.GET.get('search')
+
+        if status:
+            queryset = queryset.filter(status=status)
+        if payment_status:
+            queryset = queryset.filter(payment_status=payment_status)
+        if search:
+            queryset = queryset.filter(
+                Q(order_number__icontains=search) |
+                Q(email__icontains=search) |
+                Q(shipping_first_name__icontains=search) |
+                Q(shipping_last_name__icontains=search)
+            )
+
+        return queryset.order_by('-created_at')
+
+
+class OrderDetailView(SuperuserRequiredMixin, DetailView):
+    """View order details for admin with status update capability."""
+    model = Order
+    template_name = 'dashboard/orders/detail.html'
+    context_object_name = 'order'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_items'] = self.object.items.select_related('product').all()
+        # Get status choices from the model
+        status_field = Order._meta.get_field('status')
+        context['status_choices'] = status_field.choices
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle status update."""
+        self.object = self.get_object()
+        new_status = request.POST.get('status')
+        
+        # Get valid status choices
+        status_field = Order._meta.get_field('status')
+        valid_statuses = [choice[0] for choice in status_field.choices]
+        
+        if new_status and new_status in valid_statuses:
+            old_status_display = self.object.get_status_display()
+            self.object.status = new_status
+            self.object.save(update_fields=['status'])
+            new_status_display = self.object.get_status_display()
+            messages.success(request, f'Order status updated from {old_status_display} to {new_status_display}.')
+        else:
+            messages.error(request, 'Invalid status selected.')
+        
+        return redirect('dashboard:order_detail', pk=self.object.pk)
 

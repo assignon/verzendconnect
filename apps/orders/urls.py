@@ -19,7 +19,7 @@ urlpatterns = [
     path('checkout/confirm/', views.CheckoutConfirmView.as_view(), name='checkout_confirm'),
     
     # Order confirmation
-    path('order/<str:order_number>/success/', views.OrderSuccessView.as_view(), name='order_success'),
-    path('order/<str:order_number>/failed/', views.OrderFailedView.as_view(), name='order_failed'),
+    path('order/<str:order_number>/success/', views.OrderSuccessView.as_view(), name='success'),
+    path('order/<str:order_number>/failed/', views.OrderFailedView.as_view(), name='failed'),
 ]
 

@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Chairs",
+        "slug": "chairs",
+        "description": "Chairs for hire and partly for sale",
+        "image": "chairs.jpg"
+    },
+    {
+        "name": "Chairs with cushions",
+        "slug": "chairs-with-cushions",
+        "description": "Chairs with cushions for hire and partly for sale",
+        "image": "chairs-with-cushions.jpg"
+    },
+    {
+        "name": "Tables",
+        "slug": "tables",
+        "description": "Tables for hire and partly for sale"
+    },
+    {
+        "name": "Party decorations and ornaments",
+        "slug": "party-decorations-and-ornaments",
+        "description": "Party decorations and ornaments for hire and partly for sale"
+    },
+    {
+        "name": "Reservation, cooling, and heating equipment",
+        "slug": "reservation-cooling-and-heating-equipment",
+        "description": "Reservation, cooling, and heating equipment for hire and partly for sale"
+    },
+    {
+        "name": "Lighting",
+        "slug": "lighting",
+        "description": "Lighting for hire and partly for sale"
+    },
+    {
+        "name": "Signage",
+        "slug": "signage",
+        "description": "Signage for hire and partly for sale"
+    },
+    {
+        "name": "Carpet with posts",
+        "slug": "carpet-with-posts",
+        "description": "Carpet with posts for hire and partly for sale"
+    }
+]

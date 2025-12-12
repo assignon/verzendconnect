@@ -1,17 +1,16 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from unfold.admin import ModelAdmin, TabularInline
 from .models import EventType, Category, Product, ProductImage, SiteSettings
 
 
-class ProductImageInline(TabularInline):
+class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
     fields = ['image', 'alt_text', 'is_primary', 'order']
 
 
 @admin.register(EventType)
-class EventTypeAdmin(ModelAdmin):
+class EventTypeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'is_active', 'order', 'product_count']
     list_filter = ['is_active']
     search_fields = ['name', 'description']
@@ -24,7 +23,7 @@ class EventTypeAdmin(ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'parent', 'is_active', 'is_featured', 'order', 'product_count']
     list_filter = ['is_active', 'is_featured', 'event_types']
     search_fields = ['name', 'description']
@@ -38,7 +37,7 @@ class CategoryAdmin(ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'price_display', 'stock', 'is_available', 'is_active', 'is_featured']
     list_filter = ['is_active', 'is_available', 'is_featured', 'category', 'event_types']
     search_fields = ['name', 'description']
@@ -82,7 +81,7 @@ class ProductAdmin(ModelAdmin):
 
 
 @admin.register(SiteSettings)
-class SiteSettingsAdmin(ModelAdmin):
+class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Site Information', {
             'fields': ('site_name', 'site_tagline', 'logo', 'favicon')

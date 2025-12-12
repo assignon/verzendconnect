@@ -1,21 +1,16 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from unfold.admin import ModelAdmin, TabularInline
-from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from .models import CustomUser, Address
 
 
-class AddressInline(TabularInline):
+class AddressInline(admin.TabularInline):
     model = Address
     extra = 0
     fields = ['address_type', 'first_name', 'last_name', 'street_address', 'city', 'postal_code', 'is_default']
 
 
 @admin.register(CustomUser)
-class CustomUserAdmin(UserAdmin, ModelAdmin):
-    form = UserChangeForm
-    add_form = UserCreationForm
-    change_password_form = AdminPasswordChangeForm
+class CustomUserAdmin(UserAdmin):
     
     list_display = ['email', 'first_name', 'last_name', 'is_active', 'email_verified', 'date_joined']
     list_filter = ['is_active', 'is_staff', 'email_verified', 'newsletter_subscribed']
@@ -44,7 +39,7 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
 
 
 @admin.register(Address)
-class AddressAdmin(ModelAdmin):
+class AddressAdmin(admin.ModelAdmin):
     list_display = ['user', 'address_type', 'full_name', 'city', 'country', 'is_default']
     list_filter = ['address_type', 'country', 'is_default']
     search_fields = ['user__email', 'first_name', 'last_name', 'city']

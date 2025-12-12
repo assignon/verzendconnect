@@ -1,11 +1,10 @@
-from celery import shared_task
+# from celery import shared_task
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.html import strip_tags
 
 
-@shared_task
 def send_order_confirmation_email(order_id):
     """Send order confirmation email to customer."""
     from apps.orders.models import Order
@@ -42,7 +41,6 @@ def send_order_confirmation_email(order_id):
     return True
 
 
-@shared_task
 def send_order_status_update_email(order_id):
     """Send order status update email to customer."""
     from apps.orders.models import Order
@@ -71,7 +69,6 @@ def send_order_status_update_email(order_id):
     return True
 
 
-@shared_task
 def send_verification_email(user_id):
     """Send email verification link to user."""
     from apps.accounts.models import CustomUser
@@ -102,7 +99,6 @@ def send_verification_email(user_id):
     return True
 
 
-@shared_task
 def notify_admin_new_order(order_id):
     """Send notification to admin when new order is placed."""
     from apps.orders.models import Order
@@ -126,7 +122,7 @@ def notify_admin_new_order(order_id):
             related_order_id=order.id,
         )
     
-    # Send email to admin
+    # Send email to admin using ADMIN_EMAIL setting
     subject = f'New Order - {order.order_number}'
     html_message = render_to_string('notifications/emails/admin_new_order.html', {
         'order': order,
@@ -134,22 +130,24 @@ def notify_admin_new_order(order_id):
         'admin_url': f'{settings.SITE_URL}/admin/orders/order/{order.id}/change/',
     })
     plain_message = strip_tags(html_message)
-    
-    # Get admin emails
-    admin_emails = list(admins.values_list('email', flat=True))
-    if admin_emails:
+
+    # Send email to the configured admin email
+    admin_email = getattr(settings, 'ADMIN_EMAIL', 'admin@verzendconnect.nl')
+    try:
         send_mail(
             subject=subject,
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=admin_emails,
+            recipient_list=[admin_email],
             html_message=html_message,
         )
+        print(f"Admin notification email sent to: {admin_email}")
+    except Exception as e:
+        print(f"Failed to send admin notification email: {e}")
     
     return True
 
 
-@shared_task
 def send_payment_confirmation_email(order_id):
     """Send payment confirmation email."""
     from apps.orders.models import Order

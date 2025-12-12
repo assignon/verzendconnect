@@ -328,9 +328,24 @@ class CheckoutConfirmView(CartMixin, View):
         
         # Store order number for redirect
         request.session['pending_order'] = order.order_number
-        
-        # Redirect to payment processing
-        return redirect('payments:process', order_number=order.order_number)
+
+        # Send order confirmation email to customer
+        from apps.notifications.tasks import send_order_confirmation_email, notify_admin_new_order
+        try:
+            send_order_confirmation_email(order.id)
+            print(f"Order confirmation email sent for order {order.order_number}")
+        except Exception as e:
+            print(f"Failed to send order confirmation email: {e}")
+
+        # Send admin notification email
+        try:
+            notify_admin_new_order(order.id)
+            print(f"Admin notification email sent for order {order.order_number}")
+        except Exception as e:
+            print(f"Failed to send admin notification email: {e}")
+
+        # For now, redirect directly to success page (mock payment)
+        return redirect('orders:success', order_number=order.order_number)
 
 
 class OrderSuccessView(View):

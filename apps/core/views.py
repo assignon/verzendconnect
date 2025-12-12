@@ -24,6 +24,11 @@ class HomeView(TemplateView):
         return context
 
 
+class AboutView(TemplateView):
+    """About page with company information."""
+    template_name = 'core/about.html'
+
+
 class ProductListView(ListView):
     """List all products with filtering and search."""
     model = Product

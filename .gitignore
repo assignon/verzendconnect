@@ -64,3 +64,4 @@ htmlcov/
 # Windows
 Thumbs.db
 
+/content.txt

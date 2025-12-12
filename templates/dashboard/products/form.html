@@ -1,0 +1,215 @@
+{% extends 'dashboard/base.html' %}
+{% load static widget_tweaks %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <a href="{% url 'dashboard:products' %}" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+            <p class="text-gray-600">{% if object %}Edit product details{% else %}Create a new product{% endif %}</p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white rounded-lg shadow">
+        <form method="post" enctype="multipart/form-data" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            <!-- Basic Information -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Basic Information</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="{{ form.name.id_for_label }}" class="label">
+                            Product Name *
+                        </label>
+                        {{ form.name|add_class:"input" }}
+                        {% if form.name.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.category.id_for_label }}" class="label">
+                            Category *
+                        </label>
+                        {{ form.category|add_class:"input" }}
+                        {% if form.category.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.category.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="{{ form.event_types.id_for_label }}" class="label">
+                        Event Types
+                    </label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {% for event_type in event_types %}
+                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer">
+                            <input type="checkbox" name="event_types" value="{{ event_type.id }}"
+                                   {% if object and event_type in object.event_types.all %}checked{% endif %}
+                                   class="h-4 w-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                            <span class="ml-3 text-sm text-gray-700 font-medium">{{ event_type.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Pricing</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="{{ form.price.id_for_label }}" class="label">
+                            Regular Price (€) *
+                        </label>
+                        {{ form.price|add_class:"input" }}
+                        {% if form.price.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.price.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.sale_price.id_for_label }}" class="label">
+                            Sale Price (€)
+                        </label>
+                        {{ form.sale_price|add_class:"input" }}
+                        <p class="mt-2 text-sm text-gray-500">Leave empty for no sale price</p>
+                        {% if form.sale_price.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.sale_price.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Inventory</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="{{ form.stock.id_for_label }}" class="label">
+                            Stock Quantity *
+                        </label>
+                        {{ form.stock|add_class:"input" }}
+                        {% if form.stock.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.stock.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Availability</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer">
+                                {{ form.is_available }}
+                                <span class="ml-3 text-sm text-gray-700 font-medium">Available for purchase</span>
+                            </label>
+                            <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer">
+                                {{ form.is_active }}
+                                <span class="ml-3 text-sm text-gray-700 font-medium">Active (visible to customers)</span>
+                            </label>
+                            <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer">
+                                {{ form.is_featured }}
+                                <span class="ml-3 text-sm text-gray-700 font-medium">Featured product</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Images -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Product Images</h3>
+
+                <div>
+                    <label class="label">
+                        Primary Product Image
+                    </label>
+                    <div class="mt-2">
+                        {% if object and object.primary_image %}
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Current primary image:</p>
+                            <img src="{{ object.primary_image.image.url }}" alt="{{ object.name }}" class="w-32 h-32 object-cover rounded-lg border-2 border-gray-200">
+                        </div>
+                        {% endif %}
+                        <input type="file" name="primary_image" accept="image/*" class="input">
+                        <p class="mt-2 text-sm text-gray-500">Upload a new primary image for this product</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descriptions -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Descriptions</h3>
+
+                <div>
+                    <label for="{{ form.short_description.id_for_label }}" class="label">
+                        Short Description
+                    </label>
+                    {{ form.short_description|add_class:"input" }}
+                    <p class="mt-2 text-sm text-gray-500">Brief description shown in product listings</p>
+                    {% if form.short_description.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.short_description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.description.id_for_label }}" class="label">
+                        Full Description *
+                    </label>
+                    {{ form.description|add_class:"input" }}
+                    {% if form.description.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
+                <a href="{% url 'dashboard:products' %}" class="px-6 py-3.5 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md transition-all duration-200 font-semibold shadow-sm">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-3.5 border-2 border-primary-600 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:border-primary-700 hover:shadow-lg transition-all duration-200 font-semibold shadow-md">
+                    {% if object %}Update Product{% else %}Create Product{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Auto-format price inputs
+document.querySelectorAll('input[name="price"], input[name="sale_price"]').forEach(input => {
+    input.addEventListener('input', function(e) {
+        // Remove any non-numeric characters except decimal point
+        let value = this.value.replace(/[^0-9.]/g, '');
+        // Ensure only one decimal point
+        const parts = value.split('.');
+        if (parts.length > 2) {
+            value = parts[0] + '.' + parts.slice(1).join('');
+        }
+        this.value = value;
+    });
+});
+
+// Auto-generate short description if empty
+document.querySelector('textarea[name="description"]').addEventListener('input', function() {
+    const shortDesc = document.querySelector('textarea[name="short_description"]');
+    if (!shortDesc.value.trim()) {
+        shortDesc.value = this.value.substring(0, 150) + (this.value.length > 150 ? '...' : '');
+    }
+});
+</script>
+{% endblock %}

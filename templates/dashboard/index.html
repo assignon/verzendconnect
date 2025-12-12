@@ -1,9 +1,10 @@
-{% extends 'admin/base_site.html' %}
+{% extends 'dashboard/base.html' %}
 {% load static %}
 
+{% block title %}Admin Dashboard{% endblock %}
+
 {% block content %}
-<div class="p-6 max-w-7xl mx-auto">
-    <h1 class="text-2xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+{% block page_title %}Dashboard Overview{% endblock %}
     
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -125,7 +126,7 @@
             </div>
             <div class="divide-y divide-gray-200">
                 {% for order in recent_orders %}
-                <a href="/admin/orders/order/{{ order.id }}/change/" class="block p-4 hover:bg-gray-50">
+                <a href="{% url 'dashboard:order_detail' order.pk %}" class="block p-4 hover:bg-gray-50">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="font-medium text-gray-900">{{ order.order_number }}</p>
@@ -155,7 +156,7 @@
             </div>
             <div class="divide-y divide-gray-200">
                 {% for product in top_products %}
-                <a href="/admin/core/product/{{ product.id }}/change/" class="block p-4 hover:bg-gray-50">
+                <a href="{% url 'dashboard:product_detail' product.pk %}" class="block p-4 hover:bg-gray-50">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="font-medium text-gray-900">{{ product.name }}</p>
@@ -171,6 +172,14 @@
                 <p class="p-6 text-gray-500 text-center">No products yet</p>
                 {% endfor %}
             </div>
+        </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="mt-8">
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Sales Overview</h2>
+            <canvas id="salesChart" width="400" height="200"></canvas>
         </div>
     </div>
 </div>

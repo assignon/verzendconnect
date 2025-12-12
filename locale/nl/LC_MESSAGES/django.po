@@ -1,0 +1,109 @@
+# Dutch translations for VerzendConnect
+# Copyright (C) 2024 VerzendConnect
+# This file is distributed under the same license as the VerzendConnect project.
+msgid ""
+msgstr ""
+"Project-Id-Version: VerzendConnect 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 12:00+0000\n"
+"PO-Revision-Date: 2024-01-01 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "About Us"
+msgstr "Over Ons"
+
+msgid "Categories"
+msgstr "Categorieën"
+
+msgid "No categories yet"
+msgstr "Nog geen categorieën"
+
+msgid "All Products"
+msgstr "Alle Producten"
+
+msgid "Search products..."
+msgstr "Zoek producten..."
+
+msgid "My Profile"
+msgstr "Mijn Profiel"
+
+msgid "My Orders"
+msgstr "Mijn Bestellingen"
+
+msgid "Addresses"
+msgstr "Adressen"
+
+msgid "Admin Panel"
+msgstr "Beheerpaneel"
+
+msgid "Logout"
+msgstr "Uitloggen"
+
+msgid "Login"
+msgstr "Inloggen"
+
+msgid "Create Account"
+msgstr "Account Aanmaken"
+
+msgid "Quick Links"
+msgstr "Snelle Links"
+
+msgid "Contact Us"
+msgstr "Neem Contact Op"
+
+msgid "About VerzendConnect"
+msgstr "Over VerzendConnect"
+
+msgid "Your trusted partner for event rentals and shipping"
+msgstr "Uw betrouwbare partner voor evenementverhuur en verzending"
+
+msgid "Welcome to VerzendConnect"
+msgstr "Welkom bij VerzendConnect"
+
+msgid "Welcome to the Verzend-Connect website. Here you will find the rental products you are looking for and can rent for a specific period. We offer rental items ranging from small to large, especially for your party."
+msgstr "Welkom op de Verzend-Connect website. Hier vindt u de verhuurproducten die u zoekt en kunt u huren voor een bepaalde periode. We bieden verhuurartikelen variërend van klein tot groot, vooral voor uw feest."
+
+msgid "Our Services"
+msgstr "Onze Diensten"
+
+msgid "Verzend-Connect focuses on shipping rental products according to your preferences. We also offer transport options where we can share and easily connect with you."
+msgstr "Verzend-Connect richt zich op het verzenden van verhuurproducten volgens uw voorkeuren. We bieden ook transportopties waar we kunnen delen en gemakkelijk met u in contact kunnen komen."
+
+msgid "Wide Range"
+msgstr "Breed Assortiment"
+
+msgid "From small to large rental items for every occasion"
+msgstr "Van kleine tot grote verhuurartikelen voor elke gelegenheid"
+
+msgid "Fast Shipping"
+msgstr "Snelle Verzending"
+
+msgid "Quick and reliable delivery to your location"
+msgstr "Snelle en betrouwbare bezorging op uw locatie"
+
+msgid "Easy Connection"
+msgstr "Eenvoudige Verbinding"
+
+msgid "Simple communication and flexible transport options"
+msgstr "Eenvoudige communicatie en flexibele transportopties"
+
+msgid "Ready to Get Started?"
+msgstr "Klaar om te Beginnen?"
+
+msgid "Browse our catalog and find the perfect items for your event"
+msgstr "Bekijk onze catalogus en vind de perfecte artikelen voor uw evenement"
+
+msgid "View All Products"
+msgstr "Bekijk Alle Producten"
+
+msgid "Go to Homepage"
+msgstr "Ga naar Homepage"
