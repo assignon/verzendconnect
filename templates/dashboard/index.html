@@ -118,6 +118,14 @@
         </div>
     </div>
     
+    <!-- Sales Chart -->
+    <div class="mb-8">
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Sales Overview</h2>
+            <canvas id="salesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Orders -->
         <div class="bg-white rounded-xl shadow">
@@ -174,14 +182,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Sales Chart -->
-    <div class="mt-8">
-        <div class="bg-white rounded-xl shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Sales Overview</h2>
-            <canvas id="salesChart" width="400" height="200"></canvas>
-        </div>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -190,20 +190,20 @@
     const salesCtx = document.getElementById('salesChart');
     if (salesCtx) {
         new Chart(salesCtx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: {{ sales_chart_labels|safe }},
                 datasets: [{
                     label: 'Sales (€)',
                     data: {{ sales_chart_data|safe }},
-                    borderColor: '#c026d3',
-                    backgroundColor: 'rgba(192, 38, 211, 0.1)',
-                    fill: true,
-                    tension: 0.4,
+                    backgroundColor: '#c026d3',
+                    borderColor: '#a21caf',
+                    borderWidth: 1,
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: {
                         display: false
@@ -211,7 +211,12 @@
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '€' + value.toFixed(2);
+                            }
+                        }
                     }
                 }
             }

@@ -47,60 +47,34 @@
                 <form method="post" class="space-y-4">
                     {% csrf_token %}
                     
-                    <label class="block cursor-pointer">
-                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_method" value="ideal" checked class="w-5 h-5 text-primary-600">
-                                <div class="flex-1">
-                                    <span class="font-medium text-secondary-800">iDEAL</span>
-                                    <p class="text-sm text-secondary-500">Pay directly from your Dutch bank account</p>
-                                </div>
-                                <img src="https://www.mollie.com/external/icons/payment-methods/ideal.svg" alt="iDEAL" class="h-8">
-                            </div>
-                        </div>
-                    </label>
-                    
-                    <label class="block cursor-pointer">
-                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_method" value="paypal" class="w-5 h-5 text-primary-600">
-                                <div class="flex-1">
-                                    <span class="font-medium text-secondary-800">PayPal</span>
-                                    <p class="text-sm text-secondary-500">Pay with your PayPal account</p>
-                                </div>
-                                <img src="https://www.mollie.com/external/icons/payment-methods/paypal.svg" alt="PayPal" class="h-8">
-                            </div>
-                        </div>
-                    </label>
-                    
-                    <label class="block cursor-pointer">
-                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_method" value="creditcard" class="w-5 h-5 text-primary-600">
-                                <div class="flex-1">
-                                    <span class="font-medium text-secondary-800">Credit Card</span>
-                                    <p class="text-sm text-secondary-500">Visa, Mastercard, American Express</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <img src="https://www.mollie.com/external/icons/payment-methods/visa.svg" alt="Visa" class="h-8">
-                                    <img src="https://www.mollie.com/external/icons/payment-methods/mastercard.svg" alt="Mastercard" class="h-8">
+                    {% if available_methods %}
+                        {% for method in available_methods %}
+                        <label class="block cursor-pointer">
+                            <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+                                <div class="flex items-center gap-4">
+                                    <input type="radio" name="payment_method" value="{{ method.id }}" {% if method.id == selected_method or forloop.first and not selected_method %}checked{% endif %} class="w-5 h-5 text-primary-600">
+                                    <div class="flex-1">
+                                        <span class="font-medium text-secondary-800">{{ method.name }}</span>
+                                        <p class="text-sm text-secondary-500">{{ method.description }}</p>
+                                    </div>
+                                    {% if method.id == 'creditcard' and method.icons %}
+                                        <div class="flex gap-2">
+                                            {% for icon in method.icons %}
+                                            <img src="{{ icon }}" alt="{{ method.name }}" class="h-8">
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <img src="{{ method.icon }}" alt="{{ method.name }}" class="h-8">
+                                    {% endif %}
                                 </div>
                             </div>
+                        </label>
+                        {% endfor %}
+                    {% else %}
+                        <div class="p-4 border-2 border-secondary-200 rounded-xl bg-secondary-50">
+                            <p class="text-secondary-600">No payment methods available. Please contact support.</p>
                         </div>
-                    </label>
-                    
-                    <label class="block cursor-pointer">
-                        <div class="p-4 border-2 border-secondary-200 rounded-xl hover:border-primary-500 transition-colors has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="payment_method" value="banktransfer" class="w-5 h-5 text-primary-600">
-                                <div class="flex-1">
-                                    <span class="font-medium text-secondary-800">Bank Transfer</span>
-                                    <p class="text-sm text-secondary-500">Pay via manual bank transfer</p>
-                                </div>
-                                <img src="https://www.mollie.com/external/icons/payment-methods/banktransfer.svg" alt="Bank Transfer" class="h-8">
-                            </div>
-                        </div>
-                    </label>
+                    {% endif %}
                     
                     <div class="flex justify-between pt-6">
                         <a href="{% url 'orders:checkout_shipping' %}" class="btn btn-secondary">

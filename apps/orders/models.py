@@ -61,11 +61,16 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    
+    # Rental dates
+    rental_start_date = models.DateField(null=True, blank=True)
+    rental_end_date = models.DateField(null=True, blank=True)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ['cart', 'product']
+        unique_together = ['cart', 'product', 'rental_start_date', 'rental_end_date']
         verbose_name = 'Cart Item'
         verbose_name_plural = 'Cart Items'
 
@@ -79,6 +84,13 @@ class CartItem(models.Model):
     @property
     def total(self):
         return self.price * self.quantity
+
+    @property
+    def rental_days(self):
+        """Calculate number of rental days."""
+        if self.rental_start_date and self.rental_end_date:
+            return (self.rental_end_date - self.rental_start_date).days
+        return 0
 
 
 class Order(models.Model):
@@ -217,8 +229,12 @@ class OrderItem(models.Model):
     product_name = models.CharField(max_length=200)  # Saved in case product is deleted
     product_sku = models.CharField(max_length=50, blank=True)
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # Price at time of purchase
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Price at time of rental
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # Rental dates
+    rental_start_date = models.DateField(null=True, blank=True)
+    rental_end_date = models.DateField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Order Item'
@@ -230,4 +246,11 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         self.total = self.price * self.quantity
         super().save(*args, **kwargs)
+
+    @property
+    def rental_days(self):
+        """Calculate number of rental days."""
+        if self.rental_start_date and self.rental_end_date:
+            return (self.rental_end_date - self.rental_start_date).days
+        return 0
 

@@ -32,7 +32,7 @@
                 </a>
                 
                 <!-- Desktop Navigation -->
-                <div class="hidden lg:flex items-center gap-8 ml-8">
+                <div class="hidden lg:flex items-center gap-8 ml-12">
                     <a href="{% url 'core:about' %}" class="nav-link">{% trans "About Us" %}</a>
                     <div class="relative group">
                         <button class="nav-link flex items-center gap-1">
@@ -214,9 +214,8 @@
                         <li><a href="{% url 'core:home' %}" class="hover:text-white transition-colors">{% trans "Home" %}</a></li>
                         <li><a href="{% url 'core:about' %}" class="hover:text-white transition-colors">{% trans "About Us" %}</a></li>
                         <li><a href="{% url 'core:product_list' %}" class="hover:text-white transition-colors">{% trans "All Products" %}</a></li>
-                        {% for event in nav_event_types|slice:":4" %}
-                        <li><a href="{{ event.get_absolute_url }}" class="hover:text-white transition-colors">{{ event.name }}</a></li>
-                        {% endfor %}
+                        <li><a href="{% url 'core:faq' %}" class="hover:text-white transition-colors">{% trans "FAQ" %}</a></li>
+                        <li><a href="{% url 'core:rental_terms' %}" class="hover:text-white transition-colors">{% trans "Rental Terms" %}</a></li>
                     </ul>
                 </div>
                 
@@ -275,8 +274,10 @@
                     {{ site_settings.footer_text|default:'© 2024 VerzendConnect. All rights reserved.' }}
                 </p>
                 <div class="flex gap-6 text-sm text-secondary-400">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="{% url 'core:faq' %}" class="hover:text-white transition-colors">{% trans "FAQ" %}</a>
+                    <a href="{% url 'core:rental_terms' %}" class="hover:text-white transition-colors">{% trans "Rental Terms" %}</a>
+                    <a href="#" class="hover:text-white transition-colors">{% trans "Privacy Policy" %}</a>
+                    <a href="#" class="hover:text-white transition-colors">{% trans "Terms of Service" %}</a>
                 </div>
             </div>
         </div>

@@ -42,6 +42,28 @@
                                 {% endif %}
                             </p>
                             
+                            <!-- Rental Dates Summary -->
+                            {% regroup order.items.all by rental_start_date|yesno:"rental,non-rental" as grouped_items %}
+                            {% for group in grouped_items %}
+                                {% if group.grouper == "rental" %}
+                                    <div style="margin: 30px 0; padding: 20px; background-color: #fef3c7; border-radius: 12px; border-left: 4px solid #f59e0b;">
+                                        <h3 style="color: #92400e; margin: 0 0 12px; font-size: 16px; font-weight: 600;">📅 Rental Information</h3>
+                                        {% for item in group.list %}
+                                            {% if item.rental_start_date and item.rental_end_date %}
+                                            <div style="margin-bottom: 12px;">
+                                                <p style="color: #78350f; margin: 0 0 4px; font-weight: 600; font-size: 14px;">{{ item.product_name }}</p>
+                                                <p style="color: #92400e; margin: 0; font-size: 13px;">
+                                                    Start: {{ item.rental_start_date|date:"d M Y" }} | 
+                                                    Return: {{ item.rental_end_date|date:"d M Y" }} | 
+                                                    Duration: {{ item.rental_days }} days
+                                                </p>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            
                             <div style="text-align: center;">
                                 <a href="{{ site_url }}/accounts/orders/{{ order.order_number }}/" style="display: inline-block; background: linear-gradient(135deg, #c026d3 0%, #a21caf 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 600;">
                                     View Order

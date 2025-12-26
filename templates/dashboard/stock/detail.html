@@ -1,0 +1,223 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Rental Details" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                <a href="{% url 'dashboard:stock_management' %}" class="hover:text-gray-700">{% trans "Stock Management" %}</a>
+                <span>/</span>
+                <span>{% trans "Rental Details" %}</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900">{{ rental.product.name }}</h1>
+        </div>
+        <div class="flex gap-3">
+            {% if not rental.is_returned %}
+            <form action="{% url 'dashboard:rental_mark_returned' rental.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="action-btn-primary" onclick="return confirm('{% trans "Mark this rental as returned?" %}')">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    {% trans "Mark as Returned" %}
+                </button>
+            </form>
+            {% endif %}
+            <a href="{% url 'dashboard:stock_management' %}" class="action-btn">
+                {% trans "Back to List" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Info -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Rental Status -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Rental Status" %}</h2>
+                
+                <div class="flex items-center gap-4 mb-6">
+                    {% if rental.is_returned %}
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-gray-900">{% trans "Returned" %}</p>
+                        <p class="text-sm text-gray-500">{% trans "Returned on" %} {{ rental.returned_at|date:"d M Y H:i" }}</p>
+                    </div>
+                    {% elif rental.is_overdue %}
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-red-600">{{ rental.days_overdue }} {% trans "Days Overdue" %}</p>
+                        <p class="text-sm text-gray-500">{% trans "Was due on" %} {{ rental.return_date|date:"d M Y" }}</p>
+                    </div>
+                    {% else %}
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-green-600">{% trans "Active Rental" %}</p>
+                        <p class="text-sm text-gray-500">{% trans "Due on" %} {{ rental.return_date|date:"d M Y" }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <p class="text-sm text-gray-500 mb-1">{% trans "Rental Start" %}</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ rental.rental_start_date|date:"d M Y" }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <p class="text-sm text-gray-500 mb-1">{% trans "Return Date" %}</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ rental.return_date|date:"d M Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Product Details" %}</h2>
+                
+                <div class="flex items-start gap-4">
+                    {% if rental.product.primary_image %}
+                    <img src="{{ rental.product.primary_image.image.url }}" alt="{{ rental.product.name }}" class="w-24 h-24 rounded-xl object-cover">
+                    {% else %}
+                    <div class="w-24 h-24 bg-gray-200 rounded-xl flex items-center justify-center">
+                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900">{{ rental.product.name }}</h3>
+                        <p class="text-gray-500 mt-1">{{ rental.product.short_description }}</p>
+                        <div class="mt-4 flex items-center gap-6">
+                            <div>
+                                <p class="text-sm text-gray-500">{% trans "Quantity Rented" %}</p>
+                                <p class="text-2xl font-bold text-gray-900">{{ rental.quantity }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">{% trans "Price per unit" %}</p>
+                                <p class="text-lg font-semibold text-gray-900">€{{ rental.product.current_price }}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{% url 'dashboard:product_stock_detail' rental.product.pk %}" class="text-blue-600 hover:underline text-sm">
+                                {% trans "View Product Stock Details" %} →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Customer Info -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Customer Information" %}</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm text-gray-500">{% trans "Name" %}</p>
+                        <p class="font-medium text-gray-900">{{ rental.customer_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">{% trans "Email" %}</p>
+                        <a href="mailto:{{ rental.customer_email }}" class="font-medium text-blue-600 hover:underline">{{ rental.customer_email }}</a>
+                    </div>
+                    {% if rental.customer %}
+                    <div>
+                        <p class="text-sm text-gray-500">{% trans "Registered User" %}</p>
+                        <p class="font-medium text-gray-900">{{ rental.customer.get_full_name }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Order Info -->
+            {% if rental.order_item and rental.order_item.order %}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Order Information" %}</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm text-gray-500">{% trans "Order Number" %}</p>
+                        <a href="{% url 'dashboard:order_detail' rental.order_item.order.pk %}" class="font-medium text-blue-600 hover:underline">
+                            {{ rental.order_item.order.order_number }}
+                        </a>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">{% trans "Order Date" %}</p>
+                        <p class="font-medium text-gray-900">{{ rental.order_item.order.created_at|date:"d M Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">{% trans "Order Status" %}</p>
+                        <p class="font-medium text-gray-900">{{ rental.order_item.order.get_status_display }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Notes -->
+            {% if rental.notes %}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Notes" %}</h2>
+                <p class="text-gray-700">{{ rental.notes }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Timeline -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Timeline" %}</h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{% trans "Rental Created" %}</p>
+                            <p class="text-sm text-gray-500">{{ rental.created_at|date:"d M Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{% trans "Rental Start" %}</p>
+                            <p class="text-sm text-gray-500">{{ rental.rental_start_date|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-2 h-2 {% if rental.is_returned %}bg-gray-500{% elif rental.is_overdue %}bg-red-500{% else %}bg-yellow-500{% endif %} rounded-full mt-2"></div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{% trans "Return Date" %}</p>
+                            <p class="text-sm text-gray-500">{{ rental.return_date|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                    {% if rental.is_returned %}
+                    <div class="flex items-start gap-3">
+                        <div class="w-2 h-2 bg-gray-500 rounded-full mt-2"></div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{% trans "Returned" %}</p>
+                            <p class="text-sm text-gray-500">{{ rental.returned_at|date:"d M Y H:i" }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

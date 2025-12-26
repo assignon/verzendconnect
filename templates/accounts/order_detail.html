@@ -40,6 +40,15 @@
                                 <p class="font-medium text-secondary-800">{{ item.product_name }}</p>
                                 <p class="text-sm text-secondary-500">Qty: {{ item.quantity }}</p>
                                 <p class="text-sm text-secondary-500">€{{ item.price }} each</p>
+                                {% if item.rental_start_date and item.rental_end_date %}
+                                <div class="mt-2 flex items-center gap-2 text-xs text-primary-600">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>Rental Period: {{ item.rental_start_date|date:"d M Y" }} - {{ item.rental_end_date|date:"d M Y" }}</span>
+                                    <span class="text-secondary-400">({{ item.rental_days }} days)</span>
+                                </div>
+                                {% endif %}
                             </div>
                             <p class="font-medium text-secondary-800">€{{ item.total }}</p>
                         </div>

@@ -80,7 +80,6 @@ Send status update notifications
 
 
 ✔ Notifications (Phase 2)
-SMS integration (optional)
 Admin notification when a new order arrives
 
 

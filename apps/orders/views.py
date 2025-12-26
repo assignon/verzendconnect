@@ -1,12 +1,14 @@
 import json
 from decimal import Decimal
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import JsonResponse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from apps.core.models import Product
+from django.conf import settings
+from apps.core.models import Product, RentalRecord
 from .models import Cart, CartItem, Order, OrderItem
 from .forms import CheckoutForm, ShippingForm
 
@@ -41,28 +43,65 @@ class CartAddView(CartMixin, View):
             data = json.loads(request.body)
             product_id = data.get('product_id')
             quantity = int(data.get('quantity', 1))
+            rental_start = data.get('rental_start_date')
+            rental_end = data.get('rental_end_date')
         except (json.JSONDecodeError, ValueError):
             product_id = request.POST.get('product_id')
             quantity = int(request.POST.get('quantity', 1))
+            rental_start = request.POST.get('rental_start_date')
+            rental_end = request.POST.get('rental_end_date')
 
         try:
             product = Product.objects.get(id=product_id, is_active=True)
         except Product.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Product not found'}, status=404)
 
-        if not product.in_stock:
-            return JsonResponse({'success': False, 'error': 'Product out of stock'}, status=400)
+        # Parse rental dates
+        rental_start_date = None
+        rental_end_date = None
+        
+        if rental_start and rental_end:
+            try:
+                rental_start_date = datetime.strptime(rental_start, '%Y-%m-%d').date()
+                rental_end_date = datetime.strptime(rental_end, '%Y-%m-%d').date()
+            except ValueError:
+                return JsonResponse({'success': False, 'error': 'Invalid date format. Use YYYY-MM-DD'}, status=400)
+            
+            # Validate rental availability
+            can_rent, message = product.can_rent(rental_start_date, rental_end_date, quantity)
+            if not can_rent:
+                return JsonResponse({'success': False, 'error': message}, status=400)
+        else:
+            # Rental dates are required
+            return JsonResponse({'success': False, 'error': 'Rental start and end dates are required'}, status=400)
 
         cart = self.get_cart(request)
-        cart_item, created = CartItem.objects.get_or_create(
+        
+        # Check for existing cart item with same product and dates
+        cart_item = CartItem.objects.filter(
             cart=cart,
             product=product,
-            defaults={'quantity': quantity}
-        )
-
-        if not created:
-            cart_item.quantity += quantity
+            rental_start_date=rental_start_date,
+            rental_end_date=rental_end_date
+        ).first()
+        
+        if cart_item:
+            # Update quantity
+            new_quantity = cart_item.quantity + quantity
+            # Re-validate availability
+            can_rent, message = product.can_rent(rental_start_date, rental_end_date, new_quantity)
+            if not can_rent:
+                return JsonResponse({'success': False, 'error': message}, status=400)
+            cart_item.quantity = new_quantity
             cart_item.save()
+        else:
+            cart_item = CartItem.objects.create(
+                cart=cart,
+                product=product,
+                quantity=quantity,
+                rental_start_date=rental_start_date,
+                rental_end_date=rental_end_date
+            )
 
         # Check if AJAX request
         if request.headers.get('Content-Type') == 'application/json':
@@ -83,17 +122,36 @@ class CartUpdateView(CartMixin, View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            cart_item_id = data.get('cart_item_id')
             product_id = data.get('product_id')
             quantity = int(data.get('quantity', 1))
         except (json.JSONDecodeError, ValueError):
+            cart_item_id = request.POST.get('cart_item_id')
             product_id = request.POST.get('product_id')
             quantity = int(request.POST.get('quantity', 1))
 
         cart = self.get_cart(request)
         
         try:
-            cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
+            if cart_item_id:
+                cart_item = CartItem.objects.get(id=cart_item_id, cart=cart)
+            else:
+                cart_item = CartItem.objects.filter(cart=cart, product_id=product_id).first()
+                if not cart_item:
+                    raise CartItem.DoesNotExist()
+            
             if quantity > 0:
+                # Validate stock availability
+                product = cart_item.product
+                if cart_item.rental_start_date and cart_item.rental_end_date:
+                    can_rent, message = product.can_rent(
+                        cart_item.rental_start_date, 
+                        cart_item.rental_end_date, 
+                        quantity
+                    )
+                    if not can_rent:
+                        return JsonResponse({'success': False, 'error': message}, status=400)
+                
                 cart_item.quantity = quantity
                 cart_item.save()
             else:
@@ -118,15 +176,21 @@ class CartRemoveView(CartMixin, View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            cart_item_id = data.get('cart_item_id')
             product_id = data.get('product_id')
         except (json.JSONDecodeError, ValueError):
+            cart_item_id = request.POST.get('cart_item_id')
             product_id = request.POST.get('product_id')
 
         cart = self.get_cart(request)
         
         try:
-            cart_item = CartItem.objects.get(cart=cart, product_id=product_id)
-            cart_item.delete()
+            if cart_item_id:
+                cart_item = CartItem.objects.get(id=cart_item_id, cart=cart)
+            else:
+                cart_item = CartItem.objects.filter(cart=cart, product_id=product_id).first()
+            if cart_item:
+                cart_item.delete()
         except CartItem.DoesNotExist:
             pass
 
@@ -251,7 +315,25 @@ class CheckoutPaymentView(CartMixin, View):
         if 'checkout_shipping' not in request.session:
             return redirect('orders:checkout_shipping')
         
-        return render(request, self.template_name, {'cart': cart, 'step': 3})
+        # Get available payment methods from Mollie
+        from apps.payments.services import MollieService
+        mollie_service = MollieService()
+        # Pass cart total to get only methods applicable for this amount
+        available_methods = mollie_service.get_available_payment_methods(
+            amount=cart.total,
+            currency='EUR'
+        )
+        
+        # Get previously selected method if any
+        checkout_payment = request.session.get('checkout_payment', {})
+        selected_method = checkout_payment.get('method', available_methods[0]['id'] if available_methods else 'ideal')
+        
+        return render(request, self.template_name, {
+            'cart': cart,
+            'step': 3,
+            'available_methods': available_methods,
+            'selected_method': selected_method,
+        })
 
     def post(self, request):
         payment_method = request.POST.get('payment_method', 'ideal')
@@ -290,10 +372,48 @@ class CheckoutConfirmView(CartMixin, View):
         checkout_shipping = request.session.get('checkout_shipping', {})
         checkout_payment = request.session.get('checkout_payment', {})
         
+        # Validate required checkout data
+        if not checkout_info or not checkout_info.get('email'):
+            # Try to get email from authenticated user
+            if request.user.is_authenticated and request.user.email:
+                checkout_info['email'] = request.user.email
+            else:
+                messages.error(request, 'Please complete the checkout information step.')
+                return redirect('orders:checkout_info')
+        
+        if not checkout_shipping:
+            messages.error(request, 'Please complete the shipping information step.')
+            return redirect('orders:checkout_shipping')
+        
+        if not checkout_payment:
+            messages.error(request, 'Please select a payment method.')
+            return redirect('orders:checkout_payment')
+        
+        # Validate stock availability before creating order
+        for cart_item in cart.items.all():
+            if cart_item.rental_start_date and cart_item.rental_end_date:
+                can_rent, message = cart_item.product.can_rent(
+                    cart_item.rental_start_date,
+                    cart_item.rental_end_date,
+                    cart_item.quantity
+                )
+                if not can_rent:
+                    messages.error(request, f"{cart_item.product.name}: {message}")
+                    return redirect('orders:cart')
+        
+        # Get email with fallback
+        email = checkout_info.get('email')
+        if not email and request.user.is_authenticated:
+            email = request.user.email
+        
+        if not email:
+            messages.error(request, 'Email address is required.')
+            return redirect('orders:checkout_info')
+        
         # Create order
         order = Order.objects.create(
             user=request.user if request.user.is_authenticated else None,
-            email=checkout_info.get('email'),
+            email=email,
             phone=checkout_info.get('phone', ''),
             shipping_first_name=checkout_shipping.get('shipping_first_name'),
             shipping_last_name=checkout_shipping.get('shipping_last_name'),
@@ -310,16 +430,36 @@ class CheckoutConfirmView(CartMixin, View):
             customer_notes=request.POST.get('notes', ''),
         )
         
-        # Create order items
+        # Create order items and rental records
         for cart_item in cart.items.all():
-            OrderItem.objects.create(
+            order_item = OrderItem.objects.create(
                 order=order,
                 product=cart_item.product,
                 product_name=cart_item.product.name,
                 quantity=cart_item.quantity,
                 price=cart_item.price,
                 total=cart_item.total,
+                rental_start_date=cart_item.rental_start_date,
+                rental_end_date=cart_item.rental_end_date,
             )
+            
+            # Deduct stock from product
+            product = cart_item.product
+            product.stock = max(0, product.stock - cart_item.quantity)
+            product.save(update_fields=['stock'])
+            
+            # Create rental record for stock tracking
+            if cart_item.rental_start_date and cart_item.rental_end_date:
+                RentalRecord.objects.create(
+                    product=cart_item.product,
+                    order_item=order_item,
+                    customer=order.user,
+                    customer_name=order.shipping_full_name,
+                    customer_email=order.email,
+                    quantity=cart_item.quantity,
+                    rental_start_date=cart_item.rental_start_date,
+                    return_date=cart_item.rental_end_date,
+                )
         
         # Clear cart and session
         cart.clear()
@@ -329,23 +469,16 @@ class CheckoutConfirmView(CartMixin, View):
         # Store order number for redirect
         request.session['pending_order'] = order.order_number
 
-        # Send order confirmation email to customer
-        from apps.notifications.tasks import send_order_confirmation_email, notify_admin_new_order
-        try:
-            send_order_confirmation_email(order.id)
-            print(f"Order confirmation email sent for order {order.order_number}")
-        except Exception as e:
-            print(f"Failed to send order confirmation email: {e}")
-
-        # Send admin notification email
+        # Send admin notification email about new order
+        from apps.notifications.tasks import notify_admin_new_order
         try:
             notify_admin_new_order(order.id)
             print(f"Admin notification email sent for order {order.order_number}")
         except Exception as e:
             print(f"Failed to send admin notification email: {e}")
 
-        # For now, redirect directly to success page (mock payment)
-        return redirect('orders:success', order_number=order.order_number)
+        # Redirect to Mollie payment processing
+        return redirect('payments:process', order_number=order.order_number)
 
 
 class OrderSuccessView(View):

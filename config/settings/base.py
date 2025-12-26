@@ -34,9 +34,8 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'rest_framework_simplejwt',
-    # Temporarily disable Celery apps
-    # 'django_celery_beat',
-    # 'django_celery_results',
+    'django_celery_beat',
+    'django_celery_results',
     'widget_tweaks',
     
     # Local Apps
@@ -191,6 +190,12 @@ SITE_NAME = os.getenv('SITE_NAME', 'VerzendConnect')
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 days
 CART_SESSION_ID = 'cart'
+
+# Rental Configuration
+# Minimum days from today that a rental can start (e.g., 2 = today + 2 days)
+MIN_BEGIN_DATE = int(os.getenv('MIN_BEGIN_DATE', 2))
+# Days after return date to trigger overdue notification
+OVERDUE_NOTIFICATION_DAYS = int(os.getenv('OVERDUE_NOTIFICATION_DAYS', 2))
 
 # Django Unfold Admin Configuration
 UNFOLD = {

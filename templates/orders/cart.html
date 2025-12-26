@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Shopping Cart{% endblock %}
+{% block title %}{% trans "Shopping Cart" %}{% endblock %}
 
 {% block content %}
 <div class="container-custom py-8 md:py-12">
@@ -45,15 +45,32 @@
                                 {{ item.product.name }}
                             </a>
                             <p class="text-sm text-secondary-500 mt-1">{{ item.product.category.name }}</p>
+                            
+                            <!-- Rental Period -->
+                            {% if item.rental_start_date and item.rental_end_date %}
+                            <div class="flex items-center gap-2 mt-2 text-sm">
+                                <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span class="text-secondary-600">
+                                    {% trans "Rental:" %} {{ item.rental_start_date|date:"d M Y" }} - {{ item.rental_end_date|date:"d M Y" }}
+                                    <span class="text-secondary-400">({{ item.rental_days }} {% trans "days" %})</span>
+                                </span>
+                            </div>
+                            {% endif %}
                         </div>
-                        <button 
-                            onclick="Cart.remove({{ item.product.id }}); document.getElementById('cart-item-{{ item.product.id }}').remove(); location.reload();"
-                            class="text-secondary-400 hover:text-error-500 transition-colors"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                        </button>
+                        <form action="{% url 'orders:cart_remove' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="cart_item_id" value="{{ item.id }}">
+                            <button 
+                                type="submit"
+                                class="text-secondary-400 hover:text-error-500 transition-colors"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                     
                     <div class="flex flex-wrap items-center justify-between gap-4 mt-4">

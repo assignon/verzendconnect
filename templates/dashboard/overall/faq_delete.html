@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Delete FAQ" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <a href="{% url 'dashboard:overall' %}?tab=faq" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">{% trans "Delete FAQ" %}</h1>
+            <p class="text-gray-600">{% trans "Are you sure you want to delete this FAQ?" %}</p>
+        </div>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ object.question }}</h3>
+            <p class="text-gray-600">{{ object.answer|truncatewords:30 }}</p>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div class="flex justify-end gap-4">
+                <a href="{% url 'dashboard:overall' %}?tab=faq" class="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="px-6 py-3 border-2 border-red-400 rounded-xl text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-500 hover:shadow-md transition-all duration-200 font-semibold shadow-sm">
+                    {% trans "Delete FAQ" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

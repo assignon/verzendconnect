@@ -7,9 +7,10 @@ from django.views import View
 from django.db.models import Sum, Count, Avg, Q
 from django.db.models.functions import TruncDate, TruncMonth
 from django.utils import timezone
+from django.http import JsonResponse
 from datetime import timedelta
 from apps.orders.models import Order
-from apps.core.models import Product, Category, ProductImage, EventType
+from apps.core.models import Product, Category, ProductImage, EventType, RentalRecord, FAQ, RentalTerms
 from apps.accounts.models import CustomUser
 
 
@@ -81,8 +82,8 @@ class DashboardView(SuperuserRequiredMixin, TemplateView):
             stock=0
         ).count()
         
-        # Recent Orders
-        context['recent_orders'] = Order.objects.select_related('user').order_by('-created_at')[:10]
+        # Recent Orders (limit to 5)
+        context['recent_orders'] = Order.objects.select_related('user').order_by('-created_at')[:5]
         
         # Order Status Distribution
         context['pending_orders'] = Order.objects.filter(status='pending').count()
@@ -191,7 +192,8 @@ class ProductCreateView(SuperuserRequiredMixin, CreateView):
     model = Product
     template_name = 'dashboard/products/form.html'
     fields = ['name', 'category', 'event_types', 'price', 'sale_price', 'stock',
-              'short_description', 'description', 'is_available', 'is_active', 'is_featured']
+              'short_description', 'description', 'is_available', 'is_active', 'is_featured',
+              'rental_start_date', 'rental_end_date']
     success_url = reverse_lazy('dashboard:products')
 
     def get_context_data(self, **kwargs):
@@ -222,7 +224,8 @@ class ProductUpdateView(SuperuserRequiredMixin, UpdateView):
     model = Product
     template_name = 'dashboard/products/form.html'
     fields = ['name', 'category', 'event_types', 'price', 'sale_price', 'stock',
-              'short_description', 'description', 'is_available', 'is_active', 'is_featured']
+              'short_description', 'description', 'is_available', 'is_active', 'is_featured',
+              'rental_start_date', 'rental_end_date']
     success_url = reverse_lazy('dashboard:products')
 
     def get_context_data(self, **kwargs):
@@ -490,13 +493,210 @@ class OrderDetailView(SuperuserRequiredMixin, DetailView):
         valid_statuses = [choice[0] for choice in status_field.choices]
         
         if new_status and new_status in valid_statuses:
+            old_status = self.object.status
             old_status_display = self.object.get_status_display()
             self.object.status = new_status
             self.object.save(update_fields=['status'])
             new_status_display = self.object.get_status_display()
             messages.success(request, f'Order status updated from {old_status_display} to {new_status_display}.')
+            
+            # Send status update notification email to customer if status actually changed
+            if old_status != new_status:
+                from apps.notifications.tasks import send_order_status_update_email
+                try:
+                    send_order_status_update_email(self.object.id)
+                except Exception as e:
+                    print(f"Failed to send status update email: {e}")
         else:
             messages.error(request, 'Invalid status selected.')
         
         return redirect('dashboard:order_detail', pk=self.object.pk)
+
+
+# Stock Management Views
+class StockManagementView(SuperuserRequiredMixin, ListView):
+    """View all rental records for stock management."""
+    model = RentalRecord
+    template_name = 'dashboard/stock/list.html'
+    context_object_name = 'rentals'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = RentalRecord.objects.select_related('product', 'customer', 'order_item__order')
+        
+        # Filter options
+        status = self.request.GET.get('status')
+        search = self.request.GET.get('search')
+        product_id = self.request.GET.get('product')
+        
+        if status == 'active':
+            queryset = queryset.filter(is_returned=False)
+        elif status == 'returned':
+            queryset = queryset.filter(is_returned=True)
+        elif status == 'overdue':
+            today = timezone.now().date()
+            queryset = queryset.filter(is_returned=False, return_date__lt=today)
+        
+        if search:
+            queryset = queryset.filter(
+                Q(product__name__icontains=search) |
+                Q(customer_name__icontains=search) |
+                Q(customer_email__icontains=search)
+            )
+        
+        if product_id:
+            queryset = queryset.filter(product_id=product_id)
+        
+        return queryset.order_by('-rental_start_date', '-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = timezone.now().date()
+        
+        # Stats
+        context['total_rentals'] = RentalRecord.objects.count()
+        context['active_rentals'] = RentalRecord.objects.filter(is_returned=False).count()
+        context['overdue_rentals'] = RentalRecord.objects.filter(
+            is_returned=False, 
+            return_date__lt=today
+        ).count()
+        context['returned_rentals'] = RentalRecord.objects.filter(is_returned=True).count()
+        
+        # Products for filter dropdown
+        context['products'] = Product.objects.filter(is_active=True).order_by('name')
+        
+        return context
+
+
+class RentalDetailView(SuperuserRequiredMixin, DetailView):
+    """View rental record details."""
+    model = RentalRecord
+    template_name = 'dashboard/stock/detail.html'
+    context_object_name = 'rental'
+
+
+class RentalMarkReturnedView(SuperuserRequiredMixin, View):
+    """Mark a rental as returned."""
+    
+    def post(self, request, pk):
+        rental = get_object_or_404(RentalRecord, pk=pk)
+        
+        if rental.is_returned:
+            messages.warning(request, 'This rental is already marked as returned.')
+        else:
+            rental.mark_returned()
+            messages.success(request, f'Rental for {rental.product.name} marked as returned. Stock restored.')
+        
+        # Check if it's an AJAX request
+        if request.headers.get('Content-Type') == 'application/json':
+            return JsonResponse({'success': True})
+        
+        return redirect('dashboard:stock_management')
+
+
+class ProductStockDetailView(SuperuserRequiredMixin, DetailView):
+    """View stock details for a specific product."""
+    model = Product
+    template_name = 'dashboard/stock/product_detail.html'
+    context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.object
+        today = timezone.now().date()
+        
+        # All rentals for this product
+        context['all_rentals'] = product.rental_records.select_related(
+            'customer', 'order_item__order'
+        ).order_by('-rental_start_date')
+        
+        # Active rentals
+        context['active_rentals'] = product.rental_records.filter(
+            is_returned=False
+        ).order_by('return_date')
+        
+        # Overdue rentals
+        context['overdue_rentals'] = product.rental_records.filter(
+            is_returned=False,
+            return_date__lt=today
+        )
+        
+        # Calculate current available stock
+        context['available_stock'] = product.get_available_stock(today, today + timedelta(days=1))
+        
+        # Stock currently rented out
+        rented_out = product.rental_records.filter(is_returned=False).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
+        context['rented_out'] = rented_out
+        
+        return context
+
+
+# Overall Management Views (FAQ & Rental Terms)
+class OverallManagementView(SuperuserRequiredMixin, TemplateView):
+    """Overall management page with tabs for FAQ and Rental Terms."""
+    template_name = 'dashboard/overall/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['faqs'] = FAQ.objects.all().order_by('order', 'question')
+        context['rental_terms'] = RentalTerms.get_terms()
+        context['active_tab'] = self.request.GET.get('tab', 'faq')
+        return context
+
+
+class FAQCreateView(SuperuserRequiredMixin, CreateView):
+    """Create new FAQ."""
+    model = FAQ
+    template_name = 'dashboard/overall/faq_form.html'
+    fields = ['question', 'answer', 'order', 'is_active']
+    success_url = reverse_lazy('dashboard:overall')
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:overall') + '?tab=faq'
+
+
+class FAQUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update FAQ."""
+    model = FAQ
+    template_name = 'dashboard/overall/faq_form.html'
+    fields = ['question', 'answer', 'order', 'is_active']
+    success_url = reverse_lazy('dashboard:overall')
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:overall') + '?tab=faq'
+
+
+class FAQDeleteView(SuperuserRequiredMixin, DeleteView):
+    """Delete FAQ."""
+    model = FAQ
+    template_name = 'dashboard/overall/faq_delete.html'
+    success_url = reverse_lazy('dashboard:overall')
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:overall') + '?tab=faq'
+
+    def delete(self, request, *args, **kwargs):
+        faq = self.get_object()
+        messages.success(request, f'FAQ "{faq.question}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+class RentalTermsUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update Rental Terms and Conditions."""
+    model = RentalTerms
+    template_name = 'dashboard/overall/rental_terms_form.html'
+    fields = ['title', 'content', 'is_active']
+    success_url = reverse_lazy('dashboard:overall')
+
+    def get_object(self, queryset=None):
+        return RentalTerms.get_terms()
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:overall') + '?tab=terms'
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Rental Terms and Conditions updated successfully.')
+        return super().form_valid(form)
 

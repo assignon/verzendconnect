@@ -17,7 +17,7 @@ class PaymentProcessView(View):
         order = get_object_or_404(Order, order_number=order_number)
         
         if order.payment_status == 'paid':
-            return redirect('orders:order_success', order_number=order_number)
+            return redirect('orders:success', order_number=order_number)
         
         # Create Mollie payment
         mollie_service = MollieService()
@@ -30,13 +30,20 @@ class PaymentProcessView(View):
                 webhook_url=request.build_absolute_uri('/payments/webhook/'),
             )
             
+            # Check if checkout URL was created
+            if not payment.mollie_checkout_url:
+                raise ValueError("Mollie checkout URL is empty")
+            
             # Redirect to Mollie checkout
             return redirect(payment.mollie_checkout_url)
             
         except Exception as e:
+            import traceback
+            print(f"Payment processing error: {str(e)}")
+            print(traceback.format_exc())
             order.payment_status = 'failed'
             order.save()
-            return redirect('orders:order_failed', order_number=order_number)
+            return redirect('orders:failed', order_number=order_number)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -75,11 +82,11 @@ class PaymentReturnView(View):
             mollie_service.update_payment_status(payment)
             
             if payment.status == 'paid':
-                return redirect('orders:order_success', order_number=order_number)
+                return redirect('orders:success', order_number=order_number)
         
         # If not paid, show order status page
         if order.payment_status == 'paid':
-            return redirect('orders:order_success', order_number=order_number)
+            return redirect('orders:success', order_number=order_number)
         else:
-            return redirect('orders:order_failed', order_number=order_number)
+            return redirect('orders:failed', order_number=order_number)
 

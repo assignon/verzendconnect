@@ -1,0 +1,253 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Stock Details" %} - {{ product.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                <a href="{% url 'dashboard:stock_management' %}" class="hover:text-gray-700">{% trans "Stock Management" %}</a>
+                <span>/</span>
+                <span>{{ product.name }}</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900">{{ product.name }}</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'dashboard:product_edit' product.pk %}" class="action-btn-primary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                {% trans "Edit Product" %}
+            </a>
+            <a href="{% url 'dashboard:stock_management' %}" class="action-btn">
+                {% trans "Back to Stock Management" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Stock Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Total Stock" %}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ product.stock }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Available Now" %}</p>
+                    <p class="text-2xl font-bold text-green-600">{{ available_stock }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Currently Rented" %}</p>
+                    <p class="text-2xl font-bold text-yellow-600">{{ rented_out }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Overdue" %}</p>
+                    <p class="text-2xl font-bold text-red-600">{{ overdue_rentals.count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Product Info -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Product Information" %}</h2>
+            
+            <div class="flex items-start gap-4 mb-6">
+                {% if product.primary_image %}
+                <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-20 h-20 rounded-xl object-cover">
+                {% else %}
+                <div class="w-20 h-20 bg-gray-200 rounded-xl flex items-center justify-center">
+                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                {% endif %}
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Category" %}</p>
+                    <p class="font-medium text-gray-900">{{ product.category.name }}</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Price" %}</p>
+                    <p class="font-semibold text-gray-900">€{{ product.current_price }}</p>
+                </div>
+                {% if product.rental_start_date or product.rental_end_date %}
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Rental Period Restriction" %}</p>
+                    <p class="font-medium text-gray-900">
+                        {% if product.rental_start_date %}{{ product.rental_start_date|date:"d M Y" }}{% else %}{% trans "Any" %}{% endif %}
+                        -
+                        {% if product.rental_end_date %}{{ product.rental_end_date|date:"d M Y" }}{% else %}{% trans "Any" %}{% endif %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Active Rentals -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Active Rentals" %}</h2>
+            
+            {% if active_rentals %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-100">
+                            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase">{% trans "Customer" %}</th>
+                            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase">{% trans "Qty" %}</th>
+                            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase">{% trans "Return Date" %}</th>
+                            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase">{% trans "Status" %}</th>
+                            <th class="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase">{% trans "Actions" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for rental in active_rentals %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-2">
+                                <p class="font-medium text-gray-900">{{ rental.customer_name }}</p>
+                                <p class="text-sm text-gray-500">{{ rental.customer_email }}</p>
+                            </td>
+                            <td class="py-3 px-2 font-semibold text-gray-900">{{ rental.quantity }}</td>
+                            <td class="py-3 px-2 text-gray-900">{{ rental.return_date|date:"d M Y" }}</td>
+                            <td class="py-3 px-2">
+                                {% if rental.is_overdue %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                    {{ rental.days_overdue }}d {% trans "overdue" %}
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                    {% trans "Active" %}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-2">
+                                <form action="{% url 'dashboard:rental_mark_returned' rental.pk %}" method="post" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="return confirm('{% trans "Mark as returned?" %}')">
+                                        {% trans "Return" %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-8 text-gray-500">
+                <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p>{% trans "No active rentals for this product" %}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- All Rentals History -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-900">{% trans "Rental History" %}</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>{% trans "Customer" %}</th>
+                        <th>{% trans "Quantity" %}</th>
+                        <th>{% trans "Rental Period" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for rental in all_rentals %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td>
+                            <p class="font-medium text-gray-900">{{ rental.customer_name }}</p>
+                            <p class="text-sm text-gray-500">{{ rental.customer_email }}</p>
+                        </td>
+                        <td class="font-semibold text-gray-900">{{ rental.quantity }}</td>
+                        <td>
+                            <p class="text-sm text-gray-900">{{ rental.rental_start_date|date:"d M Y" }}</p>
+                            <p class="text-sm text-gray-500">{% trans "to" %} {{ rental.return_date|date:"d M Y" }}</p>
+                        </td>
+                        <td>
+                            {% if rental.is_returned %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                {% trans "Returned" %}
+                            </span>
+                            {% elif rental.is_overdue %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                {{ rental.days_overdue }} {% trans "days overdue" %}
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                {% trans "Active" %}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:rental_detail' rental.pk %}" class="action-btn">
+                                {% trans "View" %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-12">
+                            <div class="text-gray-500">
+                                <p>{% trans "No rental history for this product" %}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

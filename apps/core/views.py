@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
-from .models import Product, Category, EventType
+from .models import Product, Category, EventType, FAQ, RentalTerms
 
 
 class HomeView(TemplateView):
@@ -101,6 +101,10 @@ class ProductDetailView(DetailView):
             is_active=True,
             category=self.object.category
         ).exclude(id=self.object.id).prefetch_related('images')[:4]
+        
+        # Minimum rental date (based on settings and product restrictions)
+        context['min_rental_date'] = self.object.get_min_rental_date()
+        
         return context
 
 
@@ -179,5 +183,25 @@ class SearchView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
+        return context
+
+
+class FAQView(TemplateView):
+    """FAQ page for customers."""
+    template_name = 'core/faq.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['faqs'] = FAQ.objects.filter(is_active=True).order_by('order', 'question')
+        return context
+
+
+class RentalTermsView(TemplateView):
+    """Rental Terms and Conditions page for customers."""
+    template_name = 'core/rental_terms.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rental_terms'] = RentalTerms.get_terms()
         return context
 

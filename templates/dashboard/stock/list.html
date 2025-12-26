@@ -1,0 +1,241 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Stock Management" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">{% trans "Stock Management" %}</h1>
+            <p class="text-gray-600 mt-1">{% trans "Track all product rentals and returns" %}</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Total Rentals" %}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_rentals }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Active Rentals" %}</p>
+                    <p class="text-2xl font-bold text-green-600">{{ active_rentals }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Overdue" %}</p>
+                    <p class="text-2xl font-bold text-red-600">{{ overdue_rentals }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">{% trans "Returned" %}</p>
+                    <p class="text-2xl font-bold text-gray-600">{{ returned_rentals }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <form method="get" class="flex flex-wrap gap-4 items-end">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Search" %}</label>
+                <input type="text" name="search" value="{{ request.GET.search }}" placeholder="{% trans 'Search by product, customer...' %}" class="input">
+            </div>
+            <div class="w-48">
+                <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Status" %}</label>
+                <select name="status" class="input">
+                    <option value="">{% trans "All" %}</option>
+                    <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                    <option value="overdue" {% if request.GET.status == 'overdue' %}selected{% endif %}>{% trans "Overdue" %}</option>
+                    <option value="returned" {% if request.GET.status == 'returned' %}selected{% endif %}>{% trans "Returned" %}</option>
+                </select>
+            </div>
+            <div class="w-48">
+                <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Product" %}</label>
+                <select name="product" class="input">
+                    <option value="">{% trans "All Products" %}</option>
+                    {% for product in products %}
+                    <option value="{{ product.id }}" {% if request.GET.product == product.id|stringformat:"d" %}selected{% endif %}>{{ product.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="action-btn-primary">
+                {% trans "Filter" %}
+            </button>
+            <a href="{% url 'dashboard:stock_management' %}" class="action-btn">
+                {% trans "Clear" %}
+            </a>
+        </form>
+    </div>
+
+    <!-- Rentals Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>{% trans "Product" %}</th>
+                        <th>{% trans "Customer" %}</th>
+                        <th>{% trans "Quantity" %}</th>
+                        <th>{% trans "Rental Period" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for rental in rentals %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td>
+                            <div class="flex items-center gap-3">
+                                {% if rental.product.primary_image %}
+                                <img src="{{ rental.product.primary_image.image.url }}" alt="{{ rental.product.name }}" class="w-12 h-12 rounded-lg object-cover">
+                                {% else %}
+                                <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                    </svg>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <a href="{% url 'dashboard:product_stock_detail' rental.product.pk %}" class="font-semibold text-gray-900 hover:text-blue-600">
+                                        {{ rental.product.name }}
+                                    </a>
+                                    {% if rental.order_item and rental.order_item.order %}
+                                    <p class="text-sm text-gray-500">
+                                        Order: <a href="{% url 'dashboard:order_detail' rental.order_item.order.pk %}" class="text-blue-600 hover:underline">{{ rental.order_item.order.order_number }}</a>
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="font-medium text-gray-900">{{ rental.customer_name }}</p>
+                                <p class="text-sm text-gray-500">{{ rental.customer_email }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="font-semibold text-gray-900">{{ rental.quantity }}</span>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="text-sm text-gray-900">{{ rental.rental_start_date|date:"d M Y" }}</p>
+                                <p class="text-sm text-gray-500">{% trans "to" %} {{ rental.return_date|date:"d M Y" }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            {% if rental.is_returned %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                {% trans "Returned" %}
+                            </span>
+                            {% elif rental.is_overdue %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                {{ rental.days_overdue }} {% trans "days overdue" %}
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                {% trans "Active" %}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <a href="{% url 'dashboard:rental_detail' rental.pk %}" class="action-btn" title="{% trans 'View Details' %}">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </a>
+                                {% if not rental.is_returned %}
+                                <form action="{% url 'dashboard:rental_mark_returned' rental.pk %}" method="post" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn-primary" title="{% trans 'Mark as Returned' %}" onclick="return confirm('{% trans "Mark this rental as returned?" %}')">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-12">
+                            <div class="text-gray-500">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <p>{% trans "No rental records found" %}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="px-6 py-4 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+                <p class="text-sm text-gray-600">
+                    {% trans "Showing" %} {{ page_obj.start_index }} - {{ page_obj.end_index }} {% trans "of" %} {{ page_obj.paginator.count }} {% trans "rentals" %}
+                </p>
+                <div class="flex gap-2">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="action-btn">
+                        {% trans "Previous" %}
+                    </a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="action-btn">
+                        {% trans "Next" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

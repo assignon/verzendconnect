@@ -129,6 +129,40 @@
                 </div>
             </div>
 
+            <!-- Rental Date Restrictions -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Rental Period Restrictions</h3>
+                <p class="text-sm text-gray-500 -mt-4">Set a date range for when this product can be rented. Leave empty for no restrictions.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="{{ form.rental_start_date.id_for_label }}" class="label">
+                            Rental Available From
+                        </label>
+                        <input type="date" name="rental_start_date" 
+                               value="{% if object.rental_start_date %}{{ object.rental_start_date|date:'Y-m-d' }}{% endif %}"
+                               class="input">
+                        <p class="mt-2 text-sm text-gray-500">Earliest date this product can be rented from</p>
+                        {% if form.rental_start_date.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.rental_start_date.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.rental_end_date.id_for_label }}" class="label">
+                            Rental Available Until
+                        </label>
+                        <input type="date" name="rental_end_date" 
+                               value="{% if object.rental_end_date %}{{ object.rental_end_date|date:'Y-m-d' }}{% endif %}"
+                               class="input">
+                        <p class="mt-2 text-sm text-gray-500">Latest date this product can be returned</p>
+                        {% if form.rental_end_date.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.rental_end_date.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
             <!-- Images -->
             <div class="space-y-6">
                 <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Product Images</h3>
