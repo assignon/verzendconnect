@@ -2,31 +2,12 @@
 Production settings for VerzendConnect project.
 """
 import os
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.celery import CeleryIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 from .base import *
 
 DEBUG = False
 
 # Add anymail to installed apps for Resend email backend
 INSTALLED_APPS += ['anymail']
-
-# Sentry Error Tracking
-SENTRY_DSN = os.getenv('SENTRY_DSN', '')
-if SENTRY_DSN:
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        integrations=[
-            DjangoIntegration(),
-            CeleryIntegration(),
-            RedisIntegration(),
-        ],
-        traces_sample_rate=0.1,  # 10% of transactions for performance monitoring
-        send_default_pii=True,
-        environment=os.getenv('ENVIRONMENT', 'production'),
-    )
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()]
 
