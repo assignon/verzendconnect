@@ -9,7 +9,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">{% trans "Overall Management" %}</h1>
-            <p class="text-gray-600 mt-1">{% trans "Manage FAQ and Rental Terms & Conditions" %}</p>
+            <p class="text-gray-600 mt-1">{% trans "Manage FAQ, Rental Terms & Conditions, and Services" %}</p>
         </div>
     </div>
 
@@ -22,6 +22,9 @@
                 </a>
                 <a href="?tab=terms" class="flex-1 py-4 px-6 text-center text-sm font-medium border-b-2 transition-colors {% if active_tab == 'terms' %}border-primary-600 text-primary-600{% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif %}">
                     {% trans "Rental Terms & Conditions" %}
+                </a>
+                <a href="?tab=services" class="flex-1 py-4 px-6 text-center text-sm font-medium border-b-2 transition-colors {% if active_tab == 'services' %}border-primary-600 text-primary-600{% else %}border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300{% endif %}">
+                    {% trans "Services" %}
                 </a>
             </nav>
         </div>
@@ -121,6 +124,42 @@
                     {% endautoescape %}
                 </div>
                 <p class="text-xs text-gray-500 mt-4">{% trans "Last updated:" %} {{ rental_terms.updated_at|date:"d M Y H:i" }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Services Tab Content -->
+        {% if active_tab == 'services' %}
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold text-gray-900">{% trans "Services" %}</h2>
+                <a href="{% url 'dashboard:services_edit' %}" class="action-btn-primary">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    {% trans "Edit Services" %}
+                </a>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ services.title }}</h3>
+                    {% if services.is_active %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                        {% trans "Active" %}
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                        {% trans "Inactive" %}
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="prose max-w-none text-gray-700">
+                    {% autoescape off %}
+                    {{ services.content|linebreaks }}
+                    {% endautoescape %}
+                </div>
+                <p class="text-xs text-gray-500 mt-4">{% trans "Last updated:" %} {{ services.updated_at|date:"d M Y H:i" }}</p>
             </div>
         </div>
         {% endif %}

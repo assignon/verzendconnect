@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n seo_tags %}
 
-{% block title %}Event Ordering Made Easy{% endblock %}
+{% block title %}{% trans "Event Ordering Made Easy" %}{% endblock %}
+{% block meta_title %}Event Rental & Party Supplies - VerzendConnect{% endblock %}
+{% block meta_description %}Rent everything you need for your perfect event in Amsterdam. Party supplies, furniture, decorations for birthdays, weddings, and corporate events. Fast delivery available.{% endblock %}
+{% block meta_keywords %}event rental Amsterdam, party supplies, wedding decorations, birthday party rental, furniture rental, event equipment, party furniture{% endblock %}
+{% block og_type %}website{% endblock %}
+{% block og_title %}Event Rental & Party Supplies - VerzendConnect{% endblock %}
+{% block og_description %}Rent everything you need for your perfect event. Party supplies, furniture, and decorations with fast delivery in Amsterdam.{% endblock %}
+{% block twitter_title %}Event Rental & Party Supplies - VerzendConnect{% endblock %}
+{% block twitter_description %}Rent everything you need for your perfect event. Party supplies, furniture, and decorations with fast delivery in Amsterdam.{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -12,22 +20,21 @@
     <div class="container-custom py-20 md:py-32 relative">
         <div class="max-w-3xl">
             <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
-                Make Your Event
-                <span class="block text-accent-400">Unforgettable</span>
+                {% trans "Make Your Event" %}
+                <span class="block text-accent-400">{% trans "Unforgettable" %}</span>
             </h1>
             <p class="text-xl md:text-2xl text-white/80 mb-8 animate-fade-in" style="animation-delay: 0.1s">
-                Everything you need for birthdays, weddings, and private parties. 
-                Browse, select, and order with ease.
+                {% trans "Everything you need for birthdays, weddings, and private parties. Browse, select, and order with ease." %}
             </p>
             <div class="flex flex-wrap gap-4 animate-fade-in" style="animation-delay: 0.2s">
                 <a href="{% url 'core:product_list' %}" class="btn btn-lg bg-white text-primary-700 hover:bg-white/90">
-                    Shop Now
+                    {% trans "Shop Now" %}
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
                 </a>
                 <a href="#categories" class="btn btn-lg border-2 border-white/30 text-white hover:bg-white/10">
-                    Explore Categories
+                    {% trans "Explore Categories" %}
                 </a>
             </div>
         </div>
@@ -45,8 +52,8 @@
 <section class="section" id="events">
     <div class="container-custom">
         <div class="text-center mb-12">
-            <h2 class="section-title">Shop by Event</h2>
-            <p class="section-subtitle mx-auto">Find everything you need for your special occasion</p>
+            <h2 class="section-title">{% trans "Shop by Event" %}</h2>
+            <p class="section-subtitle mx-auto">{% trans "Find everything you need for your special occasion" %}</p>
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
@@ -75,11 +82,11 @@
     <div class="container-custom">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
             <div>
-                <h2 class="section-title">Popular Categories</h2>
-                <p class="section-subtitle">Browse our most popular product categories</p>
+                <h2 class="section-title">{% trans "Popular Categories" %}</h2>
+                <p class="section-subtitle">{% trans "Browse our most popular product categories" %}</p>
             </div>
             <a href="{% url 'core:product_list' %}" class="btn btn-secondary">
-                View All Categories
+                {% trans "View All Categories" %}
             </a>
         </div>
         
@@ -113,11 +120,11 @@
     <div class="container-custom">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
             <div>
-                <h2 class="section-title">Featured Products</h2>
-                <p class="section-subtitle">Hand-picked items for your special events</p>
+                <h2 class="section-title">{% trans "Featured Products" %}</h2>
+                <p class="section-subtitle">{% trans "Hand-picked items for your special events" %}</p>
             </div>
             <a href="{% url 'core:product_list' %}" class="btn btn-secondary">
-                View All Products
+                {% trans "View All Products" %}
             </a>
         </div>
         
@@ -138,11 +145,11 @@
     <div class="container-custom">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
             <div>
-                <h2 class="section-title">New Arrivals</h2>
-                <p class="section-subtitle">Check out our latest additions</p>
+                <h2 class="section-title">{% trans "New Arrivals" %}</h2>
+                <p class="section-subtitle">{% trans "Check out our latest additions" %}</p>
             </div>
             <a href="{% url 'core:product_list' %}?sort=-created_at" class="btn btn-secondary">
-                See All New
+                {% trans "See All New" %}
             </a>
         </div>
         
@@ -162,14 +169,13 @@
 <section class="section bg-secondary-900 text-white">
     <div class="container-custom text-center">
         <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">
-            Ready to Create Your Perfect Event?
+            {% trans "Ready to Create Your Perfect Event?" %}
         </h2>
         <p class="text-secondary-300 text-lg max-w-2xl mx-auto mb-8">
-            Browse our extensive collection of event supplies, decorations, and services. 
-            We've got everything you need to make your celebration memorable.
+            {% trans "Browse our extensive collection of event supplies, decorations, and services. We've got everything you need to make your celebration memorable." %}
         </p>
         <a href="{% url 'core:product_list' %}" class="btn btn-primary btn-lg">
-            Start Shopping
+            {% trans "Start Shopping" %}
             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>

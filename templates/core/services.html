@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static i18n seo_tags %}
+
+{% block title %}{% trans "Services" %} - VerzendConnect{% endblock %}
+{% block meta_title %}Services - VerzendConnect{% endblock %}
+{% block meta_description %}Learn about our event rental services. We provide party supplies, furniture, and decorations for your perfect event in Amsterdam.{% endblock %}
+{% block meta_keywords %}event rental services, party supply services, furniture rental, event decorations, Amsterdam event services{% endblock %}
+{% block og_title %}Services - VerzendConnect{% endblock %}
+{% block og_description %}Learn about our event rental services for your perfect event.{% endblock %}
+{% block twitter_title %}Services - VerzendConnect{% endblock %}
+{% block twitter_description %}Learn about our event rental services for your perfect event.{% endblock %}
+{% block canonical_url %}{% absolute_url request.path %}{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm text-secondary-500">
+            <li><a href="{% url 'core:home' %}" class="hover:text-primary-600">{% trans "Home" %}</a></li>
+            <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></li>
+            <li class="text-secondary-800 font-medium">{% trans "Services" %}</li>
+        </ol>
+    </nav>
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-secondary-900 mb-4">
+                {{ services.title }}
+            </h1>
+            {% if not services.is_active %}
+            <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                {% trans "This page is currently inactive" %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Services Content -->
+        {% if services.is_active %}
+        <div class="card p-8 md:p-12">
+            <div class="prose prose-lg max-w-none">
+                {% autoescape off %}
+                {{ services.content|linebreaks }}
+                {% endautoescape %}
+            </div>
+            <p class="text-xs text-gray-500 mt-8 pt-6 border-t border-gray-200">
+                {% trans "Last updated:" %} {{ services.updated_at|date:"d M Y H:i" }}
+            </p>
+        </div>
+        {% else %}
+        <div class="card p-8 text-center">
+            <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="text-gray-500 text-lg">{% trans "Services information is currently unavailable." %}</p>
+        </div>
+        {% endif %}
+
+        <!-- Call to Action -->
+        <div class="mt-16 pt-12 border-t border-secondary-200">
+            <div class="card p-8 text-center bg-gradient-to-r from-primary-50 to-purple-50">
+                <h2 class="text-2xl font-bold text-secondary-900 mb-4">
+                    {% trans "Ready to get started?" %}
+                </h2>
+                <p class="text-secondary-600 mb-6">
+                    {% trans "Browse our products and start planning your perfect event today." %}
+                </p>
+                <a href="{% url 'core:product_list' %}" class="btn btn-primary btn-lg">
+                    {% trans "View Products" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

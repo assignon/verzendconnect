@@ -104,8 +104,6 @@ Customer activity reports
 
 ✔ Settings Module
 Manage business information
-Manage email templates
-Payment configurations
 
 
 ✔ Front-End Polishing

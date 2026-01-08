@@ -419,3 +419,29 @@ class RentalTerms(models.Model):
         obj, created = cls.objects.get_or_create(pk=1, defaults={'title': 'Rental Terms and Conditions'})
         return obj
 
+
+class Services(models.Model):
+    """Services Information - Singleton model."""
+    title = models.CharField(max_length=200, default='Our Services')
+    content = models.TextField(help_text="Services content. HTML is allowed.")
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Services'
+        verbose_name_plural = 'Services'
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        # Ensure only one instance exists
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_services(cls):
+        """Get or create the single Services instance."""
+        obj, created = cls.objects.get_or_create(pk=1, defaults={'title': 'Our Services'})
+        return obj
+

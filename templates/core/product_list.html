@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static seo_tags %}
 
-{% block title %}All Products{% endblock %}
+{% block title %}All Products - Event Rental Catalog | VerzendConnect{% endblock %}
+{% block meta_title %}All Products - Event Rental Catalog{% endblock %}
+{% block meta_description %}Browse our complete catalog of event rental products. Party supplies, furniture, decorations, and more for your perfect event in Amsterdam.{% endblock %}
+{% block meta_keywords %}event rental products, party supplies catalog, furniture rental, event decorations, Amsterdam event rental{% endblock %}
+{% block og_title %}All Products - Event Rental Catalog{% endblock %}
+{% block og_description %}Browse our complete catalog of event rental products for your perfect event.{% endblock %}
+{% block twitter_title %}All Products - Event Rental Catalog{% endblock %}
+{% block twitter_description %}Browse our complete catalog of event rental products for your perfect event.{% endblock %}
+{% block canonical_url %}{% absolute_url request.path %}{% endblock %}
 
 {% block content %}
 <div class="container-custom py-8 md:py-12">

@@ -99,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-LANGUAGE_CODE = 'nl'  # Dutch as default
+LANGUAGE_CODE = 'en'  # English as default
 TIME_ZONE = 'Europe/Amsterdam'
 USE_I18N = True
 USE_L10N = True
@@ -107,8 +107,8 @@ USE_TZ = True
 
 # Supported languages
 LANGUAGES = [
-    ('nl', 'Nederlands'),
     ('en', 'English'),
+    ('nl', 'Nederlands'),
 ]
 
 # Locale paths
@@ -183,7 +183,7 @@ MOLLIE_API_KEY = os.getenv('MOLLIE_API_KEY', '')
 MOLLIE_TEST_MODE = os.getenv('MOLLIE_TEST_MODE', 'True') == 'True'
 
 # Site Settings
-SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')
+SITE_URL = os.getenv('SITE_URL', 'https://verzendconnect.nl')
 SITE_NAME = os.getenv('SITE_NAME', 'VerzendConnect')
 
 # Session Configuration

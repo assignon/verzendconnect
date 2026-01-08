@@ -1,19 +1,51 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n seo_tags %}
 
-{% block title %}{{ product.name }}{% endblock %}
-{% block meta_description %}{{ product.short_description|default:product.description|truncatewords:30 }}{% endblock %}
+{% block title %}{{ product.name }} - {{ product.category.name }}{% endblock %}
+{% block meta_title %}{{ product.name }} - {{ product.category.name }} | VerzendConnect{% endblock %}
+{% block meta_description %}{{ product.description|default:product.name|truncate_description }}{% endblock %}
+{% block meta_keywords %}{{ product.name }}, {{ product.category.name }}, event rental, party supplies{% endblock %}
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ product.name }}{% endblock %}
+{% block og_description %}{{ product.description|default:product.name|truncate_description }}{% endblock %}
+{% block og_image %}{% if product.primary_image %}{% og_image product.primary_image.image.url %}{% else %}{% og_image %}{% endif %}{% endblock %}
+{% block og_image_alt %}{{ product.name }}{% endblock %}
+{% block twitter_title %}{{ product.name }}{% endblock %}
+{% block twitter_description %}{{ product.description|default:product.name|truncate_description }}{% endblock %}
+{% block twitter_image %}{% if product.primary_image %}{% og_image product.primary_image.image.url %}{% else %}{% og_image %}{% endif %}{% endblock %}
+{% block canonical_url %}{% absolute_url product.get_absolute_url %}{% endblock %}
+
+{% block extra_head %}
+<!-- Product Structured Data -->
+{% product_schema product %}
+
+<!-- Breadcrumb Structured Data -->
+{% breadcrumb_schema breadcrumb_items %}
+{% endblock %}
 
 {% block content %}
 <div class="container-custom py-8 md:py-12">
     <!-- Breadcrumb -->
-    <nav class="flex mb-8" aria-label="Breadcrumb">
+    <nav class="flex mb-8" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
         <ol class="flex items-center gap-2 text-sm text-secondary-500">
-            <li><a href="{% url 'core:home' %}" class="hover:text-primary-600">Home</a></li>
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a href="{% url 'core:home' %}" class="hover:text-primary-600" itemprop="item">
+                    <span itemprop="name">Home</span>
+                </a>
+                <meta itemprop="position" content="1">
+            </li>
             <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></li>
-            <li><a href="{{ product.category.get_absolute_url }}" class="hover:text-primary-600">{{ product.category.name }}</a></li>
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <a href="{{ product.category.get_absolute_url }}" class="hover:text-primary-600" itemprop="item">
+                    <span itemprop="name">{{ product.category.name }}</span>
+                </a>
+                <meta itemprop="position" content="2">
+            </li>
             <li><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></li>
-            <li class="text-secondary-800 font-medium truncate max-w-[200px]">{{ product.name }}</li>
+            <li class="text-secondary-800 font-medium truncate max-w-[200px]" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <span itemprop="name">{{ product.name }}</span>
+                <meta itemprop="position" content="3">
+            </li>
         </ol>
     </nav>
     

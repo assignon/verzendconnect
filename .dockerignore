@@ -1,0 +1,71 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.eggs
+*.egg-info
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv
+ENV
+env
+.venv
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+logs/
+*.sqlite3
+db.sqlite3
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+
+# Static files (will be collected during build)
+staticfiles/
+
+# Test and coverage
+.pytest_cache
+.coverage
+htmlcov/
+.tox
+
+# Documentation
+docs/_build
+*.md
+!README.md
+!DEPLOYMENT.md
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.docker
+
+# Misc
+*.bak
+*.tmp
+certbot/
+

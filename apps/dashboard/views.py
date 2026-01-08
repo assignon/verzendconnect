@@ -10,8 +10,9 @@ from django.utils import timezone
 from django.http import JsonResponse
 from datetime import timedelta
 from apps.orders.models import Order
-from apps.core.models import Product, Category, ProductImage, EventType, RentalRecord, FAQ, RentalTerms
+from apps.core.models import Product, Category, ProductImage, EventType, RentalRecord, FAQ, RentalTerms, Services, SiteSettings
 from apps.accounts.models import CustomUser
+from .forms import CompanyInfoForm
 
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
@@ -642,6 +643,7 @@ class OverallManagementView(SuperuserRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['faqs'] = FAQ.objects.all().order_by('order', 'question')
         context['rental_terms'] = RentalTerms.get_terms()
+        context['services'] = Services.get_services()
         context['active_tab'] = self.request.GET.get('tab', 'faq')
         return context
 
@@ -698,5 +700,40 @@ class RentalTermsUpdateView(SuperuserRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         messages.success(self.request, 'Rental Terms and Conditions updated successfully.')
+        return super().form_valid(form)
+
+
+class ServicesUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update Services information."""
+    model = Services
+    template_name = 'dashboard/overall/services_form.html'
+    fields = ['title', 'content', 'is_active']
+    success_url = reverse_lazy('dashboard:overall')
+
+    def get_object(self, queryset=None):
+        return Services.get_services()
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:overall') + '?tab=services'
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Services updated successfully.')
+        return super().form_valid(form)
+
+
+class CompanyInfoUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update company contact information."""
+    model = SiteSettings
+    form_class = CompanyInfoForm
+    template_name = 'dashboard/company_info.html'
+    success_url = reverse_lazy('dashboard:company_info')
+
+    def get_object(self, queryset=None):
+        """Get or create the SiteSettings instance (singleton)."""
+        obj, created = SiteSettings.objects.get_or_create(pk=1)
+        return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Company information updated successfully.')
         return super().form_valid(form)
 

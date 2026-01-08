@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: VerzendConnect 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-01 12:00+0000\n"
-"PO-Revision-Date: 2024-01-01 12:00+0000\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-08 12:00+0000\n"
+"Last-Translator: VerzendConnect Team\n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -15,3 +15,1120 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# ============================================
+# NAVIGATION & HEADER
+# ============================================
+
+msgid "Home"
+msgstr "Home"
+
+msgid "About Us"
+msgstr "About Us"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "All Products"
+msgstr "All Products"
+
+msgid "Search products..."
+msgstr "Search products..."
+
+msgid "No categories yet"
+msgstr "No categories yet"
+
+msgid "FAQ"
+msgstr "FAQ"
+
+msgid "Rental Terms"
+msgstr "Rental Terms"
+
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "Terms of Service"
+msgstr "Terms of Service"
+
+# ============================================
+# USER ACCOUNT
+# ============================================
+
+msgid "My Profile"
+msgstr "My Profile"
+
+msgid "My Orders"
+msgstr "My Orders"
+
+msgid "Addresses"
+msgstr "Addresses"
+
+msgid "Admin Panel"
+msgstr "Admin Panel"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Create Account"
+msgstr "Create Account"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Sign In"
+msgstr "Sign In"
+
+msgid "Sign Up"
+msgstr "Sign Up"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+msgid "First Name"
+msgstr "First Name"
+
+msgid "Last Name"
+msgstr "Last Name"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Phone Number"
+msgstr "Phone Number"
+
+msgid "Forgot Password?"
+msgstr "Forgot Password?"
+
+msgid "Reset Password"
+msgstr "Reset Password"
+
+msgid "Remember me"
+msgstr "Remember me"
+
+msgid "Don't have an account?"
+msgstr "Don't have an account?"
+
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Edit Profile"
+msgstr "Edit Profile"
+
+msgid "Change Password"
+msgstr "Change Password"
+
+msgid "Current Password"
+msgstr "Current Password"
+
+msgid "New Password"
+msgstr "New Password"
+
+msgid "Save Changes"
+msgstr "Save Changes"
+
+msgid "Update"
+msgstr "Update"
+
+# ============================================
+# FOOTER
+# ============================================
+
+msgid "Quick Links"
+msgstr "Quick Links"
+
+msgid "Contact Us"
+msgstr "Contact Us"
+
+msgid "About VerzendConnect"
+msgstr "About VerzendConnect"
+
+msgid "Your trusted partner for event rentals and shipping"
+msgstr "Your trusted partner for event rentals and shipping"
+
+# ============================================
+# HOMEPAGE
+# ============================================
+
+msgid "Welcome to VerzendConnect"
+msgstr "Welcome to VerzendConnect"
+
+msgid "Welcome to the Verzend-Connect website. Here you will find the rental products you are looking for and can rent for a specific period. We offer rental items ranging from small to large, especially for your party."
+msgstr "Welcome to the Verzend-Connect website. Here you will find the rental products you are looking for and can rent for a specific period. We offer rental items ranging from small to large, especially for your party."
+
+msgid "Our Services"
+msgstr "Our Services"
+
+msgid "Verzend-Connect focuses on shipping rental products according to your preferences. We also offer transport options where we can share and easily connect with you."
+msgstr "Verzend-Connect focuses on shipping rental products according to your preferences. We also offer transport options where we can share and easily connect with you."
+
+msgid "Wide Range"
+msgstr "Wide Range"
+
+msgid "From small to large rental items for every occasion"
+msgstr "From small to large rental items for every occasion"
+
+msgid "Fast Shipping"
+msgstr "Fast Shipping"
+
+msgid "Quick and reliable delivery to your location"
+msgstr "Quick and reliable delivery to your location"
+
+msgid "Easy Connection"
+msgstr "Easy Connection"
+
+msgid "Simple communication and flexible transport options"
+msgstr "Simple communication and flexible transport options"
+
+msgid "Ready to Get Started?"
+msgstr "Ready to Get Started?"
+
+msgid "Browse our catalog and find the perfect items for your event"
+msgstr "Browse our catalog and find the perfect items for your event"
+
+msgid "View All Products"
+msgstr "View All Products"
+
+msgid "Go to Homepage"
+msgstr "Go to Homepage"
+
+msgid "Featured Products"
+msgstr "Featured Products"
+
+msgid "Browse by Category"
+msgstr "Browse by Category"
+
+msgid "Browse by Event Type"
+msgstr "Browse by Event Type"
+
+# ============================================
+# PRODUCTS
+# ============================================
+
+msgid "Products"
+msgstr "Products"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Product Details"
+msgstr "Product Details"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Price"
+msgstr "Price"
+
+msgid "Sale Price"
+msgstr "Sale Price"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "In Stock"
+msgstr "In Stock"
+
+msgid "Out of Stock"
+msgstr "Out of Stock"
+
+msgid "Available"
+msgstr "Available"
+
+msgid "Unavailable"
+msgstr "Unavailable"
+
+msgid "Add to Cart"
+msgstr "Add to Cart"
+
+msgid "Added to Cart"
+msgstr "Added to Cart"
+
+msgid "Quantity"
+msgstr "Quantity"
+
+msgid "Related Products"
+msgstr "Related Products"
+
+msgid "No products found"
+msgstr "No products found"
+
+msgid "Filter by"
+msgstr "Filter by"
+
+msgid "Sort by"
+msgstr "Sort by"
+
+msgid "Newest"
+msgstr "Newest"
+
+msgid "Price: Low to High"
+msgstr "Price: Low to High"
+
+msgid "Price: High to Low"
+msgstr "Price: High to Low"
+
+msgid "Name: A to Z"
+msgstr "Name: A to Z"
+
+msgid "Name: Z to A"
+msgstr "Name: Z to A"
+
+msgid "per day"
+msgstr "per day"
+
+msgid "Save"
+msgstr "Save"
+
+# ============================================
+# SHOPPING CART
+# ============================================
+
+msgid "Shopping Cart"
+msgstr "Shopping Cart"
+
+msgid "Cart"
+msgstr "Cart"
+
+msgid "Your cart is empty"
+msgstr "Your cart is empty"
+
+msgid "Looks like you haven't added any products yet. Start shopping to fill your cart with amazing event supplies!"
+msgstr "Looks like you haven't added any products yet. Start shopping to fill your cart with amazing event supplies!"
+
+msgid "Start Shopping"
+msgstr "Start Shopping"
+
+msgid "Continue Shopping"
+msgstr "Continue Shopping"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Update Cart"
+msgstr "Update Cart"
+
+msgid "Clear Cart"
+msgstr "Clear Cart"
+
+msgid "Order Summary"
+msgstr "Order Summary"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Shipping"
+msgstr "Shipping"
+
+msgid "Calculated at checkout"
+msgstr "Calculated at checkout"
+
+msgid "Proceed to Checkout"
+msgstr "Proceed to Checkout"
+
+msgid "items"
+msgstr "items"
+
+msgid "item"
+msgstr "item"
+
+msgid "each"
+msgstr "each"
+
+# ============================================
+# RENTAL DATES
+# ============================================
+
+msgid "Rental:"
+msgstr "Rental:"
+
+msgid "Rental Period"
+msgstr "Rental Period"
+
+msgid "Start Date"
+msgstr "Start Date"
+
+msgid "End Date"
+msgstr "End Date"
+
+msgid "Return Date"
+msgstr "Return Date"
+
+msgid "days"
+msgstr "days"
+
+msgid "day"
+msgstr "day"
+
+msgid "Select rental dates"
+msgstr "Select rental dates"
+
+msgid "Rental Start Date"
+msgstr "Rental Start Date"
+
+msgid "Rental End Date"
+msgstr "Rental End Date"
+
+msgid "Available from"
+msgstr "Available from"
+
+msgid "Available until"
+msgstr "Available until"
+
+# ============================================
+# CHECKOUT
+# ============================================
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Customer Information"
+msgstr "Customer Information"
+
+msgid "Shipping Information"
+msgstr "Shipping Information"
+
+msgid "Delivery Address"
+msgstr "Delivery Address"
+
+msgid "Billing Address"
+msgstr "Billing Address"
+
+msgid "Payment Method"
+msgstr "Payment Method"
+
+msgid "Payment"
+msgstr "Payment"
+
+msgid "Review Order"
+msgstr "Review Order"
+
+msgid "Place Order"
+msgstr "Place Order"
+
+msgid "Complete Order"
+msgstr "Complete Order"
+
+msgid "Order Confirmation"
+msgstr "Order Confirmation"
+
+msgid "Thank you for your order!"
+msgstr "Thank you for your order!"
+
+msgid "Order Number"
+msgstr "Order Number"
+
+msgid "Order Date"
+msgstr "Order Date"
+
+msgid "Order Status"
+msgstr "Order Status"
+
+msgid "Order Total"
+msgstr "Order Total"
+
+msgid "Order Details"
+msgstr "Order Details"
+
+msgid "Address"
+msgstr "Address"
+
+msgid "Street"
+msgstr "Street"
+
+msgid "City"
+msgstr "City"
+
+msgid "Postal Code"
+msgstr "Postal Code"
+
+msgid "Country"
+msgstr "Country"
+
+msgid "Netherlands"
+msgstr "Netherlands"
+
+msgid "Continue"
+msgstr "Continue"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Previous"
+msgstr "Previous"
+
+# ============================================
+# ORDER STATUS
+# ============================================
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Paid"
+msgstr "Paid"
+
+msgid "Confirmed"
+msgstr "Confirmed"
+
+msgid "Processing"
+msgstr "Processing"
+
+msgid "Shipped"
+msgstr "Shipped"
+
+msgid "Delivered"
+msgstr "Delivered"
+
+msgid "Completed"
+msgstr "Completed"
+
+msgid "Cancelled"
+msgstr "Cancelled"
+
+msgid "Refunded"
+msgstr "Refunded"
+
+msgid "Failed"
+msgstr "Failed"
+
+# ============================================
+# PAYMENT
+# ============================================
+
+msgid "Pay with iDEAL"
+msgstr "Pay with iDEAL"
+
+msgid "Pay with PayPal"
+msgstr "Pay with PayPal"
+
+msgid "Pay with Credit Card"
+msgstr "Pay with Credit Card"
+
+msgid "Pay Now"
+msgstr "Pay Now"
+
+msgid "Payment Successful"
+msgstr "Payment Successful"
+
+msgid "Payment Failed"
+msgstr "Payment Failed"
+
+msgid "Payment Pending"
+msgstr "Payment Pending"
+
+msgid "Payment Cancelled"
+msgstr "Payment Cancelled"
+
+msgid "Secure Payment"
+msgstr "Secure Payment"
+
+msgid "Select Payment Method"
+msgstr "Select Payment Method"
+
+# ============================================
+# ABOUT PAGE
+# ============================================
+
+msgid "About"
+msgstr "About"
+
+msgid "Our Story"
+msgstr "Our Story"
+
+msgid "Our Mission"
+msgstr "Our Mission"
+
+msgid "Our Vision"
+msgstr "Our Vision"
+
+msgid "Our Team"
+msgstr "Our Team"
+
+msgid "Why Choose Us"
+msgstr "Why Choose Us"
+
+msgid "Contact Information"
+msgstr "Contact Information"
+
+# ============================================
+# FAQ & RENTAL TERMS
+# ============================================
+
+msgid "Frequently Asked Questions"
+msgstr "Frequently Asked Questions"
+
+msgid "Rental Terms & Conditions"
+msgstr "Rental Terms & Conditions"
+
+msgid "Edit Terms"
+msgstr "Edit Terms"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Last updated:"
+msgstr "Last updated:"
+
+msgid "Question"
+msgstr "Question"
+
+msgid "Answer"
+msgstr "Answer"
+
+msgid "Order"
+msgstr "Order"
+
+msgid "Add FAQ"
+msgstr "Add FAQ"
+
+msgid "Edit FAQ"
+msgstr "Edit FAQ"
+
+msgid "Delete FAQ"
+msgstr "Delete FAQ"
+
+msgid "Update Terms"
+msgstr "Update Terms"
+
+# ============================================
+# ADMIN DASHBOARD
+# ============================================
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Dashboard Overview"
+msgstr "Dashboard Overview"
+
+msgid "Total Revenue"
+msgstr "Total Revenue"
+
+msgid "Total Orders"
+msgstr "Total Orders"
+
+msgid "Total Customers"
+msgstr "Total Customers"
+
+msgid "Customers"
+msgstr "Customers"
+
+msgid "Recent Orders"
+msgstr "Recent Orders"
+
+msgid "Top Products"
+msgstr "Top Products"
+
+msgid "Sales Overview"
+msgstr "Sales Overview"
+
+msgid "This month"
+msgstr "This month"
+
+msgid "New this month"
+msgstr "New this month"
+
+msgid "Pending Orders"
+msgstr "Pending Orders"
+
+msgid "Awaiting payment"
+msgstr "Awaiting payment"
+
+msgid "Being prepared"
+msgstr "Being prepared"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Reports & Analytics"
+msgstr "Reports & Analytics"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Overall"
+msgstr "Overall"
+
+# ============================================
+# STOCK MANAGEMENT
+# ============================================
+
+msgid "Stock Management"
+msgstr "Stock Management"
+
+msgid "Rental Records"
+msgstr "Rental Records"
+
+msgid "All Rentals"
+msgstr "All Rentals"
+
+msgid "Active Rentals"
+msgstr "Active Rentals"
+
+msgid "Overdue Rentals"
+msgstr "Overdue Rentals"
+
+msgid "Returned"
+msgstr "Returned"
+
+msgid "Not Returned"
+msgstr "Not Returned"
+
+msgid "Mark as Returned"
+msgstr "Mark as Returned"
+
+msgid "Renter"
+msgstr "Renter"
+
+msgid "Rented On"
+msgstr "Rented On"
+
+msgid "Due Date"
+msgstr "Due Date"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Overdue"
+msgstr "Overdue"
+
+msgid "On Time"
+msgstr "On Time"
+
+# ============================================
+# CRUD OPERATIONS
+# ============================================
+
+msgid "Add"
+msgstr "Add"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "View"
+msgstr "View"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "More"
+msgstr "More"
+
+msgid "Less"
+msgstr "Less"
+
+msgid "Show All"
+msgstr "Show All"
+
+msgid "Hide"
+msgstr "Hide"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "No results found"
+msgstr "No results found"
+
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+msgid "This action cannot be undone."
+msgstr "This action cannot be undone."
+
+msgid "Yes, delete"
+msgstr "Yes, delete"
+
+msgid "No, cancel"
+msgstr "No, cancel"
+
+# ============================================
+# PRODUCT MANAGEMENT
+# ============================================
+
+msgid "Add Product"
+msgstr "Add Product"
+
+msgid "Edit Product"
+msgstr "Edit Product"
+
+msgid "Delete Product"
+msgstr "Delete Product"
+
+msgid "Product Name"
+msgstr "Product Name"
+
+msgid "Product Image"
+msgstr "Product Image"
+
+msgid "Primary Image"
+msgstr "Primary Image"
+
+msgid "Featured"
+msgstr "Featured"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "SKU"
+msgstr "SKU"
+
+# ============================================
+# CATEGORY MANAGEMENT
+# ============================================
+
+msgid "Add Category"
+msgstr "Add Category"
+
+msgid "Edit Category"
+msgstr "Edit Category"
+
+msgid "Delete Category"
+msgstr "Delete Category"
+
+msgid "Category Name"
+msgstr "Category Name"
+
+msgid "Parent Category"
+msgstr "Parent Category"
+
+msgid "No parent"
+msgstr "No parent"
+
+# ============================================
+# EVENT TYPE MANAGEMENT
+# ============================================
+
+msgid "Event Types"
+msgstr "Event Types"
+
+msgid "Event Type"
+msgstr "Event Type"
+
+msgid "Add Event Type"
+msgstr "Add Event Type"
+
+msgid "Edit Event Type"
+msgstr "Edit Event Type"
+
+msgid "Delete Event Type"
+msgstr "Delete Event Type"
+
+# ============================================
+# ORDER MANAGEMENT
+# ============================================
+
+msgid "Orders"
+msgstr "Orders"
+
+msgid "Order Management"
+msgstr "Order Management"
+
+msgid "View Order"
+msgstr "View Order"
+
+msgid "Update Status"
+msgstr "Update Status"
+
+msgid "Customer"
+msgstr "Customer"
+
+msgid "Customer Name"
+msgstr "Customer Name"
+
+msgid "Customer Email"
+msgstr "Customer Email"
+
+msgid "Order Items"
+msgstr "Order Items"
+
+msgid "Unit Price"
+msgstr "Unit Price"
+
+msgid "Payment Status"
+msgstr "Payment Status"
+
+msgid "Notes"
+msgstr "Notes"
+
+# ============================================
+# MESSAGES & NOTIFICATIONS
+# ============================================
+
+msgid "Success"
+msgstr "Success"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Warning"
+msgstr "Warning"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Product added to cart successfully"
+msgstr "Product added to cart successfully"
+
+msgid "Product removed from cart"
+msgstr "Product removed from cart"
+
+msgid "Cart updated successfully"
+msgstr "Cart updated successfully"
+
+msgid "Order placed successfully"
+msgstr "Order placed successfully"
+
+msgid "Profile updated successfully"
+msgstr "Profile updated successfully"
+
+msgid "Password changed successfully"
+msgstr "Password changed successfully"
+
+msgid "Something went wrong. Please try again."
+msgstr "Something went wrong. Please try again."
+
+msgid "Please fill in all required fields"
+msgstr "Please fill in all required fields"
+
+msgid "Invalid email address"
+msgstr "Invalid email address"
+
+msgid "Passwords do not match"
+msgstr "Passwords do not match"
+
+# ============================================
+# DATES & TIMES
+# ============================================
+
+msgid "Today"
+msgstr "Today"
+
+msgid "Yesterday"
+msgstr "Yesterday"
+
+msgid "Tomorrow"
+msgstr "Tomorrow"
+
+msgid "This week"
+msgstr "This week"
+
+msgid "This month"
+msgstr "This month"
+
+msgid "This year"
+msgstr "This year"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Time"
+msgstr "Time"
+
+msgid "Created"
+msgstr "Created"
+
+msgid "Updated"
+msgstr "Updated"
+
+msgid "Created at"
+msgstr "Created at"
+
+msgid "Updated at"
+msgstr "Updated at"
+
+# ============================================
+# MISC
+# ============================================
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "All"
+msgstr "All"
+
+msgid "None"
+msgstr "None"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Images"
+msgstr "Images"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Required"
+msgstr "Required"
+
+msgid "Optional"
+msgstr "Optional"
+
+msgid "or"
+msgstr "or"
+
+msgid "and"
+msgstr "and"
+
+msgid "of"
+msgstr "of"
+
+msgid "orders"
+msgstr "orders"
+
+msgid "out of stock"
+msgstr "out of stock"
+
+msgid "All in stock"
+msgstr "All in stock"
+
+msgid "No orders yet"
+msgstr "No orders yet"
+
+msgid "No products yet"
+msgstr "No products yet"
+
+# ============================================
+# HOMEPAGE ADDITIONAL
+# ============================================
+
+msgid "Event Ordering Made Easy"
+msgstr "Event Ordering Made Easy"
+
+msgid "Make Your Event"
+msgstr "Make Your Event"
+
+msgid "Unforgettable"
+msgstr "Unforgettable"
+
+msgid "Everything you need for birthdays, weddings, and private parties. Browse, select, and order with ease."
+msgstr "Everything you need for birthdays, weddings, and private parties. Browse, select, and order with ease."
+
+msgid "Shop Now"
+msgstr "Shop Now"
+
+msgid "Explore Categories"
+msgstr "Explore Categories"
+
+msgid "Shop by Event"
+msgstr "Shop by Event"
+
+msgid "Find everything you need for your special occasion"
+msgstr "Find everything you need for your special occasion"
+
+msgid "Popular Categories"
+msgstr "Popular Categories"
+
+msgid "Browse our most popular product categories"
+msgstr "Browse our most popular product categories"
+
+msgid "View All Categories"
+msgstr "View All Categories"
+
+msgid "Hand-picked items for your special events"
+msgstr "Hand-picked items for your special events"
+
+msgid "New Arrivals"
+msgstr "New Arrivals"
+
+msgid "Check out our latest additions"
+msgstr "Check out our latest additions"
+
+msgid "See All New"
+msgstr "See All New"
+
+msgid "Ready to Create Your Perfect Event?"
+msgstr "Ready to Create Your Perfect Event?"
+
+msgid "Browse our extensive collection of event supplies, decorations, and services. We've got everything you need to make your celebration memorable."
+msgstr "Browse our extensive collection of event supplies, decorations, and services. We've got everything you need to make your celebration memorable."
+
+msgid "products"
+msgstr "products"
+
+msgid "Coming soon..."
+msgstr "Coming soon..."
+
+msgid "Event types coming soon..."
+msgstr "Event types coming soon..."
+
+msgid "Categories coming soon..."
+msgstr "Categories coming soon..."
+
+msgid "Featured products coming soon..."
+msgstr "Featured products coming soon..."
+
+msgid "New products coming soon..."
+msgstr "New products coming soon..."

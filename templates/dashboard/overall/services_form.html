@@ -1,0 +1,115 @@
+{% extends 'dashboard/base.html' %}
+{% load static widget_tweaks i18n %}
+
+{% block title %}{% trans "Edit Services" %} - {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+<!-- CKEditor 5 from CDN -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <a href="{% url 'dashboard:overall' %}?tab=services" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">{% trans "Edit Services" %}</h1>
+            <p class="text-gray-600">{% trans "Update the services content" %}</p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white rounded-lg shadow">
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label for="{{ form.title.id_for_label }}" class="label">
+                    {% trans "Title" %} *
+                </label>
+                {{ form.title|add_class:"input" }}
+                {% if form.title.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.content.id_for_label }}" class="label">
+                    {% trans "Content" %} *
+                </label>
+                <textarea name="{{ form.content.name }}" id="{{ form.content.id_for_label }}">{{ form.content.value|default:'' }}</textarea>
+                <p class="mt-2 text-sm text-gray-500">{% trans "Services content. Use the editor toolbar to format your content." %}</p>
+                {% if form.content.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.content.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer">
+                    {{ form.is_active }}
+                    <span class="ml-3 text-sm text-gray-700 font-medium">{% trans "Active (visible to customers)" %}</span>
+                </label>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
+                <a href="{% url 'dashboard:overall' %}?tab=services" class="px-6 py-3.5 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md transition-all duration-200 font-semibold shadow-sm">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="px-6 py-3.5 border-2 border-primary-600 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:border-primary-700 hover:shadow-lg transition-all duration-200 font-semibold shadow-md">
+                    {% trans "Update Services" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Initialize CKEditor
+        ClassicEditor
+            .create(document.querySelector('#{{ form.content.id_for_label }}'), {
+                toolbar: {
+                    items: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', '|',
+                        'bulletedList', 'numberedList', '|',
+                        'outdent', 'indent', '|',
+                        'blockQuote', 'insertTable', '|',
+                        'undo', 'redo'
+                    ]
+                },
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                    ]
+                },
+                language: 'en',
+                licenseKey: '',
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error('Oops, something went wrong!', error);
+            });
+    </script>
+
+    <style>
+        /* CKEditor styling */
+        .ck-editor__editable {
+            min-height: 400px;
+        }
+        .ck-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+{% endblock %}
+

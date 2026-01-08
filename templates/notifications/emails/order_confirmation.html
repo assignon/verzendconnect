@@ -125,7 +125,7 @@
                         <td style="background-color: #f8fafc; padding: 30px 40px; text-align: center;">
                             <p style="color: #64748b; margin: 0 0 10px; font-size: 14px;">
                                 Questions about your order? Contact us at<br>
-                                <a href="mailto:support@verzendconnect.nl" style="color: #c026d3;">support@verzendconnect.nl</a>
+                                <a href="mailto:{{ site_settings.email }}" style="color: #c026d3;">{{ site_settings.email }}</a>
                             </p>
                             <p style="color: #94a3b8; margin: 0; font-size: 12px;">
                                 © {{ order.created_at|date:"Y" }} {{ site_name }}. All rights reserved.

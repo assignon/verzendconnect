@@ -198,7 +198,7 @@ class Command(BaseCommand):
 <h2>15. Contact Information</h2>
 <p>For questions, concerns, or support regarding your rental:</p>
 <ul>
-<li>Email: support@verzendconnect.nl</li>
+<li>Email: {{ site_settings.email }}</li>
 <li>Phone: +31 6 10 65 25 56</li>
 <li>Address: Amsterdam, Netherlands</li>
 </ul>

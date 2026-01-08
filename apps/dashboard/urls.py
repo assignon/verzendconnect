@@ -39,11 +39,15 @@ urlpatterns = [
     path('stock-management/<int:pk>/mark-returned/', views.RentalMarkReturnedView.as_view(), name='rental_mark_returned'),
     path('stock-management/product/<int:pk>/', views.ProductStockDetailView.as_view(), name='product_stock_detail'),
 
-    # Overall Management (FAQ & Rental Terms)
+    # Overall Management (FAQ & Rental Terms & Services)
     path('overall/', views.OverallManagementView.as_view(), name='overall'),
     path('overall/faq/add/', views.FAQCreateView.as_view(), name='faq_add'),
     path('overall/faq/<int:pk>/edit/', views.FAQUpdateView.as_view(), name='faq_edit'),
     path('overall/faq/<int:pk>/delete/', views.FAQDeleteView.as_view(), name='faq_delete'),
     path('overall/rental-terms/', views.RentalTermsUpdateView.as_view(), name='rental_terms_edit'),
+    path('overall/services/', views.ServicesUpdateView.as_view(), name='services_edit'),
+
+    # Company Info
+    path('company-info/', views.CompanyInfoUpdateView.as_view(), name='company_info'),
 ]
 

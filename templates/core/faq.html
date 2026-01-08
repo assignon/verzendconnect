@@ -1,7 +1,20 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n seo_tags %}
 
-{% block title %}{% trans "Frequently Asked Questions" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Frequently Asked Questions" %} - VerzendConnect{% endblock %}
+{% block meta_title %}FAQ - Frequently Asked Questions About Event Rental{% endblock %}
+{% block meta_description %}Find answers to common questions about event rental, party supplies, delivery, and our services in Amsterdam.{% endblock %}
+{% block meta_keywords %}FAQ, event rental questions, party supply FAQ, rental information, Amsterdam event rental{% endblock %}
+{% block og_title %}FAQ - Frequently Asked Questions About Event Rental{% endblock %}
+{% block og_description %}Find answers to common questions about event rental, party supplies, delivery, and our services in Amsterdam.{% endblock %}
+{% block twitter_title %}FAQ - Frequently Asked Questions About Event Rental{% endblock %}
+{% block twitter_description %}Find answers to common questions about event rental, party supplies, delivery, and our services in Amsterdam.{% endblock %}
+{% block canonical_url %}{% absolute_url request.path %}{% endblock %}
+
+{% block extra_head %}
+<!-- FAQPage Structured Data -->
+{% json_ld faq_schema %}
+{% endblock %}
 
 {% block content %}
 <div class="container-custom py-8 md:py-12">
@@ -62,7 +75,7 @@
                 <p class="text-secondary-600 mb-6">
                     {% trans "Can't find the answer you're looking for? Please get in touch with our friendly team." %}
                 </p>
-                <a href="mailto:support@verzendconnect.nl" class="btn btn-primary btn-lg">
+                <a href="mailto:{{ site_settings.email }}" class="btn btn-primary btn-lg">
                     {% trans "Contact Us" %}
                 </a>
             </div>

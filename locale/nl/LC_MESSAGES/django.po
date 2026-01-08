@@ -6,14 +6,18 @@ msgstr ""
 "Project-Id-Version: VerzendConnect 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-01 12:00+0000\n"
-"PO-Revision-Date: 2024-01-01 12:00+0000\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-01-08 12:00+0000\n"
+"Last-Translator: VerzendConnect Team\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ============================================
+# NAVIGATION & HEADER
+# ============================================
 
 msgid "Home"
 msgstr "Home"
@@ -24,14 +28,30 @@ msgstr "Over Ons"
 msgid "Categories"
 msgstr "Categorieën"
 
-msgid "No categories yet"
-msgstr "Nog geen categorieën"
-
 msgid "All Products"
 msgstr "Alle Producten"
 
 msgid "Search products..."
 msgstr "Zoek producten..."
+
+msgid "No categories yet"
+msgstr "Nog geen categorieën"
+
+msgid "FAQ"
+msgstr "Veelgestelde Vragen"
+
+msgid "Rental Terms"
+msgstr "Huurvoorwaarden"
+
+msgid "Privacy Policy"
+msgstr "Privacybeleid"
+
+msgid "Terms of Service"
+msgstr "Algemene Voorwaarden"
+
+# ============================================
+# USER ACCOUNT
+# ============================================
 
 msgid "My Profile"
 msgstr "Mijn Profiel"
@@ -54,6 +74,76 @@ msgstr "Inloggen"
 msgid "Create Account"
 msgstr "Account Aanmaken"
 
+msgid "Register"
+msgstr "Registreren"
+
+msgid "Sign In"
+msgstr "Inloggen"
+
+msgid "Sign Up"
+msgstr "Aanmelden"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgid "Confirm Password"
+msgstr "Bevestig Wachtwoord"
+
+msgid "First Name"
+msgstr "Voornaam"
+
+msgid "Last Name"
+msgstr "Achternaam"
+
+msgid "Phone"
+msgstr "Telefoon"
+
+msgid "Phone Number"
+msgstr "Telefoonnummer"
+
+msgid "Forgot Password?"
+msgstr "Wachtwoord Vergeten?"
+
+msgid "Reset Password"
+msgstr "Wachtwoord Herstellen"
+
+msgid "Remember me"
+msgstr "Onthoud mij"
+
+msgid "Don't have an account?"
+msgstr "Nog geen account?"
+
+msgid "Already have an account?"
+msgstr "Heb je al een account?"
+
+msgid "Profile"
+msgstr "Profiel"
+
+msgid "Edit Profile"
+msgstr "Profiel Bewerken"
+
+msgid "Change Password"
+msgstr "Wachtwoord Wijzigen"
+
+msgid "Current Password"
+msgstr "Huidig Wachtwoord"
+
+msgid "New Password"
+msgstr "Nieuw Wachtwoord"
+
+msgid "Save Changes"
+msgstr "Wijzigingen Opslaan"
+
+msgid "Update"
+msgstr "Bijwerken"
+
+# ============================================
+# FOOTER
+# ============================================
+
 msgid "Quick Links"
 msgstr "Snelle Links"
 
@@ -65,6 +155,10 @@ msgstr "Over VerzendConnect"
 
 msgid "Your trusted partner for event rentals and shipping"
 msgstr "Uw betrouwbare partner voor evenementverhuur en verzending"
+
+# ============================================
+# HOMEPAGE
+# ============================================
 
 msgid "Welcome to VerzendConnect"
 msgstr "Welkom bij VerzendConnect"
@@ -107,3 +201,934 @@ msgstr "Bekijk Alle Producten"
 
 msgid "Go to Homepage"
 msgstr "Ga naar Homepage"
+
+msgid "Featured Products"
+msgstr "Uitgelichte Producten"
+
+msgid "Browse by Category"
+msgstr "Blader op Categorie"
+
+msgid "Browse by Event Type"
+msgstr "Blader op Evenementtype"
+
+# ============================================
+# PRODUCTS
+# ============================================
+
+msgid "Products"
+msgstr "Producten"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Product Details"
+msgstr "Productdetails"
+
+msgid "Description"
+msgstr "Beschrijving"
+
+msgid "Price"
+msgstr "Prijs"
+
+msgid "Sale Price"
+msgstr "Actieprijs"
+
+msgid "Category"
+msgstr "Categorie"
+
+msgid "Stock"
+msgstr "Voorraad"
+
+msgid "In Stock"
+msgstr "Op Voorraad"
+
+msgid "Out of Stock"
+msgstr "Niet Op Voorraad"
+
+msgid "Available"
+msgstr "Beschikbaar"
+
+msgid "Unavailable"
+msgstr "Niet Beschikbaar"
+
+msgid "Add to Cart"
+msgstr "Toevoegen aan Winkelwagen"
+
+msgid "Added to Cart"
+msgstr "Toegevoegd aan Winkelwagen"
+
+msgid "Quantity"
+msgstr "Aantal"
+
+msgid "Related Products"
+msgstr "Gerelateerde Producten"
+
+msgid "No products found"
+msgstr "Geen producten gevonden"
+
+msgid "Filter by"
+msgstr "Filteren op"
+
+msgid "Sort by"
+msgstr "Sorteren op"
+
+msgid "Newest"
+msgstr "Nieuwste"
+
+msgid "Price: Low to High"
+msgstr "Prijs: Laag naar Hoog"
+
+msgid "Price: High to Low"
+msgstr "Prijs: Hoog naar Laag"
+
+msgid "Name: A to Z"
+msgstr "Naam: A tot Z"
+
+msgid "Name: Z to A"
+msgstr "Naam: Z tot A"
+
+msgid "per day"
+msgstr "per dag"
+
+msgid "Save"
+msgstr "Bespaar"
+
+# ============================================
+# SHOPPING CART
+# ============================================
+
+msgid "Shopping Cart"
+msgstr "Winkelwagen"
+
+msgid "Cart"
+msgstr "Winkelwagen"
+
+msgid "Your cart is empty"
+msgstr "Je winkelwagen is leeg"
+
+msgid "Looks like you haven't added any products yet. Start shopping to fill your cart with amazing event supplies!"
+msgstr "Het lijkt erop dat je nog geen producten hebt toegevoegd. Begin met winkelen om je winkelwagen te vullen met geweldige evenementartikelen!"
+
+msgid "Start Shopping"
+msgstr "Begin met Winkelen"
+
+msgid "Continue Shopping"
+msgstr "Verder Winkelen"
+
+msgid "Remove"
+msgstr "Verwijderen"
+
+msgid "Update Cart"
+msgstr "Winkelwagen Bijwerken"
+
+msgid "Clear Cart"
+msgstr "Winkelwagen Legen"
+
+msgid "Order Summary"
+msgstr "Besteloverzicht"
+
+msgid "Subtotal"
+msgstr "Subtotaal"
+
+msgid "Total"
+msgstr "Totaal"
+
+msgid "Shipping"
+msgstr "Verzending"
+
+msgid "Calculated at checkout"
+msgstr "Berekend bij afrekenen"
+
+msgid "Proceed to Checkout"
+msgstr "Doorgaan naar Afrekenen"
+
+msgid "items"
+msgstr "artikelen"
+
+msgid "item"
+msgstr "artikel"
+
+msgid "each"
+msgstr "per stuk"
+
+# ============================================
+# RENTAL DATES
+# ============================================
+
+msgid "Rental:"
+msgstr "Huur:"
+
+msgid "Rental Period"
+msgstr "Huurperiode"
+
+msgid "Start Date"
+msgstr "Startdatum"
+
+msgid "End Date"
+msgstr "Einddatum"
+
+msgid "Return Date"
+msgstr "Retourdatum"
+
+msgid "days"
+msgstr "dagen"
+
+msgid "day"
+msgstr "dag"
+
+msgid "Select rental dates"
+msgstr "Selecteer huurdata"
+
+msgid "Rental Start Date"
+msgstr "Startdatum Huur"
+
+msgid "Rental End Date"
+msgstr "Einddatum Huur"
+
+msgid "Available from"
+msgstr "Beschikbaar vanaf"
+
+msgid "Available until"
+msgstr "Beschikbaar tot"
+
+# ============================================
+# CHECKOUT
+# ============================================
+
+msgid "Checkout"
+msgstr "Afrekenen"
+
+msgid "Customer Information"
+msgstr "Klantgegevens"
+
+msgid "Shipping Information"
+msgstr "Verzendgegevens"
+
+msgid "Delivery Address"
+msgstr "Bezorgadres"
+
+msgid "Billing Address"
+msgstr "Factuuradres"
+
+msgid "Payment Method"
+msgstr "Betaalmethode"
+
+msgid "Payment"
+msgstr "Betaling"
+
+msgid "Review Order"
+msgstr "Bestelling Controleren"
+
+msgid "Place Order"
+msgstr "Bestelling Plaatsen"
+
+msgid "Complete Order"
+msgstr "Bestelling Afronden"
+
+msgid "Order Confirmation"
+msgstr "Bestellingsbevestiging"
+
+msgid "Thank you for your order!"
+msgstr "Bedankt voor je bestelling!"
+
+msgid "Order Number"
+msgstr "Bestelnummer"
+
+msgid "Order Date"
+msgstr "Besteldatum"
+
+msgid "Order Status"
+msgstr "Bestelstatus"
+
+msgid "Order Total"
+msgstr "Totaalbedrag"
+
+msgid "Order Details"
+msgstr "Bestelgegevens"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Street"
+msgstr "Straat"
+
+msgid "City"
+msgstr "Stad"
+
+msgid "Postal Code"
+msgstr "Postcode"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Netherlands"
+msgstr "Nederland"
+
+msgid "Continue"
+msgstr "Doorgaan"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "Previous"
+msgstr "Vorige"
+
+# ============================================
+# ORDER STATUS
+# ============================================
+
+msgid "Pending"
+msgstr "In Afwachting"
+
+msgid "Paid"
+msgstr "Betaald"
+
+msgid "Confirmed"
+msgstr "Bevestigd"
+
+msgid "Processing"
+msgstr "In Behandeling"
+
+msgid "Shipped"
+msgstr "Verzonden"
+
+msgid "Delivered"
+msgstr "Bezorgd"
+
+msgid "Completed"
+msgstr "Voltooid"
+
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "Refunded"
+msgstr "Terugbetaald"
+
+msgid "Failed"
+msgstr "Mislukt"
+
+# ============================================
+# PAYMENT
+# ============================================
+
+msgid "Pay with iDEAL"
+msgstr "Betaal met iDEAL"
+
+msgid "Pay with PayPal"
+msgstr "Betaal met PayPal"
+
+msgid "Pay with Credit Card"
+msgstr "Betaal met Creditcard"
+
+msgid "Pay Now"
+msgstr "Nu Betalen"
+
+msgid "Payment Successful"
+msgstr "Betaling Geslaagd"
+
+msgid "Payment Failed"
+msgstr "Betaling Mislukt"
+
+msgid "Payment Pending"
+msgstr "Betaling In Behandeling"
+
+msgid "Payment Cancelled"
+msgstr "Betaling Geannuleerd"
+
+msgid "Secure Payment"
+msgstr "Veilige Betaling"
+
+msgid "Select Payment Method"
+msgstr "Selecteer Betaalmethode"
+
+# ============================================
+# ABOUT PAGE
+# ============================================
+
+msgid "About"
+msgstr "Over"
+
+msgid "Our Story"
+msgstr "Ons Verhaal"
+
+msgid "Our Mission"
+msgstr "Onze Missie"
+
+msgid "Our Vision"
+msgstr "Onze Visie"
+
+msgid "Our Team"
+msgstr "Ons Team"
+
+msgid "Why Choose Us"
+msgstr "Waarom Ons Kiezen"
+
+msgid "Contact Information"
+msgstr "Contactgegevens"
+
+# ============================================
+# FAQ & RENTAL TERMS
+# ============================================
+
+msgid "Frequently Asked Questions"
+msgstr "Veelgestelde Vragen"
+
+msgid "Rental Terms & Conditions"
+msgstr "Huurvoorwaarden"
+
+msgid "Edit Terms"
+msgstr "Voorwaarden Bewerken"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Content"
+msgstr "Inhoud"
+
+msgid "Active"
+msgstr "Actief"
+
+msgid "Inactive"
+msgstr "Inactief"
+
+msgid "Last updated:"
+msgstr "Laatst bijgewerkt:"
+
+msgid "Question"
+msgstr "Vraag"
+
+msgid "Answer"
+msgstr "Antwoord"
+
+msgid "Order"
+msgstr "Volgorde"
+
+msgid "Add FAQ"
+msgstr "Vraag Toevoegen"
+
+msgid "Edit FAQ"
+msgstr "Vraag Bewerken"
+
+msgid "Delete FAQ"
+msgstr "Vraag Verwijderen"
+
+msgid "Update Terms"
+msgstr "Voorwaarden Bijwerken"
+
+# ============================================
+# ADMIN DASHBOARD
+# ============================================
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Dashboard Overview"
+msgstr "Dashboard Overzicht"
+
+msgid "Total Revenue"
+msgstr "Totale Omzet"
+
+msgid "Total Orders"
+msgstr "Totaal Bestellingen"
+
+msgid "Total Customers"
+msgstr "Totaal Klanten"
+
+msgid "Customers"
+msgstr "Klanten"
+
+msgid "Recent Orders"
+msgstr "Recente Bestellingen"
+
+msgid "Top Products"
+msgstr "Top Producten"
+
+msgid "Sales Overview"
+msgstr "Verkoopoverzicht"
+
+msgid "This month"
+msgstr "Deze maand"
+
+msgid "New this month"
+msgstr "Nieuw deze maand"
+
+msgid "Pending Orders"
+msgstr "Openstaande Bestellingen"
+
+msgid "Awaiting payment"
+msgstr "Wachtend op betaling"
+
+msgid "Being prepared"
+msgstr "Wordt voorbereid"
+
+msgid "Reports"
+msgstr "Rapporten"
+
+msgid "Reports & Analytics"
+msgstr "Rapporten & Analyses"
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Overall"
+msgstr "Algemeen"
+
+# ============================================
+# STOCK MANAGEMENT
+# ============================================
+
+msgid "Stock Management"
+msgstr "Voorraadbeheer"
+
+msgid "Rental Records"
+msgstr "Verhuuroverzicht"
+
+msgid "All Rentals"
+msgstr "Alle Verhuren"
+
+msgid "Active Rentals"
+msgstr "Actieve Verhuren"
+
+msgid "Overdue Rentals"
+msgstr "Te Late Verhuren"
+
+msgid "Returned"
+msgstr "Geretourneerd"
+
+msgid "Not Returned"
+msgstr "Niet Geretourneerd"
+
+msgid "Mark as Returned"
+msgstr "Markeer als Geretourneerd"
+
+msgid "Renter"
+msgstr "Huurder"
+
+msgid "Rented On"
+msgstr "Gehuurd Op"
+
+msgid "Due Date"
+msgstr "Vervaldatum"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Overdue"
+msgstr "Te Laat"
+
+msgid "On Time"
+msgstr "Op Tijd"
+
+# ============================================
+# CRUD OPERATIONS
+# ============================================
+
+msgid "Add"
+msgstr "Toevoegen"
+
+msgid "Edit"
+msgstr "Bewerken"
+
+msgid "Delete"
+msgstr "Verwijderen"
+
+msgid "View"
+msgstr "Bekijken"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Confirm"
+msgstr "Bevestigen"
+
+msgid "Create"
+msgstr "Aanmaken"
+
+msgid "Update"
+msgstr "Bijwerken"
+
+msgid "Search"
+msgstr "Zoeken"
+
+msgid "Filter"
+msgstr "Filteren"
+
+msgid "Clear"
+msgstr "Wissen"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Submit"
+msgstr "Verzenden"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Actions"
+msgstr "Acties"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "More"
+msgstr "Meer"
+
+msgid "Less"
+msgstr "Minder"
+
+msgid "Show All"
+msgstr "Alles Tonen"
+
+msgid "Hide"
+msgstr "Verbergen"
+
+msgid "Loading..."
+msgstr "Laden..."
+
+msgid "No results found"
+msgstr "Geen resultaten gevonden"
+
+msgid "Are you sure?"
+msgstr "Weet je het zeker?"
+
+msgid "This action cannot be undone."
+msgstr "Deze actie kan niet ongedaan worden gemaakt."
+
+msgid "Yes, delete"
+msgstr "Ja, verwijderen"
+
+msgid "No, cancel"
+msgstr "Nee, annuleren"
+
+# ============================================
+# PRODUCT MANAGEMENT
+# ============================================
+
+msgid "Add Product"
+msgstr "Product Toevoegen"
+
+msgid "Edit Product"
+msgstr "Product Bewerken"
+
+msgid "Delete Product"
+msgstr "Product Verwijderen"
+
+msgid "Product Name"
+msgstr "Productnaam"
+
+msgid "Product Image"
+msgstr "Productafbeelding"
+
+msgid "Primary Image"
+msgstr "Hoofdafbeelding"
+
+msgid "Featured"
+msgstr "Uitgelicht"
+
+msgid "Active"
+msgstr "Actief"
+
+msgid "SKU"
+msgstr "SKU"
+
+# ============================================
+# CATEGORY MANAGEMENT
+# ============================================
+
+msgid "Add Category"
+msgstr "Categorie Toevoegen"
+
+msgid "Edit Category"
+msgstr "Categorie Bewerken"
+
+msgid "Delete Category"
+msgstr "Categorie Verwijderen"
+
+msgid "Category Name"
+msgstr "Categorienaam"
+
+msgid "Parent Category"
+msgstr "Bovenliggende Categorie"
+
+msgid "No parent"
+msgstr "Geen bovenliggende"
+
+# ============================================
+# EVENT TYPE MANAGEMENT
+# ============================================
+
+msgid "Event Types"
+msgstr "Evenementtypes"
+
+msgid "Event Type"
+msgstr "Evenementtype"
+
+msgid "Add Event Type"
+msgstr "Evenementtype Toevoegen"
+
+msgid "Edit Event Type"
+msgstr "Evenementtype Bewerken"
+
+msgid "Delete Event Type"
+msgstr "Evenementtype Verwijderen"
+
+# ============================================
+# ORDER MANAGEMENT
+# ============================================
+
+msgid "Orders"
+msgstr "Bestellingen"
+
+msgid "Order Management"
+msgstr "Bestellingenbeheer"
+
+msgid "View Order"
+msgstr "Bestelling Bekijken"
+
+msgid "Update Status"
+msgstr "Status Bijwerken"
+
+msgid "Customer"
+msgstr "Klant"
+
+msgid "Customer Name"
+msgstr "Klantnaam"
+
+msgid "Customer Email"
+msgstr "E-mail Klant"
+
+msgid "Order Items"
+msgstr "Bestelitems"
+
+msgid "Unit Price"
+msgstr "Stukprijs"
+
+msgid "Payment Status"
+msgstr "Betaalstatus"
+
+msgid "Notes"
+msgstr "Opmerkingen"
+
+# ============================================
+# MESSAGES & NOTIFICATIONS
+# ============================================
+
+msgid "Success"
+msgstr "Succes"
+
+msgid "Error"
+msgstr "Fout"
+
+msgid "Warning"
+msgstr "Waarschuwing"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Product added to cart successfully"
+msgstr "Product succesvol toegevoegd aan winkelwagen"
+
+msgid "Product removed from cart"
+msgstr "Product verwijderd uit winkelwagen"
+
+msgid "Cart updated successfully"
+msgstr "Winkelwagen succesvol bijgewerkt"
+
+msgid "Order placed successfully"
+msgstr "Bestelling succesvol geplaatst"
+
+msgid "Profile updated successfully"
+msgstr "Profiel succesvol bijgewerkt"
+
+msgid "Password changed successfully"
+msgstr "Wachtwoord succesvol gewijzigd"
+
+msgid "Something went wrong. Please try again."
+msgstr "Er ging iets mis. Probeer het opnieuw."
+
+msgid "Please fill in all required fields"
+msgstr "Vul alstublieft alle verplichte velden in"
+
+msgid "Invalid email address"
+msgstr "Ongeldig e-mailadres"
+
+msgid "Passwords do not match"
+msgstr "Wachtwoorden komen niet overeen"
+
+# ============================================
+# DATES & TIMES
+# ============================================
+
+msgid "Today"
+msgstr "Vandaag"
+
+msgid "Yesterday"
+msgstr "Gisteren"
+
+msgid "Tomorrow"
+msgstr "Morgen"
+
+msgid "This week"
+msgstr "Deze week"
+
+msgid "This month"
+msgstr "Deze maand"
+
+msgid "This year"
+msgstr "Dit jaar"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Time"
+msgstr "Tijd"
+
+msgid "Created"
+msgstr "Aangemaakt"
+
+msgid "Updated"
+msgstr "Bijgewerkt"
+
+msgid "Created at"
+msgstr "Aangemaakt op"
+
+msgid "Updated at"
+msgstr "Bijgewerkt op"
+
+# ============================================
+# MISC
+# ============================================
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "None"
+msgstr "Geen"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "Image"
+msgstr "Afbeelding"
+
+msgid "Images"
+msgstr "Afbeeldingen"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Required"
+msgstr "Verplicht"
+
+msgid "Optional"
+msgstr "Optioneel"
+
+msgid "or"
+msgstr "of"
+
+msgid "and"
+msgstr "en"
+
+msgid "of"
+msgstr "van"
+
+msgid "orders"
+msgstr "bestellingen"
+
+msgid "out of stock"
+msgstr "niet op voorraad"
+
+msgid "All in stock"
+msgstr "Alles op voorraad"
+
+msgid "No orders yet"
+msgstr "Nog geen bestellingen"
+
+msgid "No products yet"
+msgstr "Nog geen producten"
+
+# ============================================
+# HOMEPAGE ADDITIONAL
+# ============================================
+
+msgid "Event Ordering Made Easy"
+msgstr "Evenement Bestellen Gemakkelijk Gemaakt"
+
+msgid "Make Your Event"
+msgstr "Maak Uw Evenement"
+
+msgid "Unforgettable"
+msgstr "Onvergetelijk"
+
+msgid "Everything you need for birthdays, weddings, and private parties. Browse, select, and order with ease."
+msgstr "Alles wat u nodig heeft voor verjaardagen, bruiloften en privéfeesten. Blader, selecteer en bestel met gemak."
+
+msgid "Shop Now"
+msgstr "Nu Winkelen"
+
+msgid "Explore Categories"
+msgstr "Ontdek Categorieën"
+
+msgid "Shop by Event"
+msgstr "Winkel per Evenement"
+
+msgid "Find everything you need for your special occasion"
+msgstr "Vind alles wat u nodig heeft voor uw speciale gelegenheid"
+
+msgid "Popular Categories"
+msgstr "Populaire Categorieën"
+
+msgid "Browse our most popular product categories"
+msgstr "Blader door onze meest populaire productcategorieën"
+
+msgid "View All Categories"
+msgstr "Bekijk Alle Categorieën"
+
+msgid "Hand-picked items for your special events"
+msgstr "Handgeselecteerde artikelen voor uw speciale evenementen"
+
+msgid "New Arrivals"
+msgstr "Nieuw Binnen"
+
+msgid "Check out our latest additions"
+msgstr "Bekijk onze nieuwste toevoegingen"
+
+msgid "See All New"
+msgstr "Bekijk Alles Nieuw"
+
+msgid "Ready to Create Your Perfect Event?"
+msgstr "Klaar om Uw Perfecte Evenement te Creëren?"
+
+msgid "Browse our extensive collection of event supplies, decorations, and services. We've got everything you need to make your celebration memorable."
+msgstr "Blader door onze uitgebreide collectie evenementbenodigdheden, decoraties en diensten. Wij hebben alles wat u nodig heeft om uw feest onvergetelijk te maken."
+
+msgid "products"
+msgstr "producten"
+
+msgid "Coming soon..."
+msgstr "Binnenkort beschikbaar..."
+
+msgid "Event types coming soon..."
+msgstr "Evenementtypes binnenkort beschikbaar..."
+
+msgid "Categories coming soon..."
+msgstr "Categorieën binnenkort beschikbaar..."
+
+msgid "Featured products coming soon..."
+msgstr "Uitgelichte producten binnenkort beschikbaar..."
+
+msgid "New products coming soon..."
+msgstr "Nieuwe producten binnenkort beschikbaar..."
