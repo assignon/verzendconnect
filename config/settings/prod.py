@@ -11,18 +11,19 @@ INSTALLED_APPS += ['anymail']
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()]
 
-# Database - PostgreSQL for production
+# Database - PostgreSQL for production (DigitalOcean Managed Database)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'verzendconnect'),
-        'USER': os.getenv('DB_USER', 'verzendconnect'),
+        'NAME': os.getenv('DB_NAME', 'defaultdb'),
+        'USER': os.getenv('DB_USER', ''),
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', '25060'),
         'CONN_MAX_AGE': 60,
         'OPTIONS': {
             'connect_timeout': 10,
+            'sslmode': 'require',
         },
     }
 }

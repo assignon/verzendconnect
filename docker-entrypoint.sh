@@ -1,12 +1,17 @@
 #!/bin/bash
 set -e
 
-# Wait for database to be ready
-echo "Waiting for database..."
-while ! nc -z $DB_HOST ${DB_PORT:-5432}; do
-    sleep 1
-done
-echo "Database is ready!"
+# Wait for database to be ready (only if DB_HOST is 'db' - local Docker container)
+# For DigitalOcean managed databases, skip this check
+if [ "$DB_HOST" = "db" ]; then
+    echo "Waiting for database..."
+    while ! nc -z $DB_HOST ${DB_PORT:-5432}; do
+        sleep 1
+    done
+    echo "Database is ready!"
+else
+    echo "Using external database: $DB_HOST"
+fi
 
 # Apply database migrations
 echo "Applying database migrations..."

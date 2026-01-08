@@ -12,11 +12,8 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.prod
-      - DB_HOST=db
       - REDIS_URL=redis://redis:6379/0
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_started
 
@@ -55,11 +52,8 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.prod
-      - DB_HOST=db
       - REDIS_URL=redis://redis:6379/0
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_started
 
@@ -73,11 +67,8 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.prod
-      - DB_HOST=db
       - REDIS_URL=redis://redis:6379/0
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_started
 
