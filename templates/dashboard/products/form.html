@@ -49,6 +49,23 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="selling_type" class="label">
+                            Selling Type *
+                        </label>
+                        <select name="selling_type" id="selling_type" class="input" onchange="toggleSellingTypeFields()">
+                            {% for value, label in selling_type_choices %}
+                            <option value="{{ value }}" {% if object.selling_type == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="mt-2 text-sm text-gray-500">
+                            <strong>Rental:</strong> Clients rent for a period and return.<br>
+                            <strong>Selling:</strong> Clients purchase permanently.
+                        </p>
+                    </div>
+                </div>
+
                 <div>
                     <label for="{{ form.event_types.id_for_label }}" class="label">
                         Event Types
@@ -129,8 +146,8 @@
                 </div>
             </div>
 
-            <!-- Rental Date Restrictions -->
-            <div class="space-y-6">
+            <!-- Rental Date Restrictions (Only for Rental Products) -->
+            <div id="rental-restrictions-section" class="space-y-6">
                 <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Rental Period Restrictions</h3>
                 <p class="text-sm text-gray-500 -mt-4">Set a date range for when this product can be rented. Leave empty for no restrictions.</p>
 
@@ -159,6 +176,28 @@
                         {% if form.rental_end_date.errors %}
                             <p class="mt-2 text-sm text-red-600">{{ form.rental_end_date.errors.0 }}</p>
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Rental Products (Only for Selling Products) -->
+            <div id="related-products-section" class="space-y-6" style="display: none;">
+                <h3 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Related Rental Products</h3>
+                <p class="text-sm text-gray-500 -mt-4">Select rental products that can be paired with this selling product. When customers view these rental products, this product will be shown as "Products you can buy".</p>
+
+                <div class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {% for rental_product in rental_products %}
+                        <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer">
+                            <input type="checkbox" name="related_rental_products" value="{{ rental_product.id }}"
+                                   {% if object and rental_product in object.related_rental_products.all %}checked{% endif %}
+                                   class="h-4 w-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                            <span class="ml-3 text-sm text-gray-700 font-medium">{{ rental_product.name }}</span>
+                            <span class="ml-auto text-xs text-gray-500">€{{ rental_product.current_price }}</span>
+                        </label>
+                        {% empty %}
+                        <p class="text-gray-500 col-span-2">No rental products available. Create rental products first.</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -224,6 +263,31 @@
 </div>
 
 <script>
+// Toggle fields based on selling type
+function toggleSellingTypeFields() {
+    const sellingType = document.getElementById('selling_type').value;
+    const rentalSection = document.getElementById('rental-restrictions-section');
+    const relatedSection = document.getElementById('related-products-section');
+    
+    if (sellingType === 'rental') {
+        rentalSection.style.display = 'block';
+        relatedSection.style.display = 'none';
+        // Clear related products checkboxes when switching to rental
+        document.querySelectorAll('input[name="related_rental_products"]').forEach(cb => cb.checked = false);
+    } else if (sellingType === 'selling') {
+        rentalSection.style.display = 'none';
+        relatedSection.style.display = 'block';
+        // Clear rental date restrictions when switching to selling
+        document.querySelector('input[name="rental_start_date"]').value = '';
+        document.querySelector('input[name="rental_end_date"]').value = '';
+    }
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', function() {
+    toggleSellingTypeFields();
+});
+
 // Auto-format price inputs
 document.querySelectorAll('input[name="price"], input[name="sale_price"]').forEach(input => {
     input.addEventListener('input', function(e) {

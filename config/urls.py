@@ -34,7 +34,7 @@ urlpatterns += i18n_patterns(
     path('cart/', include('apps.orders.urls')),
     path('payments/', include('apps.payments.urls')),
     path('api/', include('apps.core.api_urls')),
-    prefix_default_language=False,  # Don't prefix default language (English)
+    prefix_default_language=False,  # Don't prefix default language (Dutch)
 )
 
 # Serve media files in development

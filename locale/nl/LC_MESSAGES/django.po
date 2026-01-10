@@ -1132,3 +1132,131 @@ msgstr "Uitgelichte producten binnenkort beschikbaar..."
 
 msgid "New products coming soon..."
 msgstr "Nieuwe producten binnenkort beschikbaar..."
+
+# ============================================
+# ADMIN DASHBOARD
+# ============================================
+
+msgid "Admin Dashboard"
+msgstr "Beheer Dashboard"
+
+msgid "Admin Panel VerzendConnect"
+msgstr "Beheerpaneel VerzendConnect"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Dashboard Overview"
+msgstr "Dashboard Overzicht"
+
+msgid "Products"
+msgstr "Producten"
+
+msgid "Event Types"
+msgstr "Evenementtypes"
+
+msgid "Orders"
+msgstr "Bestellingen"
+
+msgid "Stock Management"
+msgstr "Voorraadbeheer"
+
+msgid "Overall"
+msgstr "Algemeen"
+
+msgid "Company Info"
+msgstr "Bedrijfsinformatie"
+
+msgid "Reports"
+msgstr "Rapporten"
+
+msgid "Welcome back"
+msgstr "Welkom terug"
+
+msgid "Total Revenue"
+msgstr "Totale Omzet"
+
+msgid "This month"
+msgstr "Deze maand"
+
+msgid "Total Orders"
+msgstr "Totale Bestellingen"
+
+msgid "Customers"
+msgstr "Klanten"
+
+msgid "New this month"
+msgstr "Nieuw deze maand"
+
+msgid "out of stock"
+msgstr "niet op voorraad"
+
+msgid "All in stock"
+msgstr "Alles op voorraad"
+
+msgid "Pending Orders"
+msgstr "Openstaande Bestellingen"
+
+msgid "Awaiting payment"
+msgstr "Wachten op betaling"
+
+msgid "Processing"
+msgstr "In behandeling"
+
+msgid "Being prepared"
+msgstr "Wordt voorbereid"
+
+msgid "Completed"
+msgstr "Voltooid"
+
+msgid "Delivered"
+msgstr "Afgeleverd"
+
+msgid "Sales Overview"
+msgstr "Verkoopoverzicht"
+
+msgid "Sales (€)"
+msgstr "Verkoop (€)"
+
+msgid "Recent Orders"
+msgstr "Recente Bestellingen"
+
+msgid "No orders yet"
+msgstr "Nog geen bestellingen"
+
+msgid "Top Products"
+msgstr "Top Producten"
+
+msgid "orders"
+msgstr "bestellingen"
+
+msgid "No products yet"
+msgstr "Nog geen producten"
+
+# ============================================
+# SELLING TYPE TRANSLATIONS
+# ============================================
+
+msgid "Rental"
+msgstr "Verhuur"
+
+msgid "Selling"
+msgstr "Verkoop"
+
+msgid "Purchase"
+msgstr "Aankoop"
+
+msgid "Buy Now"
+msgstr "Nu Kopen"
+
+msgid "Products You Can Buy"
+msgstr "Producten die u kunt kopen"
+
+msgid "Complete your rental with these products for purchase."
+msgstr "Maak uw huur compleet met deze producten voor aankoop."
+
+msgid "This product is available for purchase. No rental dates required."
+msgstr "Dit product is beschikbaar voor aankoop. Geen verhuurdatums nodig."
+
+msgid "Related Products"
+msgstr "Gerelateerde Producten"

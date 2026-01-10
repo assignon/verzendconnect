@@ -132,7 +132,8 @@
             </div>
             {% endif %}
             
-            <!-- Rental Dates -->
+            {% if product.is_rental %}
+            <!-- Rental Dates (Only for rental products) -->
             <div class="pt-4 border-t border-secondary-200 space-y-4">
                 <h3 class="font-semibold text-lg text-secondary-800">{% trans "Rental Period" %}</h3>
                 
@@ -193,6 +194,19 @@
                     <p class="text-sm text-yellow-800" id="availability-text"></p>
                 </div>
             </div>
+            {% else %}
+            <!-- Selling Product Notice -->
+            <div class="pt-4 border-t border-secondary-200">
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <p class="text-sm text-green-800">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        {% trans "This product is available for purchase. No rental dates required." %}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
 
             <!-- Quantity and Add to Cart -->
             <div class="flex flex-col sm:flex-row gap-4 pt-4">
@@ -212,14 +226,14 @@
                 
                 <button 
                     id="add-to-cart-btn"
-                    onclick="addToCartWithDates()"
+                    onclick="addToCart()"
                     class="btn btn-primary flex-1 {% if not product.in_stock %}opacity-50 cursor-not-allowed{% endif %}"
                     {% if not product.in_stock %}disabled{% endif %}
                 >
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    {% trans "Add to Cart" %}
+                    {% if product.is_rental %}{% trans "Add to Cart" %}{% else %}{% trans "Buy Now" %}{% endif %}
                 </button>
             </div>
             
@@ -233,13 +247,30 @@
         </div>
     </div>
     
+    {% if product.is_rental %}
+    <!-- Products You Can Buy With This Rental -->
+    {% with selling_products=product.get_related_selling_products %}
+    {% if selling_products %}
+    <section class="mt-16 pt-12 border-t border-secondary-200">
+        <h2 class="section-title mb-4">{% trans "Products You Can Buy" %}</h2>
+        <p class="text-secondary-600 mb-8">{% trans "Complete your rental with these products for purchase." %}</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {% for selling_product in selling_products %}
+            {% include 'core/partials/product_card.html' with product=selling_product %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    {% endwith %}
+    {% endif %}
+
     <!-- Related Products -->
     {% if related_products %}
     <section class="mt-16 pt-12 border-t border-secondary-200">
-        <h2 class="section-title mb-8">Related Products</h2>
+        <h2 class="section-title mb-8">{% trans "Related Products" %}</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {% for product in related_products %}
-            {% include 'core/partials/product_card.html' with product=product %}
+            {% for related in related_products %}
+            {% include 'core/partials/product_card.html' with product=related %}
             {% endfor %}
         </div>
     </section>
@@ -249,52 +280,71 @@
 
 {% block extra_js %}
 <script>
+// Product type - determines if rental dates are needed
+const isRentalProduct = {{ product.is_rental|yesno:"true,false" }};
+
 // Set minimum date for rental start
 document.addEventListener('DOMContentLoaded', function() {
-    const startDateInput = document.getElementById('rental-start-date');
-    const endDateInput = document.getElementById('rental-end-date');
-    
-    // When start date changes, update end date minimum
-    startDateInput.addEventListener('change', function() {
-        if (this.value) {
-            // End date must be after start date
-            const startDate = new Date(this.value);
-            startDate.setDate(startDate.getDate() + 1);
-            const minEndDate = startDate.toISOString().split('T')[0];
-            endDateInput.min = minEndDate;
-            
-            // If current end date is before new minimum, reset it
-            if (endDateInput.value && endDateInput.value <= this.value) {
-                endDateInput.value = '';
-            }
+    if (isRentalProduct) {
+        const startDateInput = document.getElementById('rental-start-date');
+        const endDateInput = document.getElementById('rental-end-date');
+        
+        if (startDateInput && endDateInput) {
+            // When start date changes, update end date minimum
+            startDateInput.addEventListener('change', function() {
+                if (this.value) {
+                    // End date must be after start date
+                    const startDate = new Date(this.value);
+                    startDate.setDate(startDate.getDate() + 1);
+                    const minEndDate = startDate.toISOString().split('T')[0];
+                    endDateInput.min = minEndDate;
+                    
+                    // If current end date is before new minimum, reset it
+                    if (endDateInput.value && endDateInput.value <= this.value) {
+                        endDateInput.value = '';
+                    }
+                }
+            });
         }
-    });
+    }
 });
 
-// Add to cart with rental dates
-function addToCartWithDates() {
-    const startDate = document.getElementById('rental-start-date').value;
-    const endDate = document.getElementById('rental-end-date').value;
+// Add to cart - handles both rental and selling products
+function addToCart() {
     const quantity = parseInt(document.getElementById('quantity-input').value) || 1;
     const productId = {{ product.id }};
     
-    // Validate dates
-    if (!startDate) {
-        showNotification('{% trans "Please select a rental start date" %}', 'error');
-        document.getElementById('rental-start-date').focus();
-        return;
-    }
+    let payload = {
+        product_id: productId,
+        quantity: quantity
+    };
     
-    if (!endDate) {
-        showNotification('{% trans "Please select a return date" %}', 'error');
-        document.getElementById('rental-end-date').focus();
-        return;
-    }
-    
-    if (new Date(endDate) <= new Date(startDate)) {
-        showNotification('{% trans "Return date must be after start date" %}', 'error');
-        document.getElementById('rental-end-date').focus();
-        return;
+    if (isRentalProduct) {
+        // For rental products, validate and include dates
+        const startDate = document.getElementById('rental-start-date').value;
+        const endDate = document.getElementById('rental-end-date').value;
+        
+        // Validate dates
+        if (!startDate) {
+            showNotification('{% trans "Please select a rental start date" %}', 'error');
+            document.getElementById('rental-start-date').focus();
+            return;
+        }
+        
+        if (!endDate) {
+            showNotification('{% trans "Please select a return date" %}', 'error');
+            document.getElementById('rental-end-date').focus();
+            return;
+        }
+        
+        if (new Date(endDate) <= new Date(startDate)) {
+            showNotification('{% trans "Return date must be after start date" %}', 'error');
+            document.getElementById('rental-end-date').focus();
+            return;
+        }
+        
+        payload.rental_start_date = startDate;
+        payload.rental_end_date = endDate;
     }
     
     // Add to cart via AJAX
@@ -304,12 +354,7 @@ function addToCartWithDates() {
             'Content-Type': 'application/json',
             'X-CSRFToken': '{{ csrf_token }}'
         },
-        body: JSON.stringify({
-            product_id: productId,
-            quantity: quantity,
-            rental_start_date: startDate,
-            rental_end_date: endDate
-        })
+        body: JSON.stringify(payload)
     })
     .then(response => response.json())
     .then(data => {

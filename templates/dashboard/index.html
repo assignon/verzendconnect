@@ -1,10 +1,10 @@
 {% extends 'dashboard/base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}{% trans "Admin Dashboard" %}{% endblock %}
 
 {% block content %}
-{% block page_title %}Dashboard Overview{% endblock %}
+{% block page_title %}{% trans "Dashboard Overview" %}{% endblock %}
     
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -12,7 +12,7 @@
         <div class="bg-white rounded-xl shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Total Revenue</p>
+                    <p class="text-sm font-medium text-gray-500">{% trans "Total Revenue" %}</p>
                     <p class="text-2xl font-bold text-gray-900">€{{ total_revenue|floatformat:2 }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
@@ -21,14 +21,14 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-2">This month: €{{ revenue_this_month|floatformat:2 }}</p>
+            <p class="text-sm text-gray-500 mt-2">{% trans "This month" %}: €{{ revenue_this_month|floatformat:2 }}</p>
         </div>
         
         <!-- Total Orders -->
         <div class="bg-white rounded-xl shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Total Orders</p>
+                    <p class="text-sm font-medium text-gray-500">{% trans "Total Orders" %}</p>
                     <p class="text-2xl font-bold text-gray-900">{{ total_orders }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
@@ -37,14 +37,14 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-2">This month: {{ orders_this_month }}</p>
+            <p class="text-sm text-gray-500 mt-2">{% trans "This month" %}: {{ orders_this_month }}</p>
         </div>
         
         <!-- Total Customers -->
         <div class="bg-white rounded-xl shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Customers</p>
+                    <p class="text-sm font-medium text-gray-500">{% trans "Customers" %}</p>
                     <p class="text-2xl font-bold text-gray-900">{{ total_customers }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
@@ -53,14 +53,14 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-2">New this month: {{ new_customers_this_month }}</p>
+            <p class="text-sm text-gray-500 mt-2">{% trans "New this month" %}: {{ new_customers_this_month }}</p>
         </div>
         
         <!-- Products -->
         <div class="bg-white rounded-xl shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Products</p>
+                    <p class="text-sm font-medium text-gray-500">{% trans "Products" %}</p>
                     <p class="text-2xl font-bold text-gray-900">{{ total_products }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
@@ -71,9 +71,9 @@
             </div>
             <p class="text-sm text-gray-500 mt-2">
                 {% if out_of_stock_products > 0 %}
-                <span class="text-red-600">{{ out_of_stock_products }} out of stock</span>
+                <span class="text-red-600">{{ out_of_stock_products }} {% trans "out of stock" %}</span>
                 {% else %}
-                All in stock
+                {% trans "All in stock" %}
                 {% endif %}
             </p>
         </div>
@@ -87,8 +87,8 @@
                     <span class="text-white font-bold">{{ pending_orders }}</span>
                 </div>
                 <div>
-                    <p class="font-medium text-yellow-800">Pending Orders</p>
-                    <p class="text-sm text-yellow-600">Awaiting payment</p>
+                    <p class="font-medium text-yellow-800">{% trans "Pending Orders" %}</p>
+                    <p class="text-sm text-yellow-600">{% trans "Awaiting payment" %}</p>
                 </div>
             </div>
         </div>
@@ -99,8 +99,8 @@
                     <span class="text-white font-bold">{{ processing_orders }}</span>
                 </div>
                 <div>
-                    <p class="font-medium text-blue-800">Processing</p>
-                    <p class="text-sm text-blue-600">Being prepared</p>
+                    <p class="font-medium text-blue-800">{% trans "Processing" %}</p>
+                    <p class="text-sm text-blue-600">{% trans "Being prepared" %}</p>
                 </div>
             </div>
         </div>
@@ -111,8 +111,8 @@
                     <span class="text-white font-bold">{{ completed_orders }}</span>
                 </div>
                 <div>
-                    <p class="font-medium text-green-800">Completed</p>
-                    <p class="text-sm text-green-600">Delivered</p>
+                    <p class="font-medium text-green-800">{% trans "Completed" %}</p>
+                    <p class="text-sm text-green-600">{% trans "Delivered" %}</p>
                 </div>
             </div>
         </div>
@@ -121,7 +121,7 @@
     <!-- Sales Chart -->
     <div class="mb-8">
         <div class="bg-white rounded-xl shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Sales Overview</h2>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Sales Overview" %}</h2>
             <canvas id="salesChart" width="400" height="200"></canvas>
         </div>
     </div>
@@ -130,7 +130,7 @@
         <!-- Recent Orders -->
         <div class="bg-white rounded-xl shadow">
             <div class="p-6 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Recent Orders" %}</h2>
             </div>
             <div class="divide-y divide-gray-200">
                 {% for order in recent_orders %}
@@ -152,7 +152,7 @@
                     </div>
                 </a>
                 {% empty %}
-                <p class="p-6 text-gray-500 text-center">No orders yet</p>
+                <p class="p-6 text-gray-500 text-center">{% trans "No orders yet" %}</p>
                 {% endfor %}
             </div>
         </div>
@@ -160,7 +160,7 @@
         <!-- Top Products -->
         <div class="bg-white rounded-xl shadow">
             <div class="p-6 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Top Products</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Top Products" %}</h2>
             </div>
             <div class="divide-y divide-gray-200">
                 {% for product in top_products %}
@@ -172,12 +172,12 @@
                         </div>
                         <div class="text-right">
                             <p class="font-medium text-gray-900">€{{ product.price }}</p>
-                            <p class="text-sm text-gray-500">{{ product.order_count }} orders</p>
+                            <p class="text-sm text-gray-500">{{ product.order_count }} {% trans "orders" %}</p>
                         </div>
                     </div>
                 </a>
                 {% empty %}
-                <p class="p-6 text-gray-500 text-center">No products yet</p>
+                <p class="p-6 text-gray-500 text-center">{% trans "No products yet" %}</p>
                 {% endfor %}
             </div>
         </div>
@@ -194,7 +194,7 @@
             data: {
                 labels: {{ sales_chart_labels|safe }},
                 datasets: [{
-                    label: 'Sales (€)',
+                    label: '{% trans "Sales (€)" %}',
                     data: {{ sales_chart_data|safe }},
                     backgroundColor: '#c026d3',
                     borderColor: '#a21caf',

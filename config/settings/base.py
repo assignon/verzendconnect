@@ -99,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-LANGUAGE_CODE = 'en'  # English as default
+LANGUAGE_CODE = 'nl'  # Dutch as default
 TIME_ZONE = 'Europe/Amsterdam'
 USE_I18N = True
 USE_L10N = True
@@ -107,8 +107,8 @@ USE_TZ = True
 
 # Supported languages
 LANGUAGES = [
-    ('en', 'English'),
     ('nl', 'Nederlands'),
+    ('en', 'English'),
 ]
 
 # Locale paths

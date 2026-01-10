@@ -46,17 +46,28 @@
                             </a>
                             <p class="text-sm text-secondary-500 mt-1">{{ item.product.category.name }}</p>
                             
-                            <!-- Rental Period -->
-                            {% if item.rental_start_date and item.rental_end_date %}
-                            <div class="flex items-center gap-2 mt-2 text-sm">
-                                <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                                <span class="text-secondary-600">
-                                    {% trans "Rental:" %} {{ item.rental_start_date|date:"d M Y" }} - {{ item.rental_end_date|date:"d M Y" }}
-                                    <span class="text-secondary-400">({{ item.rental_days }} {% trans "days" %})</span>
-                                </span>
-                            </div>
+                            <!-- Product Type and Rental Period -->
+                            {% if item.product.is_rental %}
+                                {% if item.rental_start_date and item.rental_end_date %}
+                                <div class="flex items-center gap-2 mt-2 text-sm">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                        {% trans "Rental" %}
+                                    </span>
+                                    <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="text-secondary-600">
+                                        {{ item.rental_start_date|date:"d M Y" }} - {{ item.rental_end_date|date:"d M Y" }}
+                                        <span class="text-secondary-400">({{ item.rental_days }} {% trans "days" %})</span>
+                                    </span>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="flex items-center gap-2 mt-2 text-sm">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        {% trans "Purchase" %}
+                                    </span>
+                                </div>
                             {% endif %}
                         </div>
                         <form action="{% url 'orders:cart_remove' %}" method="post" class="inline">

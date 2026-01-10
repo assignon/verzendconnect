@@ -56,42 +56,60 @@ class CartAddView(CartMixin, View):
         except Product.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Product not found'}, status=404)
 
-        # Parse rental dates
+        # Parse rental dates (only for rental products)
         rental_start_date = None
         rental_end_date = None
         
-        if rental_start and rental_end:
-            try:
-                rental_start_date = datetime.strptime(rental_start, '%Y-%m-%d').date()
-                rental_end_date = datetime.strptime(rental_end, '%Y-%m-%d').date()
-            except ValueError:
-                return JsonResponse({'success': False, 'error': 'Invalid date format. Use YYYY-MM-DD'}, status=400)
-            
-            # Validate rental availability
-            can_rent, message = product.can_rent(rental_start_date, rental_end_date, quantity)
-            if not can_rent:
-                return JsonResponse({'success': False, 'error': message}, status=400)
+        if product.is_rental:
+            # Rental products require rental dates
+            if rental_start and rental_end:
+                try:
+                    rental_start_date = datetime.strptime(rental_start, '%Y-%m-%d').date()
+                    rental_end_date = datetime.strptime(rental_end, '%Y-%m-%d').date()
+                except ValueError:
+                    return JsonResponse({'success': False, 'error': 'Invalid date format. Use YYYY-MM-DD'}, status=400)
+                
+                # Validate rental availability
+                can_rent, message = product.can_rent(rental_start_date, rental_end_date, quantity)
+                if not can_rent:
+                    return JsonResponse({'success': False, 'error': message}, status=400)
+            else:
+                # Rental dates are required for rental products
+                return JsonResponse({'success': False, 'error': 'Rental start and end dates are required for rental products'}, status=400)
         else:
-            # Rental dates are required
-            return JsonResponse({'success': False, 'error': 'Rental start and end dates are required'}, status=400)
+            # Selling products - just check stock
+            can_purchase, message = product.can_purchase(quantity)
+            if not can_purchase:
+                return JsonResponse({'success': False, 'error': message}, status=400)
 
         cart = self.get_cart(request)
         
-        # Check for existing cart item with same product and dates
-        cart_item = CartItem.objects.filter(
-            cart=cart,
-            product=product,
-            rental_start_date=rental_start_date,
-            rental_end_date=rental_end_date
-        ).first()
+        # Check for existing cart item with same product (and dates for rental)
+        if product.is_rental:
+            cart_item = CartItem.objects.filter(
+                cart=cart,
+                product=product,
+                rental_start_date=rental_start_date,
+                rental_end_date=rental_end_date
+            ).first()
+        else:
+            cart_item = CartItem.objects.filter(
+                cart=cart,
+                product=product
+            ).first()
         
         if cart_item:
             # Update quantity
             new_quantity = cart_item.quantity + quantity
             # Re-validate availability
-            can_rent, message = product.can_rent(rental_start_date, rental_end_date, new_quantity)
-            if not can_rent:
-                return JsonResponse({'success': False, 'error': message}, status=400)
+            if product.is_rental:
+                can_rent, message = product.can_rent(rental_start_date, rental_end_date, new_quantity)
+                if not can_rent:
+                    return JsonResponse({'success': False, 'error': message}, status=400)
+            else:
+                can_purchase, message = product.can_purchase(new_quantity)
+                if not can_purchase:
+                    return JsonResponse({'success': False, 'error': message}, status=400)
             cart_item.quantity = new_quantity
             cart_item.save()
         else:
@@ -99,8 +117,8 @@ class CartAddView(CartMixin, View):
                 cart=cart,
                 product=product,
                 quantity=quantity,
-                rental_start_date=rental_start_date,
-                rental_end_date=rental_end_date
+                rental_start_date=rental_start_date if product.is_rental else None,
+                rental_end_date=rental_end_date if product.is_rental else None
             )
 
         # Check if AJAX request
@@ -143,13 +161,20 @@ class CartUpdateView(CartMixin, View):
             if quantity > 0:
                 # Validate stock availability
                 product = cart_item.product
-                if cart_item.rental_start_date and cart_item.rental_end_date:
-                    can_rent, message = product.can_rent(
-                        cart_item.rental_start_date, 
-                        cart_item.rental_end_date, 
-                        quantity
-                    )
-                    if not can_rent:
+                if product.is_rental:
+                    # For rental products, validate rental dates and availability
+                    if cart_item.rental_start_date and cart_item.rental_end_date:
+                        can_rent, message = product.can_rent(
+                            cart_item.rental_start_date, 
+                            cart_item.rental_end_date, 
+                            quantity
+                        )
+                        if not can_rent:
+                            return JsonResponse({'success': False, 'error': message}, status=400)
+                else:
+                    # For selling products, just check stock
+                    can_purchase, message = product.can_purchase(quantity)
+                    if not can_purchase:
                         return JsonResponse({'success': False, 'error': message}, status=400)
                 
                 cart_item.quantity = quantity
@@ -391,14 +416,27 @@ class CheckoutConfirmView(CartMixin, View):
         
         # Validate stock availability before creating order
         for cart_item in cart.items.all():
-            if cart_item.rental_start_date and cart_item.rental_end_date:
-                can_rent, message = cart_item.product.can_rent(
-                    cart_item.rental_start_date,
-                    cart_item.rental_end_date,
-                    cart_item.quantity
-                )
-                if not can_rent:
-                    messages.error(request, f"{cart_item.product.name}: {message}")
+            product = cart_item.product
+            
+            if product.is_rental:
+                # For rental products, validate rental dates and availability
+                if cart_item.rental_start_date and cart_item.rental_end_date:
+                    can_rent, message = product.can_rent(
+                        cart_item.rental_start_date,
+                        cart_item.rental_end_date,
+                        cart_item.quantity
+                    )
+                    if not can_rent:
+                        messages.error(request, f"{product.name}: {message}")
+                        return redirect('orders:cart')
+                else:
+                    messages.error(request, f"{product.name}: Rental dates are required for rental products.")
+                    return redirect('orders:cart')
+            else:
+                # For selling products, just check if stock is available
+                can_purchase, message = product.can_purchase(cart_item.quantity)
+                if not can_purchase:
+                    messages.error(request, f"{product.name}: {message}")
                     return redirect('orders:cart')
         
         # Get email with fallback
@@ -432,26 +470,30 @@ class CheckoutConfirmView(CartMixin, View):
         
         # Create order items and rental records
         for cart_item in cart.items.all():
+            product = cart_item.product
+            
+            # For rental products, include rental dates; for selling products, leave them null
             order_item = OrderItem.objects.create(
                 order=order,
-                product=cart_item.product,
-                product_name=cart_item.product.name,
+                product=product,
+                product_name=product.name,
                 quantity=cart_item.quantity,
                 price=cart_item.price,
                 total=cart_item.total,
-                rental_start_date=cart_item.rental_start_date,
-                rental_end_date=cart_item.rental_end_date,
+                rental_start_date=cart_item.rental_start_date if product.is_rental else None,
+                rental_end_date=cart_item.rental_end_date if product.is_rental else None,
             )
             
-            # Deduct stock from product
-            product = cart_item.product
+            # Deduct stock from product (for both rental and selling products)
             product.stock = max(0, product.stock - cart_item.quantity)
             product.save(update_fields=['stock'])
             
-            # Create rental record for stock tracking
-            if cart_item.rental_start_date and cart_item.rental_end_date:
+            # Create rental record for stock tracking (only for rental products)
+            # Stock for rental products will be restored when marked as returned
+            # Stock for selling products is permanently reduced
+            if product.is_rental and cart_item.rental_start_date and cart_item.rental_end_date:
                 RentalRecord.objects.create(
-                    product=cart_item.product,
+                    product=product,
                     order_item=order_item,
                     customer=order.user,
                     customer_name=order.shipping_full_name,

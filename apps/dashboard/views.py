@@ -192,9 +192,9 @@ class ProductCreateView(SuperuserRequiredMixin, CreateView):
     """Create new product."""
     model = Product
     template_name = 'dashboard/products/form.html'
-    fields = ['name', 'category', 'event_types', 'price', 'sale_price', 'stock',
+    fields = ['name', 'category', 'event_types', 'selling_type', 'price', 'sale_price', 'stock',
               'short_description', 'description', 'is_available', 'is_active', 'is_featured',
-              'rental_start_date', 'rental_end_date']
+              'rental_start_date', 'rental_end_date', 'related_rental_products']
     success_url = reverse_lazy('dashboard:products')
 
     def get_context_data(self, **kwargs):
@@ -202,6 +202,12 @@ class ProductCreateView(SuperuserRequiredMixin, CreateView):
         context['title'] = 'Add Product'
         context['categories'] = Category.objects.filter(is_active=True)
         context['event_types'] = EventType.objects.filter(is_active=True)
+        context['selling_type_choices'] = Product.SELLING_TYPE_CHOICES
+        # Get rental products for the related_rental_products field (for selling products)
+        context['rental_products'] = Product.objects.filter(
+            selling_type=Product.SELLING_TYPE_RENTAL,
+            is_active=True
+        ).order_by('name')
         return context
 
     def form_valid(self, form):
@@ -224,9 +230,9 @@ class ProductUpdateView(SuperuserRequiredMixin, UpdateView):
     """Update existing product."""
     model = Product
     template_name = 'dashboard/products/form.html'
-    fields = ['name', 'category', 'event_types', 'price', 'sale_price', 'stock',
+    fields = ['name', 'category', 'event_types', 'selling_type', 'price', 'sale_price', 'stock',
               'short_description', 'description', 'is_available', 'is_active', 'is_featured',
-              'rental_start_date', 'rental_end_date']
+              'rental_start_date', 'rental_end_date', 'related_rental_products']
     success_url = reverse_lazy('dashboard:products')
 
     def get_context_data(self, **kwargs):
@@ -234,6 +240,16 @@ class ProductUpdateView(SuperuserRequiredMixin, UpdateView):
         context['title'] = 'Edit Product'
         context['categories'] = Category.objects.filter(is_active=True)
         context['event_types'] = EventType.objects.filter(is_active=True)
+        context['selling_type_choices'] = Product.SELLING_TYPE_CHOICES
+        # Get rental products for the related_rental_products field (for selling products)
+        # Exclude the current product if it's a rental product
+        rental_products = Product.objects.filter(
+            selling_type=Product.SELLING_TYPE_RENTAL,
+            is_active=True
+        ).order_by('name')
+        if self.object.pk:
+            rental_products = rental_products.exclude(pk=self.object.pk)
+        context['rental_products'] = rental_products
         return context
 
     def form_valid(self, form):

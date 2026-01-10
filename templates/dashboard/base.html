@@ -1,10 +1,10 @@
 {% load static i18n %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<html lang="{{ LANGUAGE_CODE|default:'nl' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Admin Dashboard{% endblock %} - VerzendConnect</title>
+    <title>{% block title %}{% trans "Admin Dashboard" %}{% endblock %} - VerzendConnect</title>
     
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
@@ -36,7 +36,7 @@
             <div class="p-6 border-b border-gray-200">
                 <a href="{% url 'dashboard:index' %}" class="flex flex-col items-center gap-2">
                     <img src="{% static 'images/verzendconnectlogo.png' %}" alt="VerzendConnect" class="h-10 w-auto">
-                    <p class="text-sm font-semibold text-gray-700 text-center">Admin Panel VerzendConnect</p>
+                    <p class="text-sm font-semibold text-gray-700 text-center">{% trans "Admin Panel VerzendConnect" %}</p>
                 </a>
             </div>
 
@@ -48,7 +48,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"/>
                         </svg>
-                        Dashboard
+                        {% trans "Dashboard" %}
                     </a>
 
                     <!-- Products -->
@@ -56,7 +56,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                         </svg>
-                        Products
+                        {% trans "Products" %}
                     </a>
 
                     <!-- Categories -->
@@ -64,7 +64,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                         </svg>
-                        Categories
+                        {% trans "Categories" %}
                     </a>
 
                     <!-- Event Types -->
@@ -72,7 +72,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                        Event Types
+                        {% trans "Event Types" %}
                     </a>
 
                     <!-- Orders -->
@@ -80,7 +80,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
-                        Orders
+                        {% trans "Orders" %}
                     </a>
 
                     <!-- Stock Management -->
@@ -88,7 +88,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                         </svg>
-                        Stock Management
+                        {% trans "Stock Management" %}
                     </a>
 
                     <!-- Overall Management -->
@@ -96,7 +96,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Overall
+                        {% trans "Overall" %}
                     </a>
 
                     <!-- Company Info -->
@@ -104,7 +104,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
-                        Company Info
+                        {% trans "Company Info" %}
                     </a>
 
                     <!-- Reports -->
@@ -112,7 +112,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
-                        Reports
+                        {% trans "Reports" %}
                     </a>
                 </div>
 
@@ -122,7 +122,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
-                        Logout
+                        {% trans "Logout" %}
                     </a>
                 </div>
             </nav>
@@ -134,8 +134,8 @@
             <header class="bg-white shadow-sm border-b border-gray-200 px-8 py-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">{% block page_title %}Dashboard{% endblock %}</h1>
-                        <p class="text-sm text-gray-500">Welcome back, {{ user.first_name|default:user.username }}</p>
+                        <h1 class="text-2xl font-bold text-gray-900">{% block page_title %}{% trans "Dashboard" %}{% endblock %}</h1>
+                        <p class="text-sm text-gray-500">{% trans "Welcome back" %}, {{ user.first_name|default:user.username }}</p>
                     </div>
                     <div class="flex items-center gap-4">
                         <!-- Language Switcher -->

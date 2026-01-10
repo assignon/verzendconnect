@@ -43,7 +43,7 @@ def set_language_custom(request):
         request.session['django_language'] = language
         
         # Handle URL translation based on prefix_default_language setting
-        # Since prefix_default_language=False, default language (nl) has no prefix
+        # Since prefix_default_language=False, default language (Dutch/nl) has no prefix
         default_lang = settings.LANGUAGE_CODE
         
         # Parse the next_url to extract path and query string

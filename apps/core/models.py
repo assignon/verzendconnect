@@ -78,6 +78,15 @@ class Category(models.Model):
 
 class Product(models.Model):
     """Products and services for events."""
+    
+    # Selling Type Choices
+    SELLING_TYPE_RENTAL = 'rental'
+    SELLING_TYPE_SELLING = 'selling'
+    SELLING_TYPE_CHOICES = [
+        (SELLING_TYPE_RENTAL, 'Rental'),
+        (SELLING_TYPE_SELLING, 'Selling'),
+    ]
+    
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     description = models.TextField()
@@ -91,22 +100,41 @@ class Product(models.Model):
     )
     event_types = models.ManyToManyField(EventType, related_name='products', blank=True)
     
+    # Selling Type - determines if product is for rental or selling
+    selling_type = models.CharField(
+        max_length=10,
+        choices=SELLING_TYPE_CHOICES,
+        default=SELLING_TYPE_RENTAL,
+        help_text="Rental: clients rent for a period. Selling: clients buy permanently."
+    )
+    
+    # Related rental products (only for selling type products)
+    # When a client views a rental product, these selling products are shown as "buy with"
+    related_rental_products = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        blank=True,
+        related_name='related_selling_products',
+        limit_choices_to={'selling_type': SELLING_TYPE_RENTAL},
+        help_text="Select rental products that can be paired with this selling product."
+    )
+    
     # Inventory
     stock = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     
-    # Rental Date Restrictions (optional - if set, clients can only rent within this range)
+    # Rental Date Restrictions (only for rental products - optional)
     rental_start_date = models.DateField(
         null=True, 
         blank=True, 
-        help_text="Earliest date this product can be rented from. Leave empty for no restriction."
+        help_text="Earliest date this product can be rented from. Leave empty for no restriction. (Only for rental products)"
     )
     rental_end_date = models.DateField(
         null=True, 
         blank=True, 
-        help_text="Latest date this product can be returned. Leave empty for no restriction."
+        help_text="Latest date this product can be returned. Leave empty for no restriction. (Only for rental products)"
     )
     
     # SEO
@@ -159,6 +187,30 @@ class Product(models.Model):
     def in_stock(self):
         return self.stock > 0 and self.is_available
 
+    @property
+    def is_rental(self):
+        """Check if this is a rental product."""
+        return self.selling_type == self.SELLING_TYPE_RENTAL
+
+    @property
+    def is_selling(self):
+        """Check if this is a selling product."""
+        return self.selling_type == self.SELLING_TYPE_SELLING
+
+    def get_related_selling_products(self):
+        """
+        For rental products, get selling products that can be bought with this rental.
+        This looks at selling products that have this rental product in their related_rental_products.
+        """
+        if self.is_rental:
+            return Product.objects.filter(
+                selling_type=self.SELLING_TYPE_SELLING,
+                related_rental_products=self,
+                is_active=True,
+                is_available=True
+            )
+        return Product.objects.none()
+
     def get_min_rental_date(self):
         """Get the minimum date from which this product can be rented."""
         min_days = getattr(settings, 'MIN_BEGIN_DATE', 2)
@@ -199,6 +251,10 @@ class Product(models.Model):
 
     def can_rent(self, start_date, end_date, quantity):
         """Check if the product can be rented for the given dates and quantity."""
+        # Only rental products can be rented
+        if not self.is_rental:
+            return False, "This product is for sale only, not rental"
+        
         # Check date restrictions
         min_date = self.get_min_rental_date()
         if start_date < min_date:
@@ -217,6 +273,19 @@ class Product(models.Model):
         available = self.get_available_stock(start_date, end_date)
         if quantity > available:
             return False, f"Only {available} items available for this period"
+        
+        return True, "Available"
+
+    def can_purchase(self, quantity):
+        """Check if the product can be purchased (for selling products)."""
+        if not self.is_selling:
+            return False, "This product is for rental only, not sale"
+        
+        if not self.is_available:
+            return False, "This product is not available"
+        
+        if quantity > self.stock:
+            return False, f"Only {self.stock} items in stock"
         
         return True, "Available"
 
