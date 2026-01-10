@@ -325,6 +325,17 @@
                         </li>
                         {% endif %}
                     </ul>
+                    
+                    <!-- Support QR Code -->
+                    <div class="mt-6 pt-6 border-t border-secondary-800">
+                        <h5 class="font-semibold text-sm mb-3 text-white">{% trans "Your support helps us grow and serve you better. Every contribution makes a difference!" %}</h5>
+                        <a href="{% url 'core:support' %}" class="block">
+                            <img src="{% url 'core:support_qr_code' %}" alt="{% trans 'Support QR Code' %}" class="w-32 h-32 mx-auto bg-white p-2 rounded-lg hover:opacity-90 transition-opacity">
+                        </a>
+                        <p class="text-xs text-secondary-500 text-center mt-2">
+                            {% trans "Scan to support" %}
+                        </p>
+                    </div>
                 </div>
             </div>
             

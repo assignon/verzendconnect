@@ -514,3 +514,62 @@ class Services(models.Model):
         obj, created = cls.objects.get_or_create(pk=1, defaults={'title': 'Our Services'})
         return obj
 
+
+class Costs(models.Model):
+    """Costs Settings - Singleton model for BTW and delivery costs."""
+    BTW_TYPE_CHOICES = [
+        ('inclusif', 'Inclusif (BTW included in prices)'),
+        ('exclusif', 'Exclusif (BTW added to prices)'),
+    ]
+    
+    # BTW Settings
+    btw_percentage = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=21.00,
+        help_text="BTW (VAT) percentage"
+    )
+    btw_type = models.CharField(
+        max_length=10,
+        choices=BTW_TYPE_CHOICES,
+        default='inclusif',
+        help_text="Whether BTW is included in prices or added separately"
+    )
+    
+    # Delivery Cost
+    delivery_cost_enabled = models.BooleanField(
+        default=True,
+        help_text="Enable or disable delivery cost"
+    )
+    delivery_cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00,
+        help_text="Delivery/shipping cost"
+    )
+    
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Costs Settings'
+        verbose_name_plural = 'Costs Settings'
+
+    def __str__(self):
+        return f"Costs Settings (BTW: {self.btw_percentage}% - {self.get_btw_type_display()})"
+
+    def save(self, *args, **kwargs):
+        # Ensure only one instance exists
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_costs(cls):
+        """Get or create the single Costs instance."""
+        obj, created = cls.objects.get_or_create(pk=1, defaults={
+            'btw_percentage': 21.00,
+            'btw_type': 'inclusif',
+            'delivery_cost_enabled': True,
+            'delivery_cost': 0.00
+        })
+        return obj
+

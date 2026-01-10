@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 from datetime import timedelta
 from apps.orders.models import Order
-from apps.core.models import Product, Category, ProductImage, EventType, RentalRecord, FAQ, RentalTerms, Services, SiteSettings
+from apps.core.models import Product, Category, ProductImage, EventType, RentalRecord, FAQ, RentalTerms, Services, SiteSettings, Costs
 from apps.accounts.models import CustomUser
 from .forms import CompanyInfoForm
 
@@ -748,6 +748,27 @@ class CompanyInfoUpdateView(SuperuserRequiredMixin, UpdateView):
         """Get or create the SiteSettings instance (singleton)."""
         obj, created = SiteSettings.objects.get_or_create(pk=1)
         return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Company information updated successfully.')
+        return super().form_valid(form)
+
+
+class CostsUpdateView(SuperuserRequiredMixin, UpdateView):
+    """Update costs settings (BTW and delivery)."""
+    model = Costs
+    template_name = 'dashboard/costs.html'
+    fields = ['btw_percentage', 'btw_type', 'delivery_cost_enabled', 'delivery_cost']
+    success_url = reverse_lazy('dashboard:costs')
+
+    def get_object(self, queryset=None):
+        """Get or create the Costs instance (singleton)."""
+        obj, created = Costs.objects.get_or_create(pk=1)
+        return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Costs settings updated successfully.')
+        return super().form_valid(form)
 
     def form_valid(self, form):
         messages.success(self.request, 'Company information updated successfully.')

@@ -1,0 +1,144 @@
+{% extends 'dashboard/base.html' %}
+{% load static widget_tweaks i18n %}
+
+{% block title %}{% trans "Costs Settings" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">{% trans "Costs Settings" %}</h1>
+        <p class="text-gray-600 mt-2">{% trans "Configure BTW (VAT) and delivery costs. These settings will be applied to all cart calculations." %}</p>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white rounded-lg shadow">
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            <!-- BTW Section -->
+            <div class="space-y-6 border-b border-gray-200 pb-6">
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "BTW (VAT) Settings" %}</h2>
+                
+                <!-- BTW Percentage -->
+                <div>
+                    <label for="{{ form.btw_percentage.id_for_label }}" class="label">
+                        {% trans "BTW Percentage" %} *
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="number" 
+                            id="{{ form.btw_percentage.id_for_label }}" 
+                            name="{{ form.btw_percentage.name }}" 
+                            value="{{ form.btw_percentage.value|default:21 }}" 
+                            step="0.01" 
+                            min="0" 
+                            max="100"
+                            class="input pr-12"
+                            required
+                        >
+                        <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">%</span>
+                    </div>
+                    {% if form.btw_percentage.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.btw_percentage.errors.0 }}</p>
+                    {% endif %}
+                    <p class="mt-2 text-sm text-gray-500">{% trans "Enter the BTW (VAT) percentage rate (e.g., 21 for 21%)" %}</p>
+                </div>
+
+                <!-- BTW Type -->
+                <div>
+                    <label class="label mb-3">{% trans "BTW Type" %} *</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-500 transition-colors {% if form.btw_type.value == 'inclusif' or not form.btw_type.value %}border-primary-500 bg-primary-50{% endif %}">
+                            <input 
+                                type="radio" 
+                                name="{{ form.btw_type.name }}" 
+                                value="inclusif" 
+                                {% if form.btw_type.value == 'inclusif' or not form.btw_type.value %}checked{% endif %}
+                                class="mr-3 w-5 h-5 text-primary-600 focus:ring-primary-500"
+                            >
+                            <div>
+                                <span class="font-semibold text-gray-900">{% trans "Inclusif" %}</span>
+                                <p class="text-sm text-gray-600 mt-1">{% trans "BTW is included in product prices. The BTW amount will be shown for information only." %}</p>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-500 transition-colors {% if form.btw_type.value == 'exclusif' %}border-primary-500 bg-primary-50{% endif %}">
+                            <input 
+                                type="radio" 
+                                name="{{ form.btw_type.name }}" 
+                                value="exclusif" 
+                                {% if form.btw_type.value == 'exclusif' %}checked{% endif %}
+                                class="mr-3 w-5 h-5 text-primary-600 focus:ring-primary-500"
+                            >
+                            <div>
+                                <span class="font-semibold text-gray-900">{% trans "Exclusif" %}</span>
+                                <p class="text-sm text-gray-600 mt-1">{% trans "BTW will be calculated and added to the subtotal on the cart page." %}</p>
+                            </div>
+                        </label>
+                    </div>
+                    {% if form.btw_type.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.btw_type.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Delivery Cost Section -->
+            <div class="space-y-6 pt-6">
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Delivery Cost" %}</h2>
+                
+                <!-- Delivery Cost -->
+                <div>
+                    <!-- Hidden field for delivery_cost_enabled (always enabled) -->
+                    <input type="hidden" name="{{ form.delivery_cost_enabled.name }}" value="1" id="{{ form.delivery_cost_enabled.id_for_label }}">
+                    
+                    <label for="{{ form.delivery_cost.id_for_label }}" class="label">
+                        {% trans "Delivery Cost" %} (€)
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">€</span>
+                        <input 
+                            type="number" 
+                            id="{{ form.delivery_cost.id_for_label }}" 
+                            name="{{ form.delivery_cost.name }}" 
+                            value="{{ form.delivery_cost.value|default:0 }}" 
+                            step="0.01" 
+                            min="0"
+                            class="input pl-10"
+                        >
+                    </div>
+                    {% if form.delivery_cost.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.delivery_cost.errors.0 }}</p>
+                    {% endif %}
+                    <p class="mt-2 text-sm text-gray-500">{% trans "Enter the delivery/shipping cost that will be added to all orders." %}</p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
+                <button type="submit" class="px-6 py-3.5 border-2 border-primary-600 bg-primary-600 text-white rounded-xl hover:bg-primary-700 hover:border-primary-700 hover:shadow-lg transition-all duration-200 font-semibold shadow-md">
+                    {% trans "Save Costs Settings" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const radioButtons = document.querySelectorAll('input[name="{{ form.btw_type.name }}"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Update visual state
+            document.querySelectorAll('label[class*="border-primary-500"]').forEach(label => {
+                label.classList.remove('border-primary-500', 'bg-primary-50');
+            });
+            if (this.checked) {
+                this.closest('label').classList.add('border-primary-500', 'bg-primary-50');
+            }
+        });
+    });
+});
+
+</script>
+{% endblock %}
+

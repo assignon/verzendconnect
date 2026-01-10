@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from apps.orders.models import Order
-from .models import Payment
+from .models import Payment, Support
 from .services import MollieService
 
 
@@ -64,6 +64,28 @@ class MollieWebhookView(View):
         # Update payment status from Mollie
         mollie_service = MollieService()
         mollie_service.update_payment_status(payment)
+        
+        return HttpResponse(status=200)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class MollieSupportWebhookView(View):
+    """Handle Mollie payment webhooks for support/donations."""
+    
+    def post(self, request):
+        payment_id = request.POST.get('id')
+        
+        if not payment_id:
+            return HttpResponse(status=400)
+        
+        try:
+            support = Support.objects.get(mollie_payment_id=payment_id)
+        except Support.DoesNotExist:
+            return HttpResponse(status=404)
+        
+        # Update support status from Mollie
+        mollie_service = MollieService()
+        mollie_service.update_support_status(support)
         
         return HttpResponse(status=200)
 

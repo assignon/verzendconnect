@@ -49,5 +49,8 @@ urlpatterns = [
 
     # Company Info
     path('company-info/', views.CompanyInfoUpdateView.as_view(), name='company_info'),
+    
+    # Costs
+    path('costs/', views.CostsUpdateView.as_view(), name='costs'),
 ]
 

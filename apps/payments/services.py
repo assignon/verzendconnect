@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.utils import timezone
 from mollie.api.client import Client
-from .models import Payment
+from .models import Payment, Support
 
 
 class MollieService:
@@ -246,4 +246,89 @@ class MollieService:
             payment.save()
         
         return refund
+    
+    def create_support_payment(self, support, method='ideal', redirect_url='', webhook_url=''):
+        """Create a new Mollie payment for support/donation."""
+        
+        # Check if API key is set
+        if not settings.MOLLIE_API_KEY:
+            raise ValueError("MOLLIE_API_KEY is not set in settings")
+        
+        # Map internal method names to Mollie method names
+        method_mapping = {
+            'ideal': 'ideal',
+            'paypal': 'paypal',
+            'creditcard': 'creditcard',
+            'banktransfer': 'banktransfer',
+        }
+        
+        mollie_method = method_mapping.get(method, 'ideal')
+        
+        # Build payment data
+        payment_data = {
+            'amount': {
+                'currency': support.currency,
+                'value': f'{support.amount:.2f}',
+            },
+            'description': f'Support Verzend Connect - €{support.amount:.2f}',
+            'redirectUrl': redirect_url,
+            'method': mollie_method,
+            'metadata': {
+                'support_id': support.id,
+                'type': 'support',
+            },
+        }
+        
+        # Only add webhook URL if it's a public URL (not localhost)
+        if webhook_url and 'localhost' not in webhook_url and '127.0.0.1' not in webhook_url:
+            payment_data['webhookUrl'] = webhook_url
+        
+        # Create payment in Mollie
+        mollie_payment = self.client.payments.create(payment_data)
+        
+        # Extract payment ID and checkout URL from Mollie response
+        payment_id = str(mollie_payment['id'])
+        
+        # Get checkout URL from _links
+        links = mollie_payment['_links']
+        checkout_url = links['checkout']['href'] if 'checkout' in links else ''
+        
+        if not checkout_url:
+            # Fallback: construct URL from payment ID
+            checkout_url = f"https://www.mollie.com/checkout/select-method/{payment_id}"
+        
+        # Update support record with payment info
+        support.mollie_payment_id = payment_id
+        support.mollie_checkout_url = checkout_url
+        support.status = 'open'
+        support.save()
+        
+        return support
+    
+    def update_support_status(self, support):
+        """Update support payment status from Mollie."""
+        
+        if not support.mollie_payment_id:
+            return support
+        
+        mollie_payment = self.client.payments.get(support.mollie_payment_id)
+        
+        # Map Mollie status to our status
+        status_mapping = {
+            'open': 'open',
+            'pending': 'pending',
+            'paid': 'paid',
+            'failed': 'failed',
+            'expired': 'expired',
+            'canceled': 'canceled',
+        }
+        
+        new_status = status_mapping.get(mollie_payment['status'], 'pending')
+        support.status = new_status
+        
+        if new_status == 'paid':
+            support.paid_at = timezone.now()
+        
+        support.save()
+        return support
 

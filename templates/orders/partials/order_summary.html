@@ -1,9 +1,9 @@
-{% load static %}
+{% load static i18n core_tags %}
 <div class="card p-6 sticky top-24">
-    <h3 class="font-semibold text-lg text-secondary-800 mb-4">Order Summary</h3>
+    <h2 class="font-semibold text-lg text-secondary-800 mb-6">{% trans "Order Summary" %}</h2>
     
     <!-- Items -->
-    <div class="space-y-3 mb-4 max-h-64 overflow-y-auto">
+    <div class="space-y-3 mb-6 max-h-64 overflow-y-auto">
         {% for item in cart.items.all %}
         <div class="flex gap-3">
             <div class="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-secondary-100">
@@ -18,28 +18,45 @@
             </div>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-secondary-800 truncate">{{ item.product.name }}</p>
-                <p class="text-xs text-secondary-500">€{{ item.price }} each</p>
+                <p class="text-xs text-secondary-500">€{{ item.price|floatformat:2 }} {% trans "each" %}</p>
             </div>
-            <p class="text-sm font-medium text-secondary-800">€{{ item.total }}</p>
+            <p class="text-sm font-medium text-secondary-800">€{{ item.total|floatformat:2 }}</p>
         </div>
         {% endfor %}
     </div>
     
-    <div class="border-t border-secondary-200 pt-4 space-y-3">
+    <div class="space-y-4 mb-6">
         <div class="flex justify-between text-secondary-600">
-            <span>Subtotal</span>
-            <span>€{{ cart.subtotal }}</span>
+            <span>{% trans "Subtotal" %} ({{ cart.items_count }} {% trans "items" %})</span>
+            <span class="cart-total">€{{ cart.subtotal|floatformat:2 }}</span>
         </div>
-        <div class="flex justify-between text-secondary-600">
-            <span>Shipping</span>
-            <span class="text-success-600">Free</span>
+        
+        {% get_costs as costs %}
+        {% if costs.btw_type == 'inclusif' %}
+            <div class="flex justify-between text-secondary-600">
+                <span>{% trans "BTW" %} ({{ costs.btw_percentage|floatformat:0 }}%) {% trans "inclusif" %}</span>
+                <span class="text-secondary-500">{% trans "Included" %}</span>
+            </div>
+        {% elif costs.btw_type == 'exclusif' and cart.btw_amount > 0 %}
+            <div class="flex justify-between text-secondary-600">
+                <span>{% trans "BTW" %} ({{ costs.btw_percentage|floatformat:0 }}%)</span>
+                <span>€{{ cart.btw_amount|floatformat:2 }}</span>
+            </div>
+        {% endif %}
+        
+        <div class="flex justify-between {% if cart.delivery_cost_enabled %}text-secondary-600{% else %}text-secondary-400 line-through{% endif %}">
+            <span>{% trans "Verzendkosten" %}</span>
+            <span>{% if cart.delivery_cost == 0 %}{% trans "Free" %}{% else %}€{{ cart.delivery_cost|floatformat:2 }}{% endif %}</span>
         </div>
+        {% if not cart.delivery_cost_enabled %}
+        <p class="text-xs text-secondary-500 italic">{% trans "Not included in total" %}</p>
+        {% endif %}
     </div>
     
-    <div class="border-t border-secondary-200 mt-4 pt-4">
+    <div class="border-t border-secondary-200 pt-4 mb-6">
         <div class="flex justify-between text-lg font-semibold text-secondary-800">
-            <span>Total</span>
-            <span>€{{ cart.total }}</span>
+            <span>{% trans "Total" %}</span>
+            <span class="cart-total">€{{ cart.total|floatformat:2 }}</span>
         </div>
     </div>
 </div>

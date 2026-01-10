@@ -1,13 +1,13 @@
-# Dutch translations for VerzendConnect
-# Copyright (C) 2024 VerzendConnect
-# This file is distributed under the same license as the VerzendConnect project.
+# Dutch translations for Verzend Connect
+# Copyright (C) 2024 Verzend Connect
+# This file is distributed under the same license as the Verzend Connect project.
 msgid ""
 msgstr ""
-"Project-Id-Version: VerzendConnect 1.0\n"
+"Project-Id-Version: Verzend Connect 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-01 12:00+0000\n"
 "PO-Revision-Date: 2024-01-08 12:00+0000\n"
-"Last-Translator: VerzendConnect Team\n"
+"Last-Translator: Verzend Connect Team\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -150,8 +150,8 @@ msgstr "Snelle Links"
 msgid "Contact Us"
 msgstr "Neem Contact Op"
 
-msgid "About VerzendConnect"
-msgstr "Over VerzendConnect"
+msgid "About Verzend Connect"
+msgstr "Over Verzend Connect"
 
 msgid "Your trusted partner for event rentals and shipping"
 msgstr "Uw betrouwbare partner voor evenementverhuur en verzending"
@@ -160,17 +160,17 @@ msgstr "Uw betrouwbare partner voor evenementverhuur en verzending"
 # HOMEPAGE
 # ============================================
 
-msgid "Welcome to VerzendConnect"
-msgstr "Welkom bij VerzendConnect"
+msgid "Welcome to Verzend Connect"
+msgstr "Welkom bij Verzend Connect"
 
-msgid "Welcome to the Verzend-Connect website. Here you will find the rental products you are looking for and can rent for a specific period. We offer rental items ranging from small to large, especially for your party."
-msgstr "Welkom op de Verzend-Connect website. Hier vindt u de verhuurproducten die u zoekt en kunt u huren voor een bepaalde periode. We bieden verhuurartikelen variërend van klein tot groot, vooral voor uw feest."
+msgid "Welcome to the Verzend Connect website. Here you will find the rental products you are looking for and can rent for a specific period. We offer rental items ranging from small to large, especially for your party."
+msgstr "Welkom op de Verzend Connect website. Hier vindt u de verhuurproducten die u zoekt en kunt u huren voor een bepaalde periode. We bieden verhuurartikelen variërend van klein tot groot, vooral voor uw feest."
 
 msgid "Our Services"
 msgstr "Onze Diensten"
 
-msgid "Verzend-Connect focuses on shipping rental products according to your preferences. We also offer transport options where we can share and easily connect with you."
-msgstr "Verzend-Connect richt zich op het verzenden van verhuurproducten volgens uw voorkeuren. We bieden ook transportopties waar we kunnen delen en gemakkelijk met u in contact kunnen komen."
+msgid "Verzend Connect focuses on shipping rental products according to your preferences. We also offer transport options where we can share and easily connect with you."
+msgstr "Verzend Connect richt zich op het verzenden van verhuurproducten volgens uw voorkeuren. We bieden ook transportopties waar we kunnen delen en gemakkelijk met u in contact kunnen komen."
 
 msgid "Wide Range"
 msgstr "Breed Assortiment"
@@ -262,6 +262,88 @@ msgstr "Aantal"
 
 msgid "Related Products"
 msgstr "Gerelateerde Producten"
+
+# ============================================
+# SUPPORT/DONATION TRANSLATIONS
+# ============================================
+
+msgid "Support Us"
+msgstr "Steun Ons"
+
+msgid "Your support helps us grow and serve you better. Every contribution makes a difference!"
+msgstr "Uw steun helpt ons groeien en u beter te bedienen. Elke bijdrage maakt het verschil!"
+
+msgid "Support Verzend Connect"
+msgstr "Steun Verzend Connect"
+
+msgid "Help us continue providing excellent service. Your support means the world to us!"
+msgstr "Help ons om uitstekende service te blijven bieden. Uw steun betekent de wereld voor ons!"
+
+msgid "Amount (€)"
+msgstr "Bedrag (€)"
+
+msgid "Minimum amount: €0.50"
+msgstr "Minimum bedrag: €0.50"
+
+msgid "Quick Select"
+msgstr "Snelle Selectie"
+
+msgid "Your Name"
+msgstr "Uw Naam"
+
+msgid "Optional"
+msgstr "Optioneel"
+
+msgid "Your Email"
+msgstr "Uw E-mail"
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Thank you for your support message..."
+msgstr "Bedankt voor uw steunbericht..."
+
+msgid "Payment Method"
+msgstr "Betaalmethode"
+
+msgid "Thank You!"
+msgstr "Bedankt!"
+
+msgid "Your support of €"
+msgstr "Uw steun van €"
+
+msgid "has been received successfully."
+msgstr "is succesvol ontvangen."
+
+msgid "Thank you"
+msgstr "Bedankt"
+
+msgid "Back to Home"
+msgstr "Terug naar Home"
+
+msgid "Browse Products"
+msgstr "Producten Bekijken"
+
+msgid "Payment Status"
+msgstr "Betaalstatus"
+
+msgid "Your payment is being processed. You will receive a confirmation email once it's completed."
+msgstr "Uw betaling wordt verwerkt. U ontvangt een bevestigingsmail zodra deze is voltooid."
+
+msgid "Unfortunately, your payment could not be processed. Please try again."
+msgstr "Helaas kon uw betaling niet worden verwerkt. Probeer het opnieuw."
+
+msgid "Your payment status:"
+msgstr "Uw betaalstatus:"
+
+msgid "Try Again"
+msgstr "Probeer Opnieuw"
+
+msgid "Support QR Code"
+msgstr "Steun QR Code"
+
+msgid "Scan to support"
+msgstr "Scan om te steunen"
 
 msgid "No products found"
 msgstr "Geen producten gevonden"
@@ -1140,8 +1222,8 @@ msgstr "Nieuwe producten binnenkort beschikbaar..."
 msgid "Admin Dashboard"
 msgstr "Beheer Dashboard"
 
-msgid "Admin Panel VerzendConnect"
-msgstr "Beheerpaneel VerzendConnect"
+msgid "Admin Panel Verzend Connect"
+msgstr "Beheerpaneel Verzend Connect"
 
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -1260,3 +1342,168 @@ msgstr "Dit product is beschikbaar voor aankoop. Geen verhuurdatums nodig."
 
 msgid "Related Products"
 msgstr "Gerelateerde Producten"
+
+# ============================================
+# SUPPORT/DONATION TRANSLATIONS
+# ============================================
+
+msgid "Support Us"
+msgstr "Steun Ons"
+
+msgid "Your support helps us grow and serve you better. Every contribution makes a difference!"
+msgstr "Uw steun helpt ons groeien en u beter te bedienen. Elke bijdrage maakt het verschil!"
+
+msgid "Support Verzend Connect"
+msgstr "Steun Verzend Connect"
+
+msgid "Help us continue providing excellent service. Your support means the world to us!"
+msgstr "Help ons om uitstekende service te blijven bieden. Uw steun betekent de wereld voor ons!"
+
+msgid "Amount (€)"
+msgstr "Bedrag (€)"
+
+msgid "Minimum amount: €0.50"
+msgstr "Minimum bedrag: €0.50"
+
+msgid "Quick Select"
+msgstr "Snelle Selectie"
+
+msgid "Your Name"
+msgstr "Uw Naam"
+
+msgid "Optional"
+msgstr "Optioneel"
+
+msgid "Your Email"
+msgstr "Uw E-mail"
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Thank you for your support message..."
+msgstr "Bedankt voor uw steunbericht..."
+
+msgid "Payment Method"
+msgstr "Betaalmethode"
+
+msgid "Thank You!"
+msgstr "Bedankt!"
+
+msgid "Your support of €"
+msgstr "Uw steun van €"
+
+msgid "has been received successfully."
+msgstr "is succesvol ontvangen."
+
+msgid "Thank you"
+msgstr "Bedankt"
+
+msgid "Back to Home"
+msgstr "Terug naar Home"
+
+msgid "Browse Products"
+msgstr "Producten Bekijken"
+
+msgid "Payment Status"
+msgstr "Betaalstatus"
+
+msgid "Your payment is being processed. You will receive a confirmation email once it's completed."
+msgstr "Uw betaling wordt verwerkt. U ontvangt een bevestigingsmail zodra deze is voltooid."
+
+msgid "Unfortunately, your payment could not be processed. Please try again."
+msgstr "Helaas kon uw betaling niet worden verwerkt. Probeer het opnieuw."
+
+msgid "Your payment status:"
+msgstr "Uw betaalstatus:"
+
+msgid "Try Again"
+msgstr "Probeer Opnieuw"
+
+msgid "Support QR Code"
+msgstr "Steun QR Code"
+
+msgid "Scan to support"
+msgstr "Scan om te steunen"
+
+msgid "Love What We Do?"
+msgstr "Vindt u wat we doen leuk?"
+
+msgid "Your support helps us grow and serve you better. Every contribution makes a difference!"
+msgstr "Uw steun helpt ons groeien en u beter te bedienen. Elke bijdrage maakt het verschil!"
+
+msgid "Scan & Support"
+msgstr "Scan & Steun"
+
+msgid "Costs Settings"
+msgstr "Kosten Instellingen"
+
+msgid "Configure BTW (VAT) and delivery costs. These settings will be applied to all cart calculations."
+msgstr "Configureer BTW en verzendkosten. Deze instellingen worden toegepast op alle winkelwagenberekeningen."
+
+msgid "BTW (VAT) Settings"
+msgstr "BTW Instellingen"
+
+msgid "BTW Percentage"
+msgstr "BTW Percentage"
+
+msgid "Enter the BTW (VAT) percentage rate (e.g., 21 for 21%)"
+msgstr "Voer het BTW percentage in (bijv. 21 voor 21%)"
+
+msgid "BTW Type"
+msgstr "BTW Type"
+
+msgid "Inclusif"
+msgstr "Inclusief"
+
+msgid "BTW is included in product prices. The BTW amount will be shown for information only."
+msgstr "BTW is inbegrepen in productprijzen. Het BTW-bedrag wordt alleen ter informatie getoond."
+
+msgid "Exclusif"
+msgstr "Exclusief"
+
+msgid "BTW will be calculated and added to the subtotal on the cart page."
+msgstr "BTW wordt berekend en toegevoegd aan het subtotaal op de winkelwagenpagina."
+
+msgid "Delivery Cost"
+msgstr "Verzendkosten"
+
+msgid "Enter the delivery/shipping cost that will be added to all orders."
+msgstr "Voer de verzendkosten in die aan alle bestellingen worden toegevoegd."
+
+msgid "Save Costs Settings"
+msgstr "Kosten Instellingen Opslaan"
+
+msgid "Costs"
+msgstr "Kosten"
+
+msgid "Costs settings updated successfully."
+msgstr "Kosten instellingen succesvol bijgewerkt."
+
+msgid "Included"
+msgstr "Inbegrepen"
+
+msgid "Verzending"
+msgstr "Verzendkosten"
+
+msgid "Verzendkosten"
+msgstr "Verzendkosten"
+
+
+msgid "Enable Delivery Cost"
+msgstr "Verzendkosten Inschakelen"
+
+msgid "Toggle to show or hide delivery cost on the cart page."
+msgstr "Schakel in om verzendkosten op de winkelwagenpagina te tonen of te verbergen."
+
+
+msgid "Not included in total"
+msgstr "Niet inbegrepen in totaal"
+
+
+msgid "Free"
+msgstr "Gratis"
+
+
+msgid "Order Summary"
+msgstr "Besteloverzicht"
+

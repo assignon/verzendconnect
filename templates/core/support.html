@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Support Us" %} - {{ site_settings.site_name|default:'Verzend Connect' }}{% endblock %}
+
+{% block content %}
+<div class="container-custom py-8 md:py-12">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-primary-600 via-primary-700 to-accent-600 text-white py-16 rounded-2xl mb-12">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="font-display text-4xl md:text-5xl font-bold mb-6">{% trans "Support Verzend Connect" %}</h1>
+            <p class="text-xl text-primary-100">
+                {% trans "Help us continue providing excellent service. Your support means the world to us!" %}
+            </p>
+        </div>
+    </section>
+
+    <!-- Support Form -->
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Amount Input -->
+                <div>
+                    <label for="amount" class="block text-sm font-medium text-secondary-700 mb-2">
+                        {% trans "Amount (€)" %} *
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-secondary-500 text-lg font-semibold">€</span>
+                        <input 
+                            type="number" 
+                            id="amount" 
+                            name="amount" 
+                            step="0.01" 
+                            min="0.50" 
+                            value="10.00"
+                            required
+                            class="w-full pl-10 pr-4 py-4 rounded-xl border-2 border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-lg font-semibold"
+                            placeholder="10.00"
+                        >
+                    </div>
+                    <p class="mt-2 text-sm text-secondary-500">
+                        {% trans "Minimum amount: €0.50" %}
+                    </p>
+                </div>
+
+                <!-- Quick Amount Buttons -->
+                <div>
+                    <label class="block text-sm font-medium text-secondary-700 mb-2">
+                        {% trans "Quick Select" %}
+                    </label>
+                    <div class="grid grid-cols-4 gap-3">
+                        <button type="button" onclick="setAmount(5)" class="px-4 py-3 rounded-xl border-2 border-secondary-200 hover:border-primary-500 hover:bg-primary-50 transition-colors font-semibold">
+                            €5
+                        </button>
+                        <button type="button" onclick="setAmount(10)" class="px-4 py-3 rounded-xl border-2 border-secondary-200 hover:border-primary-500 hover:bg-primary-50 transition-colors font-semibold">
+                            €10
+                        </button>
+                        <button type="button" onclick="setAmount(25)" class="px-4 py-3 rounded-xl border-2 border-secondary-200 hover:border-primary-500 hover:bg-primary-50 transition-colors font-semibold">
+                            €25
+                        </button>
+                        <button type="button" onclick="setAmount(50)" class="px-4 py-3 rounded-xl border-2 border-secondary-200 hover:border-primary-500 hover:bg-primary-50 transition-colors font-semibold">
+                            €50
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Donor Name (Optional) -->
+                <div>
+                    <label for="donor_name" class="block text-sm font-medium text-secondary-700 mb-2">
+                        {% trans "Your Name" %} ({% trans "Optional" %})
+                    </label>
+                    <input 
+                        type="text" 
+                        id="donor_name" 
+                        name="donor_name" 
+                        class="w-full px-4 py-3 rounded-xl border-2 border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                        placeholder="{% trans 'John Doe' %}"
+                    >
+                </div>
+
+                <!-- Payment Method -->
+                <div>
+                    <label for="payment_method" class="block text-sm font-medium text-secondary-700 mb-2">
+                        {% trans "Payment Method" %}
+                    </label>
+                    <select 
+                        id="payment_method" 
+                        name="payment_method" 
+                        class="w-full px-4 py-3 rounded-xl border-2 border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                    >
+                        <option value="ideal">iDEAL</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="creditcard">Credit Card</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button 
+                        type="submit" 
+                        class="w-full btn btn-primary text-lg py-4"
+                    >
+                        <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        {% trans "Support Us" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function setAmount(amount) {
+    document.getElementById('amount').value = amount.toFixed(2);
+}
+</script>
+{% endblock %}
+

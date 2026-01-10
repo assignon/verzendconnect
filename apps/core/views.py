@@ -3,11 +3,13 @@ Core views for VerzendConnect.
 """
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
+from django.views import View
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.utils import translation
+from django.contrib import messages
 from .models import Product, Category, EventType, SiteSettings, FAQ, RentalTerms, Services
 
 
@@ -316,3 +318,129 @@ class ServicesView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['services'] = Services.get_services()
         return context
+
+
+class SupportView(View):
+    """Support/Donation page where customers can enter amount and donate."""
+    template_name = 'core/support.html'
+    
+    def get(self, request):
+        return render(request, self.template_name)
+    
+    def post(self, request):
+        from decimal import Decimal, InvalidOperation
+        from apps.payments.models import Support
+        from apps.payments.services import MollieService
+        
+        try:
+            amount_str = request.POST.get('amount', '').strip()
+            donor_name = request.POST.get('donor_name', '').strip()
+            payment_method = request.POST.get('payment_method', 'ideal')
+            
+            # Validate amount
+            try:
+                amount = Decimal(amount_str)
+                if amount <= 0:
+                    messages.error(request, 'Please enter a valid amount greater than 0.')
+                    return render(request, self.template_name)
+                if amount < Decimal('0.50'):
+                    messages.error(request, 'Minimum donation amount is €0.50.')
+                    return render(request, self.template_name)
+            except (InvalidOperation, ValueError):
+                messages.error(request, 'Please enter a valid amount.')
+                return render(request, self.template_name)
+            
+            # Create support record
+            support = Support.objects.create(
+                amount=amount,
+                donor_name=donor_name,
+                status='open',
+            )
+            
+            # Create Mollie payment
+            mollie_service = MollieService()
+            try:
+                support = mollie_service.create_support_payment(
+                    support=support,
+                    method=payment_method,
+                    redirect_url=request.build_absolute_uri(f'/support/return/{support.id}/'),
+                    webhook_url=request.build_absolute_uri('/payments/webhook-support/'),
+                )
+                
+                # Redirect to Mollie checkout
+                if support.mollie_checkout_url:
+                    return redirect(support.mollie_checkout_url)
+                else:
+                    messages.error(request, 'Failed to create payment. Please try again.')
+                    return render(request, self.template_name)
+                    
+            except Exception as e:
+                import traceback
+                print(f"Support payment error: {str(e)}")
+                print(traceback.format_exc())
+                messages.error(request, 'An error occurred while processing your support. Please try again.')
+                return render(request, self.template_name)
+                
+        except Exception as e:
+            import traceback
+            print(f"Support view error: {str(e)}")
+            print(traceback.format_exc())
+            messages.error(request, 'An error occurred. Please try again.')
+            return render(request, self.template_name)
+
+
+class SupportReturnView(View):
+    """Handle return from Mollie payment for support."""
+    template_name = 'core/support_success.html'
+    
+    def get(self, request, support_id):
+        from apps.payments.models import Support
+        from apps.payments.services import MollieService
+        
+        support = get_object_or_404(Support, id=support_id)
+        
+        # Update payment status from Mollie
+        if support.mollie_payment_id:
+            mollie_service = MollieService()
+            try:
+                support = mollie_service.update_support_status(support)
+            except Exception as e:
+                print(f"Error updating support status: {e}")
+        
+        context = {
+            'support': support,
+        }
+        return render(request, self.template_name, context)
+
+
+def generate_qr_code(request):
+    """Generate QR code for support page URL."""
+    import qrcode
+    from django.http import HttpResponse
+    from io import BytesIO
+    
+    # Get the support page URL
+    support_url = request.build_absolute_uri('/support/')
+    
+    # Generate QR code
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(support_url)
+    qr.make(fit=True)
+    
+    # Create image
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    # Save to BytesIO
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    buffer.seek(0)
+    
+    # Return as HTTP response
+    response = HttpResponse(buffer.getvalue(), content_type='image/png')
+    response['Content-Disposition'] = 'inline; filename="support-qr.png"'
+    return response

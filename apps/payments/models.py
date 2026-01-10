@@ -71,3 +71,45 @@ class Refund(models.Model):
     def __str__(self):
         return f"Refund {self.mollie_refund_id}"
 
+
+class Support(models.Model):
+    """Support/Donation records for site support."""
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('failed', 'Failed'),
+        ('expired', 'Expired'),
+        ('canceled', 'Canceled'),
+    ]
+    
+    # Donor info (optional)
+    donor_name = models.CharField(max_length=200, blank=True)
+    donor_email = models.EmailField(blank=True)
+    
+    # Payment details
+    mollie_payment_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    mollie_checkout_url = models.URLField(blank=True)
+    
+    # Support info
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, default='EUR')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
+    message = models.TextField(blank=True, help_text="Optional message from supporter")
+    
+    # Metadata
+    metadata = models.JSONField(default=dict, blank=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Support'
+        verbose_name_plural = 'Supports'
+
+    def __str__(self):
+        return f"Support #{self.id} - €{self.amount} ({self.status})"
+

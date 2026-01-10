@@ -1,8 +1,9 @@
 import uuid
 from decimal import Decimal
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
-from apps.core.models import Product
+from apps.core.models import Product, Costs
 
 
 class Cart(models.Model):
@@ -37,8 +38,45 @@ class Cart(models.Model):
 
     @property
     def total(self):
-        # Can add shipping, taxes, discounts here later
-        return self.subtotal
+        """Calculate total including BTW and delivery costs."""
+        subtotal = self.subtotal
+        costs = Costs.get_costs()
+        
+        # Calculate BTW based on type
+        btw_amount = Decimal('0.00')
+        if costs.btw_type == 'exclusif':
+            # BTW is calculated on subtotal
+            btw_amount = subtotal * (costs.btw_percentage / Decimal('100'))
+        # If inclusif, BTW is already in prices, so we don't add it
+        
+        # Add delivery cost only if enabled
+        delivery_cost = Decimal('0.00')
+        if costs.delivery_cost_enabled:
+            delivery_cost = costs.delivery_cost or Decimal('0.00')
+        
+        return subtotal + btw_amount + delivery_cost
+    
+    @property
+    def btw_amount(self):
+        """Calculate BTW amount based on settings."""
+        costs = Costs.get_costs()
+        if costs.btw_type == 'exclusif':
+            return self.subtotal * (costs.btw_percentage / Decimal('100'))
+        return Decimal('0.00')
+    
+    @property
+    def delivery_cost(self):
+        """Get delivery cost from settings if enabled."""
+        costs = Costs.get_costs()
+        if costs.delivery_cost_enabled:
+            return costs.delivery_cost or Decimal('0.00')
+        return Decimal('0.00')
+    
+    @property
+    def delivery_cost_enabled(self):
+        """Check if delivery cost is enabled."""
+        costs = Costs.get_costs()
+        return costs.delivery_cost_enabled
 
     def clear(self):
         self.items.all().delete()
