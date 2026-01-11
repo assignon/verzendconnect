@@ -15,7 +15,7 @@ from apps.accounts.forms import ProfileForm
 
 # Get the admin user
 User = get_user_model()
-user = User.objects.filter(email='admin@verzendconnect.nl').first()
+user = User.objects.filter(email='verzendconnect@gmail.com').first()
 print(f'User: {user.email}')
 
 # Test form initialization

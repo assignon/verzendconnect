@@ -134,7 +134,7 @@ def notify_admin_new_order(order_id):
     plain_message = strip_tags(html_message)
 
     # Send email to the configured admin email
-    admin_email = getattr(settings, 'ADMIN_EMAIL', 'admin@verzendconnect.nl')
+    admin_email = getattr(settings, 'ADMIN_EMAIL', 'verzendconnect@gmail.com')
     try:
         send_mail(
             subject=subject,
@@ -229,7 +229,7 @@ def send_overdue_rental_notification(rental_id):
     })
     plain_message = strip_tags(html_message)
     
-    admin_email = getattr(settings, 'ADMIN_EMAIL', 'admin@verzendconnect.nl')
+    admin_email = getattr(settings, 'ADMIN_EMAIL', 'verzendconnect@gmail.com')
     
     try:
         send_mail(
