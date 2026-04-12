@@ -5,6 +5,7 @@ A complete event ordering platform built with Django, Tailwind CSS, and modern w
 ## Features
 
 ### Customer Features
+
 - **Product Browsing**: Browse products by category and event type
 - **Search & Filter**: Advanced product search and filtering
 - **Shopping Cart**: Session-based cart for guests, persistent cart for users
@@ -14,6 +15,7 @@ A complete event ordering platform built with Django, Tailwind CSS, and modern w
 - **Payment Integration**: iDEAL, PayPal, Credit Card via Mollie
 
 ### Admin Features
+
 - **Dashboard**: Real-time analytics and statistics
 - **Product Management**: Full CRUD for products, categories, event types
 - **Order Management**: View, update, and manage orders
@@ -43,52 +45,61 @@ A complete event ordering platform built with Django, Tailwind CSS, and modern w
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 cd verzendconnect
 ```
 
-2. Create a virtual environment:
+1. Create a virtual environment:
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate  # Windows
 ```
 
-3. Install dependencies:
+1. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 npm install
 ```
 
-4. Set up environment variables:
+1. Set up environment variables:
+
 ```bash
 cp env.example .env
 # Edit .env with your settings
 ```
 
-5. Build Tailwind CSS:
+1. Build Tailwind CSS:
+
 ```bash
 npm run build:css
 # Or for development with watch mode:
 npm run watch:css
 ```
 
-6. Run migrations:
+1. Run migrations:
+
 ```bash
 python manage.py migrate
 ```
 
-7. Create a superuser:
+1. Create a superuser:
+
 ```bash
 python manage.py createsuperuser
 ```
 
-8. Run the development server:
+1. Run the development server:
+
 ```bash
 python manage.py runserver
 ```
 
-9. (Optional) Start Celery worker:
+1. (Optional) Start Celery worker:
+
 ```bash
 celery -A config worker -l INFO
 ```
@@ -137,14 +148,16 @@ verzendconnect/
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DEBUG` | Debug mode | `True` |
-| `SECRET_KEY` | Django secret key | - |
-| `DATABASE_URL` | Database connection URL | SQLite |
-| `REDIS_URL` | Redis connection URL | `redis://localhost:6379/0` |
-| `MOLLIE_API_KEY` | Mollie API key | - |
-| `RESEND_API_KEY` | Resend API key (prod) | - |
+
+| Variable         | Description             | Default                    |
+| ---------------- | ----------------------- | -------------------------- |
+| `DEBUG`          | Debug mode              | `True`                     |
+| `SECRET_KEY`     | Django secret key       | -                          |
+| `DATABASE_URL`   | Database connection URL | SQLite                     |
+| `REDIS_URL`      | Redis connection URL    | `redis://localhost:6379/0` |
+| `MOLLIE_API_KEY` | Mollie API key          | -                          |
+| `RESEND_API_KEY` | Resend API key (prod)   | -                          |
+
 
 ### Mollie Setup
 
@@ -196,5 +209,4 @@ Private - All rights reserved.
 
 ## Support
 
-For support, email support@verzendconnect.nl
-
+For support, email [support@verzendconnect.nl](mailto:support@verzendconnect.nl)
